@@ -8,5 +8,5 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record BotConfig(
-    @NotEmpty @Value("${app.telegram-token}") String telegramToken
+    @NotEmpty String telegramToken
 ) {}

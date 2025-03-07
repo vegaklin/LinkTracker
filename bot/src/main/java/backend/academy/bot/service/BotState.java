@@ -1,4 +1,3 @@
 package backend.academy.bot.service;
 
-public class BotState {
-}
+public record BotState(long chatId, State state, String currentLink) {}

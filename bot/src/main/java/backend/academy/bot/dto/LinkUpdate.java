@@ -1,10 +1,13 @@
 package backend.academy.bot.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.net.URI;
 import java.util.List;
 
 public record LinkUpdate(
-    Long id,
-    String url,
+    @NotNull Long id,
+    @NotEmpty URI url,
     String description,
-    List<Long> tgChatIds
+    @NotNull List<Long> tgChatIds
 ) {}
