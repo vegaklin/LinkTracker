@@ -20,7 +20,7 @@ public class LinkUpdateController {
     }
 
     @PostMapping
-    public ResponseEntity<String> processUpdate(@RequestBody LinkUpdate update) {
+    public ResponseEntity<String> handleLinkUpdate(@RequestBody LinkUpdate update) {
         update.tgChatIds().forEach(chatId ->
             bot.sendUpdate(chatId, "Update for " + update.url()));
         return ResponseEntity.ok("Обновление обработано");
