@@ -2,6 +2,7 @@ package backend.academy.bot.controller;
 
 import backend.academy.bot.dto.LinkUpdate;
 import backend.academy.bot.service.BotService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class LinkUpdateController {
     }
 
     @PostMapping
-    public ResponseEntity<String> handleLinkUpdate(@RequestBody LinkUpdate update) {
+    public ResponseEntity<String> handleLinkUpdate(@RequestBody @Valid LinkUpdate update) {
         update.tgChatIds().forEach(chatId ->
             bot.sendUpdate(chatId, "Update for " + update.url()));
         return ResponseEntity.ok("Обновление обработано");

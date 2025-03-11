@@ -2,7 +2,6 @@ package backend.academy.bot.service;
 
 import backend.academy.bot.client.ScrapperClient;
 
-import backend.academy.bot.configuration.BotConfig;
 import backend.academy.bot.repository.UserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -10,22 +9,20 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.model.BotCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class BotService {
-    private static final Logger logger = LoggerFactory.getLogger(BotService.class);
+
     private final TelegramBot bot;
     private final UserRepository userRepository;
     private final ScrapperClient scrapperClient;
 
     @Autowired
-    public BotService(BotConfig config, UserRepository userRepository, ScrapperClient scrapperClient) {
-        this.bot = new TelegramBot(config.telegramToken());
+    public BotService(TelegramBot telegramBot, UserRepository userRepository, ScrapperClient scrapperClient) {
+        this.bot = telegramBot;
         this.userRepository = userRepository;
         this.scrapperClient = scrapperClient;
     }
@@ -37,7 +34,6 @@ public class BotService {
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
 
-        // Регистрация команд
         bot.execute(new SetMyCommands(
             new BotCommand("/start", "Register"),
             new BotCommand("/help", "Show commands"),
@@ -51,7 +47,6 @@ public class BotService {
         long chatId = update.message().chat().id();
         String text = update.message().text();
 
-        logger.info("Received message", "chatId", chatId, "text", text);
 
         State state = userRepository.getState(chatId);
 
