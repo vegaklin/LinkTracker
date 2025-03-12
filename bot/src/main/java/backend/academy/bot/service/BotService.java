@@ -2,7 +2,7 @@ package backend.academy.bot.service;
 
 import backend.academy.bot.client.ScrapperClient;
 
-import backend.academy.bot.repository.UserRepository;
+import backend.academy.bot.dto.LinkUpdate;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
@@ -12,18 +12,23 @@ import com.pengrad.telegrambot.model.BotCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class BotService {
 
     private final TelegramBot bot;
-    private final UserRepository userRepository;
     private final ScrapperClient scrapperClient;
 
+    private Map<Long, String> userLinks = new HashMap<>();
+    private Map<Long, String> userTags = new HashMap<>();
+    private Map<Long, String> userFilters = new HashMap<>();
+    private Map<Long, BotState> userStates = new HashMap<>();
+
     @Autowired
-    public BotService(TelegramBot telegramBot, UserRepository userRepository, ScrapperClient scrapperClient) {
+    public BotService(TelegramBot telegramBot, ScrapperClient scrapperClient) {
         this.bot = telegramBot;
-        this.userRepository = userRepository;
         this.scrapperClient = scrapperClient;
     }
 
@@ -35,11 +40,11 @@ public class BotService {
         });
 
         bot.execute(new SetMyCommands(
-            new BotCommand("/start", "Register"),
-            new BotCommand("/help", "Show commands"),
-            new BotCommand("/track", "Track a link"),
-            new BotCommand("/untrack", "Untrack a link"),
-            new BotCommand("/list", "List tracked links")
+            new BotCommand("/start", "регистрация пользователя"),
+            new BotCommand("/help", "вывод списка доступных команд"),
+            new BotCommand("/track", "начать отслеживание ссылки"),
+            new BotCommand("/untrack", "прекратить отслеживание ссылки (аргумент: ссылка"),
+            new BotCommand("/list", "показать список отслеживаемых ссылок")
         ));
     }
 
@@ -47,47 +52,64 @@ public class BotService {
         long chatId = update.message().chat().id();
         String text = update.message().text();
 
+        if (!userStates.containsKey(chatId)) {
+            userStates.put(chatId, BotState.IDLE);
+        }
 
-        State state = userRepository.getState(chatId);
+        BotState state = userStates.get(chatId);
 
-        if (text.startsWith("/start")) {
-            userRepository.registerUser(chatId);
-            scrapperClient.registerChat(chatId);
-            sendMessage(chatId, "Welcome! Use /help for commands.");
-        } else if (text.startsWith("/help")) {
-            sendMessage(chatId, "Commands: /start, /help, /track, /untrack, /list");
-        } else if (text.startsWith("/track")) {
-            userRepository.setState(chatId, State.WAITING_FOR_LINK);
-            sendMessage(chatId, "Please send the link to track");
-        } else if (state == State.WAITING_FOR_LINK) {
-            userRepository.setCurrentLink(chatId, text);
-            userRepository.setState(chatId, State.WAITING_FOR_TAGS);
-            sendMessage(chatId, "Enter tags (optional, space-separated) or 'skip'");
-        } else if (state == State.WAITING_FOR_TAGS) {
-            String[] tags = text.equals("skip") ? new String[0] : text.split("\\s+");
-            String link = userRepository.getCurrentLink(chatId);
-            scrapperClient.addLink(chatId, link, tags, new String[0]);
-            userRepository.setState(chatId, State.IDLE);
-            sendMessage(chatId, "Link added!");
-        } else if (text.startsWith("/untrack")) {
+        if (text.equals("/start")) {
+            sendMessage(chatId, "Добро пожаловать! Введи /help для просмотра доступных команд.");
+        } else if (text.equals("/help")) {
+            sendMessage(chatId, "Команды: /start, /help, /track, /untrack, /list");
+        }
+        else if (text.equals("/track")) {
+            userStates.put(chatId, BotState.AWAITING_LINK);
+            sendMessage(chatId, "Введите ссылку для отслеживания:");
+        } else if (state == BotState.AWAITING_LINK) {
+            userLinks.put(chatId, text);
+            userStates.put(chatId, BotState.AWAITING_TAGS);
+            sendMessage(chatId, "Введите теги:");
+        }
+        else if (state == BotState.AWAITING_TAGS) {
+            userTags.put(chatId, text);
+            userStates.put(chatId, BotState.AWAITING_FILTERS);
+            sendMessage(chatId, "Введите фильтры:");
+        }
+        else if (state == BotState.AWAITING_FILTERS) {
+            userFilters.put(chatId, text);
+            userStates.put(chatId, BotState.IDLE);
+
+            String link = userLinks.get(chatId);
+            String tags = userTags.getOrDefault(chatId, "Без тегов");
+            String filters = userFilters.getOrDefault(chatId, "Без фильтров");
+
+            sendMessage(chatId, "Ссылка: " + link + "\nТеги: " + tags + "\nФильтры: " + filters + "\nСсылка добавлена!");
+
+//            scrapperClient.addLink(chatId, link, tags, new String[0]);
+        }
+        else if (text.startsWith("/untrack")) {
             String[] parts = text.split("\\s+");
             if (parts.length > 1) {
-                scrapperClient.removeLink(chatId, parts[1]);
-                sendMessage(chatId, "Link removed!");
+//                scrapperClient.removeLink(chatId, parts[1]);
+                sendMessage(chatId, "Отслеживание ссылки остановлено");
             }
         } else if (text.startsWith("/list")) {
-            String links = scrapperClient.getLinks(chatId);
-            sendMessage(chatId, links.isEmpty() ? "No tracked links" : links);
+            String links = "";
+//                scrapperClient.getLinks(chatId);
+            sendMessage(chatId, links.isEmpty() ? "Нет отслеживаемых ссылок" : links);
         } else {
-            sendMessage(chatId, "Unknown command. Use /help for available commands.");
+            sendMessage(chatId, "Неизвестная команда. Введите /help для просмотра доступных команд.");
         }
+    }
+
+    public void sendLinkUpdate(LinkUpdate linkUpdate) {
+        linkUpdate.tgChatIds().forEach(chatId ->
+            sendMessage(chatId, "Обновление по ссылке: " + linkUpdate.url())
+        );
     }
 
     private void sendMessage(long chatId, String text) {
         bot.execute(new SendMessage(chatId, text));
-    }
-
-    public void sendUpdate(long chatId, String message) {
-        sendMessage(chatId, message);
     }
 }

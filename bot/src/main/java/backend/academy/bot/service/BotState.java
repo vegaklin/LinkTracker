@@ -1,3 +1,8 @@
 package backend.academy.bot.service;
 
-public record BotState(long chatId, State state, String currentLink) {}
+public enum BotState {
+    IDLE,
+    AWAITING_LINK,
+    AWAITING_TAGS,
+    AWAITING_FILTERS
+}

@@ -13,17 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/updates")
 public class LinkUpdateController {
-    private final BotService bot;
+    private final BotService botService;
 
     @Autowired
-    public LinkUpdateController(BotService bot) {
-        this.bot = bot;
+    public LinkUpdateController(BotService botService) {
+        this.botService = botService;
     }
 
     @PostMapping
-    public ResponseEntity<String> handleLinkUpdate(@RequestBody @Valid LinkUpdate update) {
-        update.tgChatIds().forEach(chatId ->
-            bot.sendUpdate(chatId, "Update for " + update.url()));
+    public ResponseEntity<String> handleLinkUpdate(@RequestBody @Valid LinkUpdate linkUpdate) {
+        botService.sendLinkUpdate(linkUpdate);
         return ResponseEntity.ok("Обновление обработано");
     }
 }
