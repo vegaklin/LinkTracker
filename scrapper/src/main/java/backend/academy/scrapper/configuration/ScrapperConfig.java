@@ -1,4 +1,4 @@
-package backend.academy.scrapper;
+package backend.academy.scrapper.configuration;
 
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
