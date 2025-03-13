@@ -7,19 +7,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import backend.academy.scrapper.service.ScrapperService;
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/tg-chat")
+@RequiredArgsConstructor
 public class TelegramChatController {
+
+    private final ScrapperService scrapperService;
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> registerChat(@PathVariable Long id) {
-        // Логика регистрации чата
+        scrapperService.registerChat(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteChat(@PathVariable Long id) {
-        // Логика удаления чата
+        scrapperService.deleteChat(id);
         return ResponseEntity.ok().build();
     }
 }

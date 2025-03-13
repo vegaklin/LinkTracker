@@ -4,6 +4,8 @@ import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
+import backend.academy.scrapper.service.ScrapperService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,16 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 @RestController
 @RequestMapping("/links")
+@RequiredArgsConstructor
 public class LinkController {
+
+    private final ScrapperService scrapperService;
 
     @GetMapping
     public ResponseEntity<ListLinksResponse> getAllLinks(@RequestHeader("Tg-Chat-Id") Long tgChatId) {
-        // Логика получения всех ссылок
-        ListLinksResponse response = new ListLinksResponse(List.of(), 0);
+        ListLinksResponse response = scrapperService.getAllLinks(tgChatId);
         return ResponseEntity.ok(response);
     }
 
@@ -30,8 +33,7 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") Long tgChatId,
         @RequestBody AddLinkRequest request
     ) {
-        // Логика добавления ссылки
-        LinkResponse response = new LinkResponse(1L, request.link(), List.of(), List.of());
+        LinkResponse response = scrapperService.addLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }
 
@@ -40,8 +42,8 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") Long tgChatId,
         @RequestBody RemoveLinkRequest request
     ) {
-        // Логика удаления ссылки
-        LinkResponse response = new LinkResponse(1L, request.link(), List.of(), List.of());
+        LinkResponse response = scrapperService.removeLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }
 }
+
