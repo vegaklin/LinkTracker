@@ -1,11 +1,13 @@
 package backend.academy.scrapper.repository;
 
 import backend.academy.scrapper.dto.LinkResponse;
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class LinkRepository {
     private final Map<Long, List<LinkResponse>> userLinks = new HashMap<>();
 

@@ -1,8 +1,10 @@
 package backend.academy.scrapper.repository;
 
+import org.springframework.stereotype.Repository;
 import java.util.HashSet;
 import java.util.Set;
 
+@Repository
 public class ChatRepository {
     private final Set<Long> chatIds = new HashSet<>();
 
