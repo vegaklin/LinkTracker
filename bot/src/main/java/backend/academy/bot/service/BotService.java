@@ -2,6 +2,9 @@ package backend.academy.bot.service;
 
 import backend.academy.bot.client.ScrapperClient;
 
+import backend.academy.bot.client.dto.AddLinkRequest;
+import backend.academy.bot.client.dto.LinkResponse;
+import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.dto.LinkUpdate;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -59,6 +63,8 @@ public class BotService {
         BotState state = userStates.get(chatId);
 
         if (text.equals("/start")) {
+            System.out.println("add link");
+            scrapperClient.registerChat(chatId).block();
             sendMessage(chatId, "Добро пожаловать! Введи /help для просмотра доступных команд.");
         } else if (text.equals("/help")) {
             sendMessage(chatId, "Команды: /start, /help, /track, /untrack, /list");
@@ -85,8 +91,8 @@ public class BotService {
             String filters = userFilters.getOrDefault(chatId, "Без фильтров");
 
             sendMessage(chatId, "Ссылка: " + link + "\nТеги: " + tags + "\nФильтры: " + filters + "\nСсылка добавлена!");
-
-//            scrapperClient.addLink(chatId, link, tags, new String[0]);
+            System.out.println("add link");
+            scrapperClient.addLink(chatId, new AddLinkRequest(link, List.of(tags), List.of(filters))).block();
         }
         else if (text.startsWith("/untrack")) {
             String[] parts = text.split("\\s+");
@@ -95,9 +101,10 @@ public class BotService {
                 sendMessage(chatId, "Отслеживание ссылки остановлено");
             }
         } else if (text.startsWith("/list")) {
-            String links = "";
-//                scrapperClient.getLinks(chatId);
-            sendMessage(chatId, links.isEmpty() ? "Нет отслеживаемых ссылок" : links);
+            ListLinksResponse links = scrapperClient.getAllLinks(chatId).block();
+            for (LinkResponse link : links.links()) {
+                sendMessage(chatId,link.id() + " " + link.url()+" " + link.filters()+" " + link.tags());
+            }
         } else {
             sendMessage(chatId, "Неизвестная команда. Введите /help для просмотра доступных команд.");
         }

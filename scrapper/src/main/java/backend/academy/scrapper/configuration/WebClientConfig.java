@@ -8,10 +8,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
 
     @Bean
-    public WebClient botWebClient() {
+    public WebClient webClient() {
         return WebClient.builder()
-            .baseUrl("http://localhost:8080") // Базовый URL Bot API
-            .defaultHeader("Content-Type", "application/json")
+            .codecs(config -> config.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB buffer
             .build();
     }
 }

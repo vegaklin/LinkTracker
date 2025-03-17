@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/updates")
 public class LinkUpdateController {
@@ -22,6 +23,7 @@ public class LinkUpdateController {
 
     @PostMapping
     public ResponseEntity<String> handleLinkUpdate(@RequestBody @Valid LinkUpdate linkUpdate) {
+        System.out.println("handleLinkUpdate");
         botService.sendLinkUpdate(linkUpdate);
         return ResponseEntity.ok("Обновление обработано");
     }

@@ -4,8 +4,10 @@ import backend.academy.scrapper.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -26,8 +28,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handleResourceNotFoundException(Exception ex) {
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ApiErrorResponse> handleResourceNotFoundException(MissingRequestHeaderException ex) {
         ApiErrorResponse response = new ApiErrorResponse(
             "Ссылка не найдена",
             "404",

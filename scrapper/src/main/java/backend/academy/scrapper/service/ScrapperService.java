@@ -18,6 +18,7 @@ public class ScrapperService {
     private final LinkRepository linkRepository;
 
     public void registerChat(Long chatId) {
+        System.out.println("123");
         chatRepository.registerChat(chatId);
     }
 
@@ -26,13 +27,14 @@ public class ScrapperService {
     }
 
     public LinkResponse addLink(Long chatId, AddLinkRequest request) {
+        System.out.println("add link");
         if (!chatRepository.existsById(chatId)) {
             throw new RuntimeException("Чат не найден");
         }
 
-        if (linkRepository.existsByUrlAndChatId(request.link(), chatId)) {
-            throw new RuntimeException("Ссылка уже отслеживается");
-        }
+//        if (linkRepository.existsByUrlAndChatId(request.link(), chatId)) {
+//            throw new RuntimeException("Ссылка уже отслеживается");
+//        }
 
         LinkResponse link = new LinkResponse(
             System.currentTimeMillis(), // Генерация ID (временное решение)
@@ -41,6 +43,7 @@ public class ScrapperService {
             request.filters()
         );
         linkRepository.addLink(chatId, link);
+        System.out.println("added link");
         return link;
     }
 

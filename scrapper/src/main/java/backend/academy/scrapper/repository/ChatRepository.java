@@ -1,6 +1,7 @@
 package backend.academy.scrapper.repository;
 
 import org.springframework.stereotype.Repository;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,5 +19,9 @@ public class ChatRepository {
 
     public boolean existsById(Long chatId) {
         return chatIds.contains(chatId);
+    }
+
+    public Set<Long> getChatIds() {
+        return Collections.unmodifiableSet(chatIds); // Return immutable view for safety
     }
 }

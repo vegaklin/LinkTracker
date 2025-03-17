@@ -4,17 +4,23 @@ import backend.academy.bot.client.dto.AddLinkRequest;
 import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.client.dto.RemoveLinkRequest;
+import backend.academy.bot.dto.ApiErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ScrapperClient {
 
-    private final WebClient scrapperWebClient;
+    private final WebClient scrapperWebClient = WebClient.builder()
+        .baseUrl("http://localhost:8081")
+        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .build();
 
     public Mono<Void> registerChat(Long chatId) {
         return scrapperWebClient.post()
@@ -33,7 +39,7 @@ public class ScrapperClient {
     public Mono<ListLinksResponse> getAllLinks(Long chatId) {
         return scrapperWebClient.get()
             .uri("/links")
-            .header(HttpHeaders.AUTHORIZATION, "Tg-Chat-Id " + chatId)
+            .header("Tg-Chat-Id", String.valueOf(chatId))
             .retrieve()
             .bodyToMono(ListLinksResponse.class);
     }
@@ -41,7 +47,7 @@ public class ScrapperClient {
     public Mono<LinkResponse> addLink(Long chatId, AddLinkRequest request) {
         return scrapperWebClient.post()
             .uri("/links")
-            .header(HttpHeaders.AUTHORIZATION, "Tg-Chat-Id " + chatId)
+            .header("Tg-Chat-Id", String.valueOf(chatId))
             .bodyValue(request)
             .retrieve()
             .bodyToMono(LinkResponse.class);
@@ -50,7 +56,7 @@ public class ScrapperClient {
     public Mono<LinkResponse> removeLink(Long chatId, RemoveLinkRequest request) {
         return scrapperWebClient.delete()
             .uri("/links")
-            .header(HttpHeaders.AUTHORIZATION, "Tg-Chat-Id " + chatId)
+            .header("Tg-Chat-Id", String.valueOf(chatId))
 //            .bodyValue(request)
             .retrieve()
             .bodyToMono(LinkResponse.class);
