@@ -16,13 +16,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class ScrapperClient {
 
-    private final WebClient scrapperWebClient = WebClient.builder()
-        .baseUrl("http://localhost:8081")
-        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .build();
+    private final WebClient scrapperWebClient;
 
     public Mono<Void> registerChat(Long chatId) {
         return scrapperWebClient.post()

@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
             ex.getMessage(),
             Arrays.stream(ex.getStackTrace())
                 .map(StackTraceElement::toString)
-                .collect(Collectors.toList())
+                .toList()
         );
         return ResponseEntity.badRequest().body(response);
     }
