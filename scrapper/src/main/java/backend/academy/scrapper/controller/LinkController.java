@@ -43,6 +43,7 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") Long tgChatId,
         @RequestBody RemoveLinkRequest request
     ) {
+        System.out.println("removeLink");
         LinkResponse response = scrapperService.removeLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }

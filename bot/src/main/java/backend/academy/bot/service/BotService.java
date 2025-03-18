@@ -5,6 +5,7 @@ import backend.academy.bot.client.ScrapperClient;
 import backend.academy.bot.client.dto.AddLinkRequest;
 import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
+import backend.academy.bot.client.dto.RemoveLinkRequest;
 import backend.academy.bot.dto.LinkUpdate;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -97,7 +98,7 @@ public class BotService {
         else if (text.startsWith("/untrack")) {
             String[] parts = text.split("\\s+");
             if (parts.length > 1) {
-//                scrapperClient.removeLink(chatId, parts[1]);
+                scrapperClient.removeLink(chatId, new RemoveLinkRequest(parts[1])).block();
                 sendMessage(chatId, "Отслеживание ссылки остановлено");
             }
         } else if (text.startsWith("/list")) {
