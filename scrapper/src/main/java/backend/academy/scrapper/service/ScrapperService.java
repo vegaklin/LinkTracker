@@ -6,9 +6,9 @@ import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
 import backend.academy.scrapper.repository.ChatRepository;
 import backend.academy.scrapper.repository.LinkRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,16 +31,15 @@ public class ScrapperService {
             throw new RuntimeException("Чат не найден");
         }
 
-//        if (linkRepository.existsByUrlAndChatId(request.link(), chatId)) {
-//            throw new RuntimeException("Ссылка уже отслеживается");
-//        }
+        //        if (linkRepository.existsByUrlAndChatId(request.link(), chatId)) {
+        //            throw new RuntimeException("Ссылка уже отслеживается");
+        //        }
 
         LinkResponse link = new LinkResponse(
-            System.currentTimeMillis(), // Генерация ID (временное решение)
-            request.link(),
-            request.tags(),
-            request.filters()
-        );
+                System.currentTimeMillis(), // Генерация ID (временное решение)
+                request.link(),
+                request.tags(),
+                request.filters());
         linkRepository.addLink(chatId, link);
         System.out.println("added link");
         return link;
@@ -51,11 +50,10 @@ public class ScrapperService {
             throw new RuntimeException("Чат не найден");
         }
 
-        LinkResponse link = linkRepository.findAllLinksByChatId(chatId)
-            .stream()
-            .filter(l -> l.url().equals(request.link()))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
+        LinkResponse link = linkRepository.findAllLinksByChatId(chatId).stream()
+                .filter(l -> l.url().equals(request.link()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
 
         linkRepository.removeLink(chatId, request.link());
         return link;

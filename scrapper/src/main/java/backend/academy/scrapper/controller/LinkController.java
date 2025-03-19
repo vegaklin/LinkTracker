@@ -30,20 +30,15 @@ public class LinkController {
 
     @PostMapping
     public ResponseEntity<LinkResponse> addLink(
-        @RequestHeader("Tg-Chat-Id") Long tgChatId,
-        @RequestBody AddLinkRequest request
-    ) {
+            @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody AddLinkRequest request) {
         LinkResponse response = scrapperService.addLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
     public ResponseEntity<LinkResponse> removeLink(
-        @RequestHeader("Tg-Chat-Id") Long tgChatId,
-        @RequestBody RemoveLinkRequest request
-    ) {
+            @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody RemoveLinkRequest request) {
         LinkResponse response = scrapperService.removeLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }
 }
-

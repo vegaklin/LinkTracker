@@ -2,11 +2,11 @@ package backend.academy.bot.service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SetMyCommands;
-import com.pengrad.telegrambot.model.BotCommand;
-import lombok.RequiredArgsConstructor;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -38,16 +38,15 @@ public class BotService {
         });
     }
 
-    private void setTelegramMenuCommands(){
+    private void setTelegramMenuCommands() {
         try {
             log.info("Setting bot menu commands");
             telegramBot.execute(new SetMyCommands(
-                new BotCommand("/start", "регистрация пользователя"),
-                new BotCommand("/help", "вывод списка доступных команд"),
-                new BotCommand("/track", "начать отслеживание ссылки"),
-                new BotCommand("/untrack", "прекратить отслеживание ссылки (аргумент: ссылка)"),
-                new BotCommand("/list", "показать список отслеживаемых ссылок")
-            ));
+                    new BotCommand("/start", "регистрация пользователя"),
+                    new BotCommand("/help", "вывод списка доступных команд"),
+                    new BotCommand("/track", "начать отслеживание ссылки"),
+                    new BotCommand("/untrack", "прекратить отслеживание ссылки (аргумент: ссылка)"),
+                    new BotCommand("/list", "показать список отслеживаемых ссылок")));
             log.info("Bot menu commands successfully set.");
         } catch (RuntimeException e) {
             log.error("Failed to set bot commands: {}", e.getMessage(), e);

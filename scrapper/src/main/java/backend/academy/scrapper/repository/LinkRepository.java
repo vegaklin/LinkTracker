@@ -1,11 +1,11 @@
 package backend.academy.scrapper.repository;
 
 import backend.academy.scrapper.dto.LinkResponse;
-import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class LinkRepository {
@@ -27,8 +27,7 @@ public class LinkRepository {
     }
 
     public boolean existsByUrlAndChatId(String url, Long chatId) {
-        return userLinks.getOrDefault(chatId, List.of())
-            .stream()
-            .anyMatch(link -> link.url().equals(url));
+        return userLinks.getOrDefault(chatId, List.of()).stream()
+                .anyMatch(link -> link.url().equals(url));
     }
 }

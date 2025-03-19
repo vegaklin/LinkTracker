@@ -13,10 +13,11 @@ public class BotClient {
     private final WebClient botWebClient;
 
     public Mono<Void> sendUpdate(LinkUpdate update) {
-        return botWebClient.post()
-            .uri("http://localhost:8080/updates")
-            .bodyValue(update)
-            .retrieve()
-            .bodyToMono(Void.class);
+        return botWebClient
+                .post()
+                .uri("http://localhost:8080/updates")
+                .bodyValue(update)
+                .retrieve()
+                .bodyToMono(Void.class);
     }
 }
