@@ -33,7 +33,6 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") Long tgChatId,
         @RequestBody AddLinkRequest request
     ) {
-        System.out.println("add link");
         LinkResponse response = scrapperService.addLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }
@@ -43,7 +42,6 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") Long tgChatId,
         @RequestBody RemoveLinkRequest request
     ) {
-        System.out.println("removeLink");
         LinkResponse response = scrapperService.removeLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }

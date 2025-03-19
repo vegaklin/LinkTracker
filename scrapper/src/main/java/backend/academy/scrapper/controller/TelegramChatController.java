@@ -20,7 +20,6 @@ public class TelegramChatController {
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> registerChat(@PathVariable Long id) {
-        System.out.println("123");
         scrapperService.registerChat(id);
         return ResponseEntity.ok().build();
     }

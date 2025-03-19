@@ -18,7 +18,6 @@ public class ScrapperService {
     private final LinkRepository linkRepository;
 
     public void registerChat(Long chatId) {
-        System.out.println("123");
         chatRepository.registerChat(chatId);
     }
 

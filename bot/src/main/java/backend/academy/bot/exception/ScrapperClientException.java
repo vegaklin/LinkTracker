@@ -12,5 +12,4 @@ public class ScrapperClientException extends RuntimeException {
         super(errorResponse.description());
         this.errorResponse = errorResponse;
     }
-
 }
