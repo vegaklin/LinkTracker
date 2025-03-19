@@ -1,4 +1,4 @@
-package backend.academy.bot.service;
+package backend.academy.bot.service.model;
 
 public enum BotState {
     IDLE,

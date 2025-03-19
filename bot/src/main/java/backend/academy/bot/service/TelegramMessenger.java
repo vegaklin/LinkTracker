@@ -12,6 +12,10 @@ public class TelegramMessenger {
     private final TelegramBot telegramBot;
 
     public void sendMessage(long chatId, String text) {
-        telegramBot.execute(new SendMessage(chatId, text));
+        try {
+            telegramBot.execute(new SendMessage(chatId, text));
+        } catch (RuntimeException _) {
+
+        }
     }
 }
