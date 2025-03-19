@@ -1,7 +1,7 @@
 package backend.academy.bot.controller;
 
 import backend.academy.bot.dto.LinkUpdate;
-import backend.academy.bot.service.BotService;
+import backend.academy.bot.service.LinkUpdateSenderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LinkUpdateController {
 
-    private final BotService botService;
+    private final LinkUpdateSenderService linkUpdateSenderService;
 
     @PostMapping
     public ResponseEntity<String> handleLinkUpdate(@RequestBody @Valid LinkUpdate linkUpdate) {
-        botService.sendLinkUpdate(linkUpdate);
+        linkUpdateSenderService.sendLinkUpdate(linkUpdate);
         return ResponseEntity.ok("Обновление обработано");
     }
 }

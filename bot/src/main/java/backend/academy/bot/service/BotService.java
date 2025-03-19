@@ -37,7 +37,11 @@ public class BotService {
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(updates -> {
-            updates.forEach(this::processUpdate);
+            try {
+                updates.forEach(this::processUpdate);
+            } catch (Exception _) {
+
+            }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
 
@@ -108,9 +112,5 @@ public class BotService {
         }
     }
 
-    public void sendLinkUpdate(LinkUpdate linkUpdate) {
-        linkUpdate.tgChatIds().forEach(chatId ->
-            telegramMessenger.sendMessage(chatId, "Обновление по ссылке: " + linkUpdate.url())
-        );
-    }
+
 }
