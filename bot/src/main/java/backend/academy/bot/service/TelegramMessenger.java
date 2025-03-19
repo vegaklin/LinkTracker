@@ -18,7 +18,7 @@ public class TelegramMessenger {
             telegramBot.execute(new SendMessage(chatId, text));
             log.info("Message successfully sent to chatId={}", chatId);
         } catch (RuntimeException e) {
-            log.error("Failed to send message to chatId={}. Error: {}", chatId, e.getMessage(), e);
+            log.error("Failed to send message to chatId={}", chatId, e);
         }
     }
 }

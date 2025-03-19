@@ -32,7 +32,7 @@ public class BotService {
             try {
                 updates.forEach(this::processUpdate);
             } catch (RuntimeException e) {
-                log.error("Error while processing updates: {}", e.getMessage(), e);
+                log.error("Error while processing updates", e);
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
@@ -49,7 +49,7 @@ public class BotService {
                     new BotCommand("/list", "показать список отслеживаемых ссылок")));
             log.info("Bot menu commands successfully set.");
         } catch (RuntimeException e) {
-            log.error("Failed to set bot commands: {}", e.getMessage(), e);
+            log.error("Failed to set bot commands", e);
         }
     }
 

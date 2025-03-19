@@ -63,7 +63,7 @@ public class BotProcessUpdateService {
                     .addLink(chatId, new AddLinkRequest(link, List.of(tags), List.of(filters)))
                     .block();
         } else if (message.startsWith("/untrack")) {
-            String[] parts = message.split("\\s+");
+            String[] parts = message.trim().split(" +");
             if (parts.length > 1) {
                 scrapperClient
                         .removeLink(chatId, new RemoveLinkRequest(parts[1]))
