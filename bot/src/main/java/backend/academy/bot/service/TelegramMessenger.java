@@ -14,7 +14,6 @@ public class TelegramMessenger {
     private final TelegramBot telegramBot;
 
     public void sendMessage(long chatId, String text) {
-        log.info("Attempting to send message to chatId={}", chatId);
         try {
             telegramBot.execute(new SendMessage(chatId, text));
             log.info("Message successfully sent to chatId={}", chatId);

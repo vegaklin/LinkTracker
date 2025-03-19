@@ -13,7 +13,6 @@ public class LinkUpdateSenderService {
     private final TelegramMessenger telegramMessenger;
 
     public void sendLinkUpdate(LinkUpdate linkUpdate) {
-        log.info("Sending link update for URL: {} to {} chat(s)", linkUpdate.url(), linkUpdate.tgChatIds().size());
         linkUpdate.tgChatIds().forEach(chatId -> {
             log.info("Sending update to chatId={}", chatId);
             telegramMessenger.sendMessage(chatId, "Новое обновление по ссылке: " + linkUpdate.url());
