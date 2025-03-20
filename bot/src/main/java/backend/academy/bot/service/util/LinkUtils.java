@@ -13,8 +13,8 @@ public class LinkUtils {
         String filters = formatList(link.filters());
 
         return "Ссылка: " + url + System.lineSeparator()
-            + "Теги: " + tags + System.lineSeparator()
-            + "Фильтры: " + filters;
+                + "Теги: " + tags + System.lineSeparator()
+                + "Фильтры: " + filters;
     }
 
     public static String formatList(List<String> items) {
