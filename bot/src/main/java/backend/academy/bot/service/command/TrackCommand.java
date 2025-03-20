@@ -20,7 +20,7 @@ public class TrackCommand implements CommandHandler {
     }
 
     @Override
-    public void handle(long chatId, String message) {
+    public void handle(Long chatId, String message) {
         inMemoryUserStateRepository.setState(chatId, BotState.AWAITING_LINK);
         telegramMessenger.sendMessage(chatId, "Введите ссылку для отслеживания:");
     }

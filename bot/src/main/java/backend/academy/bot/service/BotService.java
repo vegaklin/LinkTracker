@@ -53,7 +53,7 @@ public class BotService {
     }
 
     private void processUpdate(Update update) {
-        long chatId = update.message().chat().id();
+        Long chatId = update.message().chat().id();
         String message = update.message().text();
 
         log.info("Processing update: chatId={}, message={}", chatId, message);

@@ -22,7 +22,7 @@ public class UntrackCommand implements CommandHandler {
     }
 
     @Override
-    public void handle(long chatId, String message) {
+    public void handle(Long chatId, String message) {
         String[] parts = message.trim().split(" ");
         if (isCorrectParts(parts)) {
             telegramMessenger.sendMessage(chatId, "Некорректная команда! Введи также ссылку: /untrack <ссылка>");

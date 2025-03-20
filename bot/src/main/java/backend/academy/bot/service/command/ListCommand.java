@@ -24,7 +24,7 @@ public class ListCommand implements CommandHandler {
     }
 
     @Override
-    public void handle(long chatId, String message) {
+    public void handle(Long chatId, String message) {
         try {
             ListLinksResponse links = scrapperClient.getAllLinks(chatId).block();
             if (isCorrectLinks(links)) {

@@ -16,7 +16,7 @@ public class HelpCommand implements CommandHandler {
     }
 
     @Override
-    public void handle(long chatId, String message) {
+    public void handle(Long chatId, String message) {
         telegramMessenger.sendMessage(chatId,  """
             /start - регистрация пользователя
             /help - вывод списка доступных команд

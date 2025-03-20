@@ -20,7 +20,7 @@ public class StartCommand implements CommandHandler {
     }
 
     @Override
-    public void handle(long chatId, String message) {
+    public void handle(Long chatId, String message) {
         try {
             scrapperClient.deleteChat(chatId).block();
             scrapperClient.registerChat(chatId).block();
