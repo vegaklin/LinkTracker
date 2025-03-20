@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class InMemoryUserLinkRepository implements UserLinkRepository{
+public class InMemoryUserLinkRepository implements UserLinkRepository {
     private final Map<Long, String> userLinks = new HashMap<>();
     private final Map<Long, List<String>> userTags = new HashMap<>();
     private final Map<Long, List<String>> userFilters = new HashMap<>();

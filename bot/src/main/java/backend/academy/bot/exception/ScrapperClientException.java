@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public class ScrapperClientException extends RuntimeException {
 
-    private final ApiErrorResponse errorResponse;
+    private final ApiErrorResponse apiErrorResponse;
 
-    public ScrapperClientException(ApiErrorResponse errorResponse) {
-        super(errorResponse.description());
-        this.errorResponse = errorResponse;
+    public ScrapperClientException(ApiErrorResponse apiErrorResponse) {
+        super(apiErrorResponse.description());
+        this.apiErrorResponse = apiErrorResponse;
     }
 }

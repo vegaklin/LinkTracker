@@ -44,7 +44,7 @@ public class BotService {
                     new BotCommand("/start", "регистрация пользователя"),
                     new BotCommand("/help", "вывод списка доступных команд"),
                     new BotCommand("/track", "начать отслеживание ссылки"),
-                    new BotCommand("/untrack", "прекратить отслеживание ссылки (аргумент: ссылка)"),
+                    new BotCommand("/untrack", "<ссылка> прекратить отслеживание ссылки"),
                     new BotCommand("/list", "показать список отслеживаемых ссылок")));
             log.info("Bot menu commands successfully set.");
         } catch (RuntimeException e) {
