@@ -17,10 +17,8 @@ public class BotProcessUpdateService {
     private final TrackStateMachine trackStateMachine;
 
     void process(Long chatId, String message) {
-        BotState state = trackStateMachine.getBotState(chatId);
-
-        if (state != BotState.DEFAULT) {
-            trackStateMachine.trackProcess(state, chatId, message);
+        if (trackStateMachine.getBotState(chatId) != BotState.DEFAULT) {
+            trackStateMachine.trackProcess(chatId, message);
             return;
         }
         for (CommandHandler commandHandler : commandHandlers) {
