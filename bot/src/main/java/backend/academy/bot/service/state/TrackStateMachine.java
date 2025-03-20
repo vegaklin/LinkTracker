@@ -34,6 +34,7 @@ public class TrackStateMachine {
             case AWAITING_LINK -> handleLink(chatId, message);
             case AWAITING_TAGS -> handleTags(chatId, message);
             case AWAITING_FILTERS -> handleFilters(chatId, message);
+            default -> telegramMessenger.sendMessage(chatId, "Произошла ошибко с состоянием бота, повторите команду!");
         }
     }
 

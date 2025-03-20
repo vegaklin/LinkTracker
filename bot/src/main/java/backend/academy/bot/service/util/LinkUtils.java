@@ -11,12 +11,10 @@ public class LinkUtils {
         String url = link.url();
         String tags = formatList(link.tags());
         String filters = formatList(link.filters());
-        return String.format(
-                """
-               Ссылка: %s
-               Теги: %s
-               Фильтры: %s""",
-                url, tags, filters);
+
+        return "Ссылка: " + url + System.lineSeparator() + "Теги: "
+                + tags + System.lineSeparator() + "Фильтры: "
+                + filters;
     }
 
     public static String formatList(List<String> items) {
