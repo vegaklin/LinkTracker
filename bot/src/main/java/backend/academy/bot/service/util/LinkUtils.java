@@ -11,12 +11,12 @@ public class LinkUtils {
         String url = link.url();
         String tags = formatList(link.tags());
         String filters = formatList(link.filters());
-        return String.format("""
+        return String.format(
+                """
                Ссылка: %s
                Теги: %s
                Фильтры: %s""",
-            url, tags, filters
-        );
+                url, tags, filters);
     }
 
     public static String formatList(List<String> items) {
@@ -36,8 +36,7 @@ public class LinkUtils {
 
     public static boolean isAnyMatchLinks(ListLinksResponse links, String message) {
         return links != null
-            && links.links() != null
-            && links.links().stream()
-            .anyMatch(link -> link.url().equals(message));
+                && links.links() != null
+                && links.links().stream().anyMatch(link -> link.url().equals(message));
     }
 }

@@ -1,9 +1,9 @@
 package backend.academy.bot.service.repository.state;
 
 import backend.academy.bot.service.model.BotState;
-import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryUserStateRepository implements UserStateRepository {

@@ -10,9 +10,9 @@ import backend.academy.bot.service.model.BotState;
 import backend.academy.bot.service.repository.link.UserLinkRepository;
 import backend.academy.bot.service.repository.state.UserStateRepository;
 import backend.academy.bot.service.util.LinkUtils;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -42,18 +42,13 @@ public class TrackStateMachine {
             ListLinksResponse links = scrapperClient.getAllLinks(chatId).block();
             if (LinkUtils.isAnyMatchLinks(links, message)) {
                 telegramMessenger.sendMessage(
-                    chatId,
-                    "Эта ссылка уже добавлена! Введите /track и повторите с новой ссылкой или /help"
-                );
+                        chatId, "Эта ссылка уже добавлена! Введите /track и повторите с новой ссылкой или /help");
                 inMemoryUserStateRepository.setState(chatId, BotState.DEFAULT);
                 return;
             }
         } catch (ScrapperClientException e) {
-            telegramMessenger.sendMessage(chatId,
-                "Ошибка при проверке ссылкина повторение: "
-                + e.getMessage()
-                + "\nПопробуйте еще раз!"
-            );
+            telegramMessenger.sendMessage(
+                    chatId, "Ошибка при проверке ссылкина повторение: " + e.getMessage() + "\nПопробуйте еще раз!");
             inMemoryUserStateRepository.setState(chatId, BotState.DEFAULT);
         }
 
@@ -78,7 +73,9 @@ public class TrackStateMachine {
         inMemoryUserLinkRepository.clear(chatId);
 
         try {
-            LinkResponse linkResponse = scrapperClient.addLink(chatId, new AddLinkRequest(link, tags, filters)).block();
+            LinkResponse linkResponse = scrapperClient
+                    .addLink(chatId, new AddLinkRequest(link, tags, filters))
+                    .block();
             if (linkResponse != null) {
                 telegramMessenger.sendMessage(chatId, "Добавлена ссылка:\n" + LinkUtils.formatLink(linkResponse));
             }

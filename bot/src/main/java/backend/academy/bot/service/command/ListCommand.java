@@ -5,9 +5,9 @@ import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.exception.ScrapperClientException;
 import backend.academy.bot.service.TelegramMessenger;
 import backend.academy.bot.service.util.LinkUtils;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -31,10 +31,9 @@ public class ListCommand implements CommandHandler {
                 return;
             }
 
-            String response = links.links()
-                .stream()
-                .map(LinkUtils::formatLink)
-                .collect(Collectors.joining("\n\n", "Отслеживаемые ссылки: \n", "\n"));
+            String response = links.links().stream()
+                    .map(LinkUtils::formatLink)
+                    .collect(Collectors.joining("\n\n", "Отслеживаемые ссылки: \n", "\n"));
 
             telegramMessenger.sendMessage(chatId, response);
         } catch (ScrapperClientException e) {

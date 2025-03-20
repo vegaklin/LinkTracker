@@ -24,9 +24,11 @@ public class StartCommand implements CommandHandler {
         try {
             scrapperClient.deleteChat(chatId).block();
             scrapperClient.registerChat(chatId).block();
-            telegramMessenger.sendMessage(chatId, "Добро пожаловать! Это бот для отслеживания ссылок. Для получения списка доступных команд, введите /help");
+            telegramMessenger.sendMessage(
+                    chatId,
+                    "Добро пожаловать! Это бот для отслеживания ссылок. Для получения списка доступных команд, введите /help");
         } catch (ScrapperClientException e) {
-            telegramMessenger.sendMessage(chatId,"Ошибка при регистрации чата: " + e.getMessage());
+            telegramMessenger.sendMessage(chatId, "Ошибка при регистрации чата: " + e.getMessage());
         }
     }
 }

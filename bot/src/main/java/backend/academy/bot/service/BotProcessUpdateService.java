@@ -2,8 +2,8 @@ package backend.academy.bot.service;
 
 import backend.academy.bot.service.command.CommandHandler;
 import backend.academy.bot.service.model.BotState;
-import java.util.List;
 import backend.academy.bot.service.state.TrackStateMachine;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

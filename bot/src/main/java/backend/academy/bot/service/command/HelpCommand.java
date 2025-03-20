@@ -17,12 +17,13 @@ public class HelpCommand implements CommandHandler {
 
     @Override
     public void handle(Long chatId, String message) {
-        telegramMessenger.sendMessage(chatId,  """
+        telegramMessenger.sendMessage(
+                chatId,
+                """
             /start - регистрация пользователя
             /help - вывод списка доступных команд
             /track - начать отслеживание ссылки
             /untrack <ссылка> - прекратить отслеживание ссылки
-            /list - показать список отслеживаемых ссылок"""
-        );
+            /list - показать список отслеживаемых ссылок""");
     }
 }

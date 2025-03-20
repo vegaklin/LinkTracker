@@ -31,12 +31,13 @@ public class UntrackCommand implements CommandHandler {
 
         try {
             RemoveLinkRequest removeLinkRequest = new RemoveLinkRequest(parts[1]);
-            LinkResponse linkResponse = scrapperClient.removeLink(chatId, removeLinkRequest).block();
+            LinkResponse linkResponse =
+                    scrapperClient.removeLink(chatId, removeLinkRequest).block();
             if (linkResponse != null) {
                 telegramMessenger.sendMessage(chatId, "Отслеживание ссылки успешно остановлено: " + linkResponse.url());
             }
         } catch (ScrapperClientException e) {
-            telegramMessenger.sendMessage(chatId,"Ошибка при удалении сслыки: " + e.getMessage());
+            telegramMessenger.sendMessage(chatId, "Ошибка при удалении сслыки: " + e.getMessage());
         }
     }
 
