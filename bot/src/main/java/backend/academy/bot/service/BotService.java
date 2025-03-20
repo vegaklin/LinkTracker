@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class BotService {
 
     private final TelegramBot telegramBot;
-
     private final BotProcessUpdateService botProcessUpdateService;
 
     @PostConstruct

@@ -6,9 +6,9 @@ import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.client.dto.RemoveLinkRequest;
 import backend.academy.bot.service.model.BotState;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import backend.academy.bot.service.repository.link.UserLinkRepository;
+import backend.academy.bot.service.repository.state.UserStateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +17,15 @@ import org.springframework.stereotype.Service;
 public class BotProcessUpdateService {
 
     private final TelegramMessenger telegramMessenger;
+
     private final ScrapperClient scrapperClient;
 
-    private Map<Long, String> userLinks = new HashMap<>();
-    private Map<Long, String> userTags = new HashMap<>();
-    private Map<Long, String> userFilters = new HashMap<>();
-    private Map<Long, BotState> userStates = new HashMap<>();
+    private final UserStateRepository inMemoryUserStateRepository;
+    private final UserLinkRepository inMemoryUserLinkRepository;
 
     void process(long chatId, String message) {
-        if (!userStates.containsKey(chatId)) {
-            userStates.put(chatId, BotState.IDLE);
-        }
 
-        BotState state = userStates.get(chatId);
+        BotState state = inMemoryUserStateRepository.getState(chatId);
 
         if (message.equals("/start")) {
             System.out.println("add link");
@@ -38,23 +34,23 @@ public class BotProcessUpdateService {
         } else if (message.equals("/help")) {
             telegramMessenger.sendMessage(chatId, "Команды: /start, /help, /track, /untrack, /list");
         } else if (message.equals("/track")) {
-            userStates.put(chatId, BotState.AWAITING_LINK);
+            inMemoryUserStateRepository.setState(chatId, BotState.AWAITING_LINK);
             telegramMessenger.sendMessage(chatId, "Введите ссылку для отслеживания:");
         } else if (state == BotState.AWAITING_LINK) {
-            userLinks.put(chatId, message);
-            userStates.put(chatId, BotState.AWAITING_TAGS);
+            inMemoryUserLinkRepository.setLink(chatId, message);
+            inMemoryUserStateRepository.setState(chatId, BotState.AWAITING_TAGS);
             telegramMessenger.sendMessage(chatId, "Введите теги:");
         } else if (state == BotState.AWAITING_TAGS) {
-            userTags.put(chatId, message);
-            userStates.put(chatId, BotState.AWAITING_FILTERS);
+            inMemoryUserLinkRepository.setTags(chatId, List.of(message));
+            inMemoryUserStateRepository.setState(chatId, BotState.AWAITING_FILTERS);
             telegramMessenger.sendMessage(chatId, "Введите фильтры:");
         } else if (state == BotState.AWAITING_FILTERS) {
-            userFilters.put(chatId, message);
-            userStates.put(chatId, BotState.IDLE);
+            inMemoryUserLinkRepository.setFilters(chatId, List.of(message));
+            inMemoryUserStateRepository.setState(chatId, BotState.DEFAULT);
 
-            String link = userLinks.get(chatId);
-            String tags = userTags.getOrDefault(chatId, "Без тегов");
-            String filters = userFilters.getOrDefault(chatId, "Без фильтров");
+            String link = inMemoryUserLinkRepository.getLink(chatId);
+            String tags = inMemoryUserLinkRepository.getTags(chatId).getFirst();
+            String filters = inMemoryUserLinkRepository.getFilters(chatId).getFirst();
 
             telegramMessenger.sendMessage(
                     chatId, "Ссылка: " + link + "\nТеги: " + tags + "\nФильтры: " + filters + "\nСсылка добавлена!");
