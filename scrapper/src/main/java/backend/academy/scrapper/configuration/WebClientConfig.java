@@ -10,9 +10,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
 
     @Bean
-    public WebClient botWebClient() {
+    public WebClient botWebClient(BotConfig botConfig) {
         return WebClient.builder()
-            .baseUrl("http://localhost:8080")
+            .baseUrl(botConfig.url())
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
     }
