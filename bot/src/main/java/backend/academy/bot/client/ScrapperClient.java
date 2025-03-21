@@ -63,10 +63,10 @@ public class ScrapperClient {
 
     private <T> Mono<T> handleResponse(ClientResponse response, Class<T> responseType) {
         if (response.statusCode().is2xxSuccessful()) {
-            return response.bodyToMono(responseType).doOnSuccess(result -> log.debug("Successfully: {}", result));
+            return response.bodyToMono(responseType).doOnSuccess(result -> log.info("Successfully: {}", result));
         } else {
             return response.bodyToMono(ApiErrorResponse.class).map(error -> {
-                log.warn("Client error: {} (code: {})", error.description(), error.code());
+                log.error("Client error: {} (code: {})", error.description(), error.code());
                 throw new ScrapperClientException(error);
             });
         }
