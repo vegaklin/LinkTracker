@@ -7,7 +7,6 @@ import backend.academy.scrapper.exception.LinkNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(LinkNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleResourceNotFoundException(LinkNotFoundException ex) {
+    public ResponseEntity<ApiErrorResponse> handleLinkNotFound(LinkNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse(
                 "Ссылка не найдена",
                 "404",

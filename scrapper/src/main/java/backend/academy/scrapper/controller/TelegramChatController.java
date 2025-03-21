@@ -17,13 +17,13 @@ public class TelegramChatController {
     private final ScrapperService scrapperService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<String> registerChat(@PathVariable Long id) {
+    public ResponseEntity<String> handleRegisterChat(@PathVariable Long id) {
         scrapperService.registerChat(id);
         return ResponseEntity.ok("Чат зарегистрирован");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteChat(@PathVariable Long id) {
+    public ResponseEntity<String> handleDeleteChat(@PathVariable Long id) {
         scrapperService.deleteChat(id);
         return ResponseEntity.ok("Чат успешно удалён");
     }

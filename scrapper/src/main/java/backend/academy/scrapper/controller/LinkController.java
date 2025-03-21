@@ -24,13 +24,13 @@ public class LinkController {
     private final ScrapperService scrapperService;
 
     @GetMapping
-    public ResponseEntity<ListLinksResponse> getAllLinks(@RequestHeader("Tg-Chat-Id") Long tgChatId) {
+    public ResponseEntity<ListLinksResponse> handleGetAllLinks(@RequestHeader("Tg-Chat-Id") Long tgChatId) {
         ListLinksResponse response = scrapperService.getAllLinks(tgChatId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<LinkResponse> addLink(
+    public ResponseEntity<LinkResponse> handleAddLink(
             @RequestHeader("Tg-Chat-Id") Long tgChatId,
             @RequestBody @Valid AddLinkRequest request
     ) {
@@ -39,7 +39,7 @@ public class LinkController {
     }
 
     @DeleteMapping
-    public ResponseEntity<LinkResponse> removeLink(
+    public ResponseEntity<LinkResponse> handleRemoveLink(
             @RequestHeader("Tg-Chat-Id") Long tgChatId,
             @RequestBody @Valid RemoveLinkRequest request
     ) {
