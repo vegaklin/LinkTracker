@@ -31,10 +31,6 @@ public class ScrapperService {
             throw new RuntimeException("Чат не найден");
         }
 
-        //        if (linkRepository.existsByUrlAndChatId(request.link(), chatId)) {
-        //            throw new RuntimeException("Ссылка уже отслеживается");
-        //        }
-
         LinkResponse link = new LinkResponse(
                 System.currentTimeMillis(), // Генерация ID (временное решение)
                 request.link(),
