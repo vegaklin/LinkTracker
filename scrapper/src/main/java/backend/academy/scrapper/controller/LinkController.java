@@ -5,6 +5,7 @@ import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
 import backend.academy.scrapper.service.ScrapperService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,14 +31,18 @@ public class LinkController {
 
     @PostMapping
     public ResponseEntity<LinkResponse> addLink(
-            @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody AddLinkRequest request) {
+            @RequestHeader("Tg-Chat-Id") Long tgChatId,
+            @RequestBody @Valid AddLinkRequest request
+    ) {
         LinkResponse response = scrapperService.addLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
     public ResponseEntity<LinkResponse> removeLink(
-            @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody RemoveLinkRequest request) {
+            @RequestHeader("Tg-Chat-Id") Long tgChatId,
+            @RequestBody @Valid RemoveLinkRequest request
+    ) {
         LinkResponse response = scrapperService.removeLink(tgChatId, request);
         return ResponseEntity.ok(response);
     }

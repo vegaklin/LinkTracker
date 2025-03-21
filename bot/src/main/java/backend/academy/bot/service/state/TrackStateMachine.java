@@ -66,6 +66,7 @@ public class TrackStateMachine {
 
     private void handleFilters(Long chatId, String message) {
         inMemoryUserLinkRepository.setFilters(chatId, LinkUtils.splitFiltersAndTags(message));
+        inMemoryUserStateRepository.setState(chatId, BotState.DEFAULT);
 
         String link = inMemoryUserLinkRepository.getLink(chatId);
         List<String> tags = inMemoryUserLinkRepository.getTags(chatId);

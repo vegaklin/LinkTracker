@@ -12,9 +12,9 @@ public class LinkUtils {
         String tags = formatList(link.tags());
         String filters = formatList(link.filters());
 
-        return "Ссылка: " + url + System.lineSeparator()
-                + "Теги: " + tags + System.lineSeparator()
-                + "Фильтры: " + filters;
+        return "Ссылка: " + url
+                + "\nТеги: " + tags
+                + "\nФильтры: " + filters;
     }
 
     public static String formatList(List<String> items) {
@@ -36,5 +36,9 @@ public class LinkUtils {
         return links != null
                 && links.links() != null
                 && links.links().stream().anyMatch(link -> link.url().equals(message));
+    }
+
+    public static boolean isCorrectParts(String[] parts) {
+        return parts.length < 2;
     }
 }

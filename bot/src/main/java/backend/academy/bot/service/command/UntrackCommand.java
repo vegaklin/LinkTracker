@@ -5,6 +5,7 @@ import backend.academy.bot.client.dto.LinkResponse;
 import backend.academy.bot.client.dto.RemoveLinkRequest;
 import backend.academy.bot.exception.ScrapperClientException;
 import backend.academy.bot.service.TelegramMessenger;
+import backend.academy.bot.service.util.LinkUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class UntrackCommand implements CommandHandler {
     @Override
     public void handle(Long chatId, String message) {
         String[] parts = message.trim().split(" ");
-        if (isCorrectParts(parts)) {
+        if (LinkUtils.isCorrectParts(parts)) {
             telegramMessenger.sendMessage(chatId, "Некорректная команда! Введи также ссылку: /untrack <ссылка>");
             return;
         }
@@ -39,9 +40,5 @@ public class UntrackCommand implements CommandHandler {
         } catch (ScrapperClientException e) {
             telegramMessenger.sendMessage(chatId, "Ошибка при удалении сслыки: " + e.getMessage());
         }
-    }
-
-    private boolean isCorrectParts(String[] parts) {
-        return parts.length < 2;
     }
 }
