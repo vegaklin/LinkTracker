@@ -7,9 +7,14 @@ import java.util.Map;
 
 public interface LinkRepository {
     Map<Long, Link> getLinks();
+
     OffsetDateTime getUpdateTime(Long linkId);
+
     void setUpdateTime(Long linkId, OffsetDateTime updateTime);
+
     LinkResponse addLink(Link link);
+
     LinkResponse getLinkById(Long linkId);
+
     Long getIdByUrl(String url);
 }

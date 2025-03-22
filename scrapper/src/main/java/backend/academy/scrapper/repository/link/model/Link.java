@@ -1,6 +1,5 @@
 package backend.academy.scrapper.repository.link.model;
 
-
 import java.time.OffsetDateTime;
 import java.util.List;
 

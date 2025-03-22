@@ -5,12 +5,12 @@ import backend.academy.scrapper.client.dto.LinkUpdate;
 import backend.academy.scrapper.exception.BotClientException;
 import backend.academy.scrapper.repository.chat.ChatLinksRepository;
 import backend.academy.scrapper.repository.chat.ChatRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -24,8 +24,8 @@ public class UpdateSenderService {
 
     public void notifyChatsForLink(Long linkId, String url) {
         Set<Long> chatIds = chatRepository.getChatIds().stream()
-            .filter(chatId -> chatLinksRepository.getLinksForChat(chatId).contains(linkId))
-            .collect(Collectors.toSet());
+                .filter(chatId -> chatLinksRepository.getLinksForChat(chatId).contains(linkId))
+                .collect(Collectors.toSet());
 
         if (!chatIds.isEmpty()) {
             LinkUpdate update = new LinkUpdate(linkId, url, "Обнвружено обновление", new ArrayList<>(chatIds));

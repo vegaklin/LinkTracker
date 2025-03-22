@@ -1,10 +1,10 @@
 package backend.academy.scrapper.repository.chat;
 
-import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryChatLinksRepository implements ChatLinksRepository {

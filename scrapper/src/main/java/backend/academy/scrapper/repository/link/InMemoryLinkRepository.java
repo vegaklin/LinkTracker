@@ -1,10 +1,10 @@
 package backend.academy.scrapper.repository.link;
 
+import backend.academy.scrapper.dto.LinkResponse;
+import backend.academy.scrapper.repository.link.model.Link;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import backend.academy.scrapper.dto.LinkResponse;
-import backend.academy.scrapper.repository.link.model.Link;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,12 +27,7 @@ public class InMemoryLinkRepository implements LinkRepository {
     @Override
     public void setUpdateTime(Long linkId, OffsetDateTime updateTime) {
         Link link = links.get(linkId);
-        Link updatedLink = new Link(
-            link.url(),
-            link.tags(),
-            link.filters(),
-            updateTime
-        );
+        Link updatedLink = new Link(link.url(), link.tags(), link.filters(), updateTime);
         links.put(linkId, updatedLink);
     }
 
@@ -55,9 +50,9 @@ public class InMemoryLinkRepository implements LinkRepository {
     @Override
     public Long getIdByUrl(String url) {
         return links.entrySet().stream()
-            .filter(entry -> entry.getValue().url().equals(url))
-            .map(Map.Entry::getKey)
-            .findFirst()
-            .orElse(null);
+                .filter(entry -> entry.getValue().url().equals(url))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
     }
 }

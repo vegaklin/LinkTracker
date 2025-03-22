@@ -20,15 +20,17 @@ public class GitHubClient {
     private final WebClient githubWebClient;
 
     public Mono<GitHubResponse> getRepository(String owner, String repo) {
-        return githubWebClient.get()
-            .uri("/repos/{owner}/{repo}", owner, repo)
-            .header("Authorization", "Bearer " + scrapperConfig.githubToken())
-            .exchangeToMono(response -> handleResponse(response, GitHubResponse.class, owner, repo));
+        return githubWebClient
+                .get()
+                .uri("/repos/{owner}/{repo}", owner, repo)
+                .header("Authorization", "Bearer " + scrapperConfig.githubToken())
+                .exchangeToMono(response -> handleResponse(response, GitHubResponse.class, owner, repo));
     }
 
     private <T> Mono<T> handleResponse(ClientResponse response, Class<T> responseType, String owner, String repo) {
         if (response.statusCode().is2xxSuccessful()) {
-            return response.bodyToMono(responseType).doOnSuccess(result -> log.info("Fetched GitHub repo: {}/{}: {}", owner, repo, result));
+            return response.bodyToMono(responseType)
+                    .doOnSuccess(result -> log.info("Fetched GitHub repo: {}/{}: {}", owner, repo, result));
         } else {
             return response.bodyToMono(String.class).map(error -> {
                 int statusCode = response.statusCode().value();

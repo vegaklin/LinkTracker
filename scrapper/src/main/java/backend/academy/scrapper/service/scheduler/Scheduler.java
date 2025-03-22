@@ -26,5 +26,4 @@ public class Scheduler {
             updateCheckService.checkLinkUpdate(linkId, url);
         });
     }
-
 }
