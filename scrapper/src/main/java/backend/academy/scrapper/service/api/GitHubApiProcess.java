@@ -16,10 +16,12 @@ public class GitHubApiProcess implements ApiProcess {
 
     private final GitHubClient gitHubClient;
 
+    @Override
     public boolean isApiUrl(String url) {
         return url.contains("github.com");
     }
 
+    @Override
     public Mono<OffsetDateTime> checkUpdate(String url) {
         String[] parts = url.split("/");
         if (parts.length < 5) {

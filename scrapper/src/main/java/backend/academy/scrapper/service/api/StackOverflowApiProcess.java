@@ -16,10 +16,12 @@ public class StackOverflowApiProcess implements ApiProcess {
 
     private final StackOverflowClient stackOverflowClient;
 
+    @Override
     public boolean isApiUrl(String url) {
         return url.contains("stackoverflow.com");
     }
 
+    @Override
     public Mono<OffsetDateTime> checkUpdate(String url) {
         String[] parts = url.split("/");
         if (parts.length < 5) {
