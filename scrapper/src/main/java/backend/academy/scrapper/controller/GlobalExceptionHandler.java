@@ -1,9 +1,9 @@
 package backend.academy.scrapper.controller;
 
 import backend.academy.scrapper.dto.ApiErrorResponse;
+import backend.academy.scrapper.exception.LinkNotFoundException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import backend.academy.scrapper.exception.LinkNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

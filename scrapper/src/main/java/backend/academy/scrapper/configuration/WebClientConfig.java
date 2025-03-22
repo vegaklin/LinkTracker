@@ -12,11 +12,10 @@ public class WebClientConfig {
     @Bean
     public WebClient botWebClient(BotConfig botConfig) {
         return WebClient.builder()
-            .baseUrl(botConfig.url())
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .build();
+                .baseUrl(botConfig.url())
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
-
 
     @Bean
     public WebClient webClient() {

@@ -4,9 +4,12 @@ import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
-import backend.academy.scrapper.repository.ChatRepository;
-import backend.academy.scrapper.repository.LinkRepository;
+import backend.academy.scrapper.repository.chat.ChatLinksRepository;
+import backend.academy.scrapper.repository.chat.ChatRepository;
+import backend.academy.scrapper.repository.link.LinkRepository;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class ScrapperService {
 
     private final ChatRepository chatRepository;
+    private final ChatLinksRepository chatLinksRepository;
     private final LinkRepository linkRepository;
 
     public void registerChat(Long chatId) {
@@ -22,45 +26,27 @@ public class ScrapperService {
     }
 
     public void deleteChat(Long chatId) {
+        chatLinksRepository.removeChatLinks(chatId);
         chatRepository.deleteChat(chatId);
     }
 
-    public LinkResponse addLink(Long chatId, AddLinkRequest request) {
-        System.out.println("add link");
-        if (!chatRepository.existsById(chatId)) {
-            throw new RuntimeException("Чат не найден");
-        }
-
-        LinkResponse link = new LinkResponse(
-                System.currentTimeMillis(), // Генерация ID (временное решение)
-                request.link(),
-                request.tags(),
-                request.filters());
-        linkRepository.addLink(chatId, link);
-        System.out.println("added link");
-        return link;
+    public LinkResponse addLink(Long chatId, AddLinkRequest addLinkRequest) {
+        LinkResponse linkResponse = linkRepository.addLink(addLinkRequest);
+        chatLinksRepository.addLink(chatId, linkResponse.id());
+        return linkResponse;
     }
 
     public LinkResponse removeLink(Long chatId, RemoveLinkRequest request) {
-        if (!chatRepository.existsById(chatId)) {
-            throw new RuntimeException("Чат не найден");
-        }
-
-        LinkResponse link = linkRepository.findAllLinksByChatId(chatId).stream()
-                .filter(l -> l.url().equals(request.link()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
-
-        linkRepository.removeLink(chatId, request.link());
-        return link;
+        Long linkId = linkRepository.getIdByUrl(request.link());
+        chatLinksRepository.removeLink(chatId, linkId);
+        return linkRepository.getLinkById(linkId);
     }
 
     public ListLinksResponse getAllLinks(Long chatId) {
-        if (!chatRepository.existsById(chatId)) {
-            throw new RuntimeException("Чат не найден");
-        }
-
-        List<LinkResponse> links = linkRepository.findAllLinksByChatId(chatId);
+        Set<Long> linkIds = chatLinksRepository.getLinksForChat(chatId);
+        List<LinkResponse> links = linkIds.stream()
+            .map(linkRepository::getLinkById)
+            .collect(Collectors.toList());
         return new ListLinksResponse(links, links.size());
     }
 }

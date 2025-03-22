@@ -12,9 +12,7 @@ public class LinkUtils {
         String tags = formatList(link.tags());
         String filters = formatList(link.filters());
 
-        return "Ссылка: " + url
-                + "\nТеги: " + tags
-                + "\nФильтры: " + filters;
+        return "Ссылка: " + url + "\nТеги: " + tags + "\nФильтры: " + filters;
     }
 
     public static String formatList(List<String> items) {
