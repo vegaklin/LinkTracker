@@ -2,23 +2,26 @@ package backend.academy.scrapper.client;
 
 import backend.academy.scrapper.configuration.ScrapperConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class GitHubClient {
-    private final ScrapperConfig config;
-    private final WebClient webClient;
+
+    private final ScrapperConfig scrapperConfig;
+    private final WebClient githubWebClient;
 
     public Mono<GitHubRepoResponse> getRepository(String owner, String repo) {
-        return webClient
-                .get()
-                .uri("https://api.github.com/repos/{owner}/{repo}", owner, repo)
-                .header("Authorization", "Bearer " + config.githubToken())
-                .header("Accept", "application/vnd.github.v3+json")
-                .retrieve()
-                .bodyToMono(GitHubRepoResponse.class);
+        return githubWebClient.get()
+            .uri("/repos/{owner}/{repo}", owner, repo)
+            .header("Authorization", "Bearer " + scrapperConfig.githubToken())
+            .retrieve()
+            .bodyToMono(GitHubRepoResponse.class)
+            .doOnSuccess(_ -> log.info("Fetched GitHub repo: {}/{}", owner, repo))
+            .doOnError(error -> log.error("Error fetching GitHub repo: {}", error.getMessage()));
     }
 }

@@ -18,9 +18,18 @@ public class WebClientConfig {
     }
 
     @Bean
-    public WebClient webClient() {
+    public WebClient githubWebClient() {
         return WebClient.builder()
-                .codecs(config -> config.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB buffer
-                .build();
+            .baseUrl("https://api.github.com")
+            .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+            .build();
     }
+
+//    @Bean
+//    public WebClient stackOverflowWebClient() {
+//        return WebClient.builder()
+//            .baseUrl("https://api.stackexchange.com")
+//            .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+//            .build();
+//    }
 }

@@ -9,7 +9,6 @@ import backend.academy.scrapper.repository.chat.ChatRepository;
 import backend.academy.scrapper.repository.link.LinkRepository;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,7 @@ public class ScrapperService {
         Set<Long> linkIds = chatLinksRepository.getLinksForChat(chatId);
         List<LinkResponse> links = linkIds.stream()
             .map(linkRepository::getLinkById)
-            .collect(Collectors.toList());
+            .toList();
         return new ListLinksResponse(links, links.size());
     }
 }
