@@ -25,11 +25,11 @@ public class WebClientConfig {
             .build();
     }
 
-//    @Bean
-//    public WebClient stackOverflowWebClient() {
-//        return WebClient.builder()
-//            .baseUrl("https://api.stackexchange.com")
-//            .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-//            .build();
-//    }
+    @Bean
+    public WebClient stackOverflowWebClient() {
+        return WebClient.builder()
+            .baseUrl("https://api.stackexchange.com")
+            .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+            .build();
+    }
 }
