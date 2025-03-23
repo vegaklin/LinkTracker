@@ -28,7 +28,7 @@ public class UpdateSenderService {
                 .collect(Collectors.toSet());
 
         if (!chatIds.isEmpty()) {
-            LinkUpdate update = new LinkUpdate(linkId, url, "Обнвружено обновление", new ArrayList<>(chatIds));
+            LinkUpdate update = new LinkUpdate(linkId, url, "Обнаружено обновление", new ArrayList<>(chatIds));
             try {
                 botClient.sendUpdate(update).block();
             } catch (BotClientException e) {

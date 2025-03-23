@@ -7,8 +7,8 @@ import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.exception.ScrapperClientException;
 import backend.academy.bot.service.TelegramMessenger;
 import backend.academy.bot.service.model.BotState;
-import backend.academy.bot.service.repository.link.UserLinkRepository;
-import backend.academy.bot.service.repository.state.UserStateRepository;
+import backend.academy.bot.service.cache.link.UserLinkRepository;
+import backend.academy.bot.service.cache.state.UserStateRepository;
 import backend.academy.bot.service.util.LinkUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +43,13 @@ public class TrackStateMachine {
             ListLinksResponse links = scrapperClient.getAllLinks(chatId).block();
             if (LinkUtils.isAnyMatchLinks(links, message)) {
                 telegramMessenger.sendMessage(
-                        chatId, "Эта ссылка уже добавлена! Введите /track и повторите с новой ссылкой или /help");
+                        chatId, "Эта ссылка уже добавлена! Введите /track и повторите с новой ссылкой или /help для просмотра доступных команд");
                 inMemoryUserStateRepository.setState(chatId, BotState.DEFAULT);
                 return;
             }
         } catch (ScrapperClientException e) {
             telegramMessenger.sendMessage(
-                    chatId, "Ошибка при проверке ссылкина повторение: " + e.getMessage() + "\nПопробуйте еще раз!");
+                    chatId, "Ошибка при проверке ссылки на повторение: " + e.getMessage() + "\nПопробуйте еще раз!");
             inMemoryUserStateRepository.setState(chatId, BotState.DEFAULT);
         }
 
@@ -82,7 +82,7 @@ public class TrackStateMachine {
                 telegramMessenger.sendMessage(chatId, "Добавлена ссылка:\n" + LinkUtils.formatLink(linkResponse));
             }
         } catch (ScrapperClientException e) {
-            telegramMessenger.sendMessage(chatId, "Ошибка при созранении ссылки: " + e.getMessage());
+            telegramMessenger.sendMessage(chatId, "Ошибка при сохранении ссылки: " + e.getMessage());
         }
     }
 }

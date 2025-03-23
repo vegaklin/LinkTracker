@@ -1,4 +1,4 @@
-package backend.academy.bot.service.repository.link;
+package backend.academy.bot.service.cache.link;
 
 import java.util.List;
 

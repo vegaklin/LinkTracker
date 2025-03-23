@@ -2,7 +2,7 @@ package backend.academy.bot.service.command;
 
 import backend.academy.bot.service.TelegramMessenger;
 import backend.academy.bot.service.model.BotState;
-import backend.academy.bot.service.repository.state.UserStateRepository;
+import backend.academy.bot.service.cache.state.UserStateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

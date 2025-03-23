@@ -1,4 +1,4 @@
-package backend.academy.bot.service.repository.state;
+package backend.academy.bot.service.cache.state;
 
 import backend.academy.bot.service.model.BotState;
 
