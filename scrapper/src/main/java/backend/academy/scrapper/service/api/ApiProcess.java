@@ -5,5 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface ApiProcess {
     boolean isApiUrl(String url);
+
     Mono<OffsetDateTime> checkUpdate(String url);
 }
