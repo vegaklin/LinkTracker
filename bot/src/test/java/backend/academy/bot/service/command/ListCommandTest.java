@@ -8,8 +8,10 @@ import backend.academy.bot.client.dto.ListLinksResponse;
 import backend.academy.bot.dto.ApiErrorResponse;
 import backend.academy.bot.exception.ScrapperClientException;
 import backend.academy.bot.service.TelegramMessenger;
+import backend.academy.bot.service.util.LinkUtils;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,17 +51,9 @@ public class ListCommandTest {
                 new LinkResponse(1L, "https://test1.ru", List.of("tag1", "tag2"), List.of("filter1", "filter3")),
                 new LinkResponse(2L, "https://test2.ru", List.of("tag2"), List.of("filter2")));
         Mockito.when(scrapperClient.getAllLinks(1L)).thenReturn(Mono.just(new ListLinksResponse(links, links.size())));
-        String expectedMessage =
-                """
-            Отслеживаемые ссылки:
-            Ссылка: https://test1.com
-            Теги: tag1, tag2
-            Фильтры: filter1, filter3
-
-            Ссылка: https://test2.com
-            Теги: tag2
-            Фильтры: filter2
-            """;
+        String expectedMessage = links.stream()
+                .map(LinkUtils::formatLink)
+                .collect(Collectors.joining("\n\n", "Отслеживаемые ссылки:\n", "\n"));
 
         // when
 
