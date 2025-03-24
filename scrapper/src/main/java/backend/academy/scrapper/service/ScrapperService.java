@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ScrapperService {
 
-    private final UpdateCheckService linkService;
+    private final UpdateCheckService updateCheckService;
 
     private final ChatRepository chatRepository;
     private final ChatLinksRepository chatLinksRepository;
@@ -38,7 +38,7 @@ public class ScrapperService {
                 addLinkRequest.link(),
                 addLinkRequest.tags(),
                 addLinkRequest.filters(),
-                linkService.checkUpdate(addLinkRequest.link()).block());
+                updateCheckService.checkUpdate(addLinkRequest.link()).block());
         LinkResponse linkResponse = linkRepository.addLink(link);
         chatLinksRepository.addLink(chatId, linkResponse.id());
         return linkResponse;
