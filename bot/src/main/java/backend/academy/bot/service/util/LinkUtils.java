@@ -8,6 +8,9 @@ import java.util.List;
 public class LinkUtils {
 
     public static String formatLink(LinkResponse link) {
+        if (link == null) {
+            return "Ссылка отсутствует";
+        }
         String url = link.url();
         String tags = formatList(link.tags());
         String filters = formatList(link.filters());
@@ -27,7 +30,10 @@ public class LinkUtils {
     }
 
     public static List<String> splitFiltersAndTags(String message) {
-        return Arrays.asList(message.trim().split(" "));
+        if (message == null || message.isEmpty()) {
+            return List.of();
+        }
+        return Arrays.asList(message.trim().split("\\s+"));
     }
 
     public static boolean isAnyMatchLinks(ListLinksResponse links, String message) {

@@ -33,7 +33,7 @@ public class ListCommand implements CommandHandler {
 
             String response = links.links().stream()
                     .map(LinkUtils::formatLink)
-                    .collect(Collectors.joining("\n\n", "Отслеживаемые ссылки: \n", "\n"));
+                    .collect(Collectors.joining("\n\n", "Отслеживаемые ссылки:\n", "\n"));
 
             telegramMessenger.sendMessage(chatId, response);
         } catch (ScrapperClientException e) {
