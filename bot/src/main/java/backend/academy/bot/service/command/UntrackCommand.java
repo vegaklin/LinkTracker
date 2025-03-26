@@ -48,7 +48,7 @@ public class UntrackCommand implements CommandHandler {
                 log.warn("Received null response when untracking link '{}' for chatId {}", link, chatId);
             }
         } catch (ScrapperClientException e) {
-            log.error("Error while untracking link '{}' for chatId {}: {}", link, chatId, e.getMessage(), e);
+            log.error("Error while untracking link '{}' for chatId {}", link, chatId, e);
             telegramMessenger.sendMessage(chatId, "Ошибка при удалении сслыки: " + e.getMessage());
         }
     }

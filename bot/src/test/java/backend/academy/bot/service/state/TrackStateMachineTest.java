@@ -128,7 +128,7 @@ class TrackStateMachineTest {
 
         // then
 
-        Mockito.verify(telegramMessenger).sendMessage(1L, "Произошла ошибко с состоянием бота, повторите команду!");
+        Mockito.verify(telegramMessenger).sendMessage(1L, "Произошла ошибка с состоянием бота, повторите команду!");
         Mockito.verifyNoInteractions(inMemoryUserLinkRepository, scrapperClient);
     }
 }
