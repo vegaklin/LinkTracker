@@ -27,7 +27,7 @@ public class LinkController {
 
     @GetMapping
     public ResponseEntity<ListLinksResponse> handleGetAllLinks(@RequestHeader("Tg-Chat-Id") Long tgChatId) {
-        log.info("Received request to get all links for chatId: {}", tgChatId);
+        log.info("Received request to get all links for chatId: {}", tgChatId.toString());
         ListLinksResponse response = scrapperService.getAllLinks(tgChatId);
         log.info("Returning {} links for chatId: {}", response.links().size(), tgChatId);
         return ResponseEntity.ok(response);
@@ -36,7 +36,7 @@ public class LinkController {
     @PostMapping
     public ResponseEntity<LinkResponse> handleAddLink(
             @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody @Valid AddLinkRequest request) {
-        log.info("Received request to add link '{}' for chatId: {}", request.link(), tgChatId);
+        log.info("Received request to add link '{}' for chatId: {}", request.link(), tgChatId.toString());
         LinkResponse response = scrapperService.addLink(tgChatId, request);
         log.info("Successfully added link '{}' for chatId: {}", response.url(), tgChatId);
         return ResponseEntity.ok(response);
@@ -45,7 +45,7 @@ public class LinkController {
     @DeleteMapping
     public ResponseEntity<LinkResponse> handleRemoveLink(
             @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody @Valid RemoveLinkRequest request) {
-        log.info("Received request to remove link '{}' for chatId: {}", request.link(), tgChatId);
+        log.info("Received request to remove link '{}' for chatId: {}", request.link(), tgChatId.toString());
         LinkResponse response = scrapperService.removeLink(tgChatId, request);
         log.info("Successfully removed link '{}' for chatId: {}", response.url(), tgChatId);
         return ResponseEntity.ok(response);

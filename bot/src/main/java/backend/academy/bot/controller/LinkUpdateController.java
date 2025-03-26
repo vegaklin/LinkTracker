@@ -21,7 +21,7 @@ public class LinkUpdateController {
 
     @PostMapping
     public ResponseEntity<String> handleLinkUpdate(@RequestBody @Valid LinkUpdate linkUpdate) {
-        log.info("Received link update: {}", linkUpdate);
+        log.info("Received link update: {}", linkUpdate.url());
         linkUpdateSenderService.sendLinkUpdate(linkUpdate);
         log.info("Link update processed successfully");
         return ResponseEntity.ok("Обновление обработано");
