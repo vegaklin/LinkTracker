@@ -22,7 +22,7 @@ public class TelegramChatController {
     public ResponseEntity<String> handleRegisterChat(@PathVariable Long id) {
         log.info("Received request to register chat with id: {}", id.toString());
         scrapperService.registerChat(id);
-        log.info("Chat with id {} registered successfully", id);
+        log.info("Chat with id {} registered successfully", id.toString());
         return ResponseEntity.ok("Чат зарегистрирован");
     }
 
@@ -30,7 +30,7 @@ public class TelegramChatController {
     public ResponseEntity<String> handleDeleteChat(@PathVariable Long id) {
         log.info("Received request to delete chat with id: {}", id.toString());
         scrapperService.deleteChat(id);
-        log.info("Chat with id {} deleted successfully", id);
+        log.info("Chat with id {} deleted successfully", id.toString());
         return ResponseEntity.ok("Чат успешно удалён");
     }
 }

@@ -82,7 +82,7 @@ public class ScrapperService {
                     return link;
                 })
                 .toList();
-        log.info("Found {} links for chat id {}", links.size(), chatId);
+        log.info("Found {} links for chat id {}", links.size(), chatId.toString());
         return new ListLinksResponse(links, links.size());
     }
 }
