@@ -21,6 +21,7 @@ public class UpdateCheckService {
     private final UpdateSenderService updateSenderService;
 
     public void checkLinkUpdate(Long linkId, String url) {
+        log.info("Checking for updates for linkId: {}, url: {}", linkId, url);
         OffsetDateTime lastUpdate = checkUpdate(url).block();
         if (lastUpdate != null) {
             OffsetDateTime previousUpdate = linkRepository.getUpdateTime(linkId);
@@ -28,18 +29,26 @@ public class UpdateCheckService {
                 log.info("Update detected for linkId: {}, url: {}", linkId, url);
                 linkRepository.setUpdateTime(linkId, lastUpdate);
                 updateSenderService.notifyChatsForLink(linkId, url);
+            } else {
+                log.info("No update for linkId: {}, url: {}", linkId, url);
             }
         } else {
-            log.warn("No update time received for linkId: {}", linkId);
+            log.info("No update time received for linkId: {}", linkId);
         }
     }
 
     public Mono<OffsetDateTime> checkUpdate(String url) {
+        log.info("Checking update for url: {}", url);
         for (ApiProcess apiProcess : apiProcessList) {
             if (apiProcess.isApiUrl(url)) {
+                log.info(
+                        "API process found for url: {}, processing with {}",
+                        url,
+                        apiProcess.getClass().getSimpleName());
                 return apiProcess.checkUpdate(url);
             }
         }
+        log.warn("No API process found for url: {}", url);
         return Mono.empty();
     }
 }

@@ -23,6 +23,8 @@ public class UpdateSenderService {
     private final ChatRepository chatRepository;
 
     public void notifyChatsForLink(Long linkId, String url) {
+        log.info("Notifying chats for linkId: {}, url: {}", linkId, url);
+
         Set<Long> chatIds = chatRepository.getChatIds().stream()
                 .filter(chatId -> chatLinksRepository.getLinksForChat(chatId).contains(linkId))
                 .collect(Collectors.toSet());
@@ -30,7 +32,9 @@ public class UpdateSenderService {
         if (!chatIds.isEmpty()) {
             LinkUpdate update = new LinkUpdate(linkId, url, "Обнаружено обновление", new ArrayList<>(chatIds));
             try {
+                log.info("Sending update for linkId: {} to {} chats", linkId, chatIds.size());
                 botClient.sendUpdate(update).block();
+                log.info("Update sent successfully for linkId: {}", linkId);
             } catch (BotClientException e) {
                 log.error("Bot client update error: ", e);
             }

@@ -4,17 +4,21 @@ import backend.academy.scrapper.dto.ApiErrorResponse;
 import backend.academy.scrapper.exception.LinkNotFoundException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleBadRequest(MethodArgumentNotValidException ex) {
+        log.error("Error processing request parameters", ex);
+
         ApiErrorResponse response = new ApiErrorResponse(
                 "Некорректные параметры запроса",
                 "400",
@@ -28,6 +32,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LinkNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleLinkNotFound(LinkNotFoundException ex) {
+        log.warn("Link not found exception", ex);
+
         ApiErrorResponse response = new ApiErrorResponse(
                 "Ссылка не найдена",
                 "404",

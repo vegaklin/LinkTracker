@@ -23,6 +23,8 @@ public class StackOverflowApiProcess implements ApiProcess {
 
     @Override
     public Mono<OffsetDateTime> checkUpdate(String url) {
+        log.info("Processing update for stackoverflow url {}", url);
+
         String[] parts = url.split("/");
         if (parts.length < 5) {
             log.warn("Invalid StackOverflow URL format: {}", url);
