@@ -48,7 +48,8 @@ public class ListCommandTest {
         // given
 
         List<LinkResponse> links = List.of(
-                new LinkResponse(1L, "https://test1.ru", List.of("tag1", "tag2"), List.of("filter:filter1", "filter:filter3")),
+                new LinkResponse(
+                        1L, "https://test1.ru", List.of("tag1", "tag2"), List.of("filter:filter1", "filter:filter3")),
                 new LinkResponse(2L, "https://test2.ru", List.of("tag2"), List.of("filter:filter2")));
         Mockito.when(scrapperClient.getAllLinks(1L)).thenReturn(Mono.just(new ListLinksResponse(links, links.size())));
         String expectedMessage = links.stream()

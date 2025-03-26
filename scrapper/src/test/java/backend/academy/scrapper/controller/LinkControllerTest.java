@@ -1,10 +1,13 @@
 package backend.academy.scrapper.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
 import backend.academy.scrapper.service.ScrapperService;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +16,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class LinkControllerTest {
@@ -29,10 +30,8 @@ class LinkControllerTest {
     void checkHandleGetAllLinksValidRequestReturnOk() {
         // given
 
-        ListLinksResponse listLinksResponse = new ListLinksResponse(List.of(
-            new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"))),
-            1
-        );
+        ListLinksResponse listLinksResponse = new ListLinksResponse(
+                List.of(new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"))), 1);
 
         Mockito.when(scrapperService.getAllLinks(1L)).thenReturn(listLinksResponse);
 
@@ -52,7 +51,8 @@ class LinkControllerTest {
     void checkHandleAddLinkValidRequestReturnOk() {
         // given
 
-        AddLinkRequest addLinkRequest = new AddLinkRequest("https://test.ru", List.of("tag1"), List.of("filter:filter1"));
+        AddLinkRequest addLinkRequest =
+                new AddLinkRequest("https://test.ru", List.of("tag1"), List.of("filter:filter1"));
         LinkResponse linkResponse = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
 
         Mockito.when(scrapperService.addLink(1L, addLinkRequest)).thenReturn(linkResponse);

@@ -1,7 +1,14 @@
 package backend.academy.scrapper.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import backend.academy.scrapper.repository.link.LinkRepository;
 import backend.academy.scrapper.service.api.ApiProcess;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,12 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateCheckServiceTest {
@@ -37,18 +38,21 @@ class UpdateCheckServiceTest {
 
     @BeforeEach
     void setUp() {
-        updateCheckService = new UpdateCheckService(linkRepository, List.of(gitHubApiProcess, stackOverflowApiProcess), updateSenderService);
+        updateCheckService = new UpdateCheckService(
+                linkRepository, List.of(gitHubApiProcess, stackOverflowApiProcess), updateSenderService);
     }
 
     @Test
     void checkLinkUpdateCheckSuccessfulUpdate() {
         // given
 
-        OffsetDateTime oldTime = OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC).minusDays(1);
+        OffsetDateTime oldTime =
+                OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC).minusDays(1);
         OffsetDateTime newTime = OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC);
 
         Mockito.when(gitHubApiProcess.isApiUrl("https://github.com/owner/repo")).thenReturn(true);
-        Mockito.when(gitHubApiProcess.checkUpdate("https://github.com/owner/repo")).thenReturn(Mono.just(newTime));
+        Mockito.when(gitHubApiProcess.checkUpdate("https://github.com/owner/repo"))
+                .thenReturn(Mono.just(newTime));
         Mockito.when(linkRepository.getUpdateTime(1L)).thenReturn(oldTime);
 
         // when
@@ -67,7 +71,8 @@ class UpdateCheckServiceTest {
         // given
 
         Mockito.when(gitHubApiProcess.isApiUrl("https://github.com/owner/repo")).thenReturn(true);
-        Mockito.when(gitHubApiProcess.checkUpdate("https://github.com/owner/repo")).thenReturn(Mono.empty());
+        Mockito.when(gitHubApiProcess.checkUpdate("https://github.com/owner/repo"))
+                .thenReturn(Mono.empty());
 
         // when
 
@@ -87,7 +92,8 @@ class UpdateCheckServiceTest {
         OffsetDateTime currentTime = OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC);
 
         Mockito.when(gitHubApiProcess.isApiUrl("https://github.com/owner/repo")).thenReturn(true);
-        Mockito.when(gitHubApiProcess.checkUpdate("https://github.com/owner/repo")).thenReturn(Mono.just(currentTime));
+        Mockito.when(gitHubApiProcess.checkUpdate("https://github.com/owner/repo"))
+                .thenReturn(Mono.just(currentTime));
         Mockito.when(linkRepository.getUpdateTime(1L)).thenReturn(currentTime);
 
         // when
@@ -107,13 +113,18 @@ class UpdateCheckServiceTest {
 
         OffsetDateTime updateTime = OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC);
 
-        Mockito.when(gitHubApiProcess.isApiUrl("https://stackoverflow.com/questions")).thenReturn(false);
-        Mockito.when(stackOverflowApiProcess.isApiUrl("https://stackoverflow.com/questions")).thenReturn(true);
-        Mockito.when(stackOverflowApiProcess.checkUpdate("https://stackoverflow.com/questions")).thenReturn(Mono.just(updateTime));
+        Mockito.when(gitHubApiProcess.isApiUrl("https://stackoverflow.com/questions"))
+                .thenReturn(false);
+        Mockito.when(stackOverflowApiProcess.isApiUrl("https://stackoverflow.com/questions"))
+                .thenReturn(true);
+        Mockito.when(stackOverflowApiProcess.checkUpdate("https://stackoverflow.com/questions"))
+                .thenReturn(Mono.just(updateTime));
 
         // when
 
-        OffsetDateTime result = updateCheckService.checkUpdate("https://stackoverflow.com/questions").block();
+        OffsetDateTime result = updateCheckService
+                .checkUpdate("https://stackoverflow.com/questions")
+                .block();
 
         // then
         assertNotNull(result);
@@ -126,12 +137,16 @@ class UpdateCheckServiceTest {
     void checkUpdateCheckNoMatchingApiProcess() {
         // given
 
-        Mockito.when(gitHubApiProcess.isApiUrl("https://stackoverflow.com/questions")).thenReturn(false);
-        Mockito.when(stackOverflowApiProcess.isApiUrl("https://stackoverflow.com/questions")).thenReturn(false);
+        Mockito.when(gitHubApiProcess.isApiUrl("https://stackoverflow.com/questions"))
+                .thenReturn(false);
+        Mockito.when(stackOverflowApiProcess.isApiUrl("https://stackoverflow.com/questions"))
+                .thenReturn(false);
 
         // when
 
-        OffsetDateTime result = updateCheckService.checkUpdate("https://stackoverflow.com/questions").block();
+        OffsetDateTime result = updateCheckService
+                .checkUpdate("https://stackoverflow.com/questions")
+                .block();
 
         // then
 

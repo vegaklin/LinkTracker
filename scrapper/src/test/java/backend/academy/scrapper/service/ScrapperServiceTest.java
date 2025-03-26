@@ -1,5 +1,8 @@
 package backend.academy.scrapper.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
@@ -9,6 +12,10 @@ import backend.academy.scrapper.repository.chat.ChatLinksRepository;
 import backend.academy.scrapper.repository.chat.ChatRepository;
 import backend.academy.scrapper.repository.link.LinkRepository;
 import backend.academy.scrapper.repository.link.model.Link;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,12 +23,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Set;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ScrapperServiceTest {
@@ -123,8 +124,8 @@ class ScrapperServiceTest {
 
         // when-then
 
-        LinkNotFoundException exception = assertThrows(LinkNotFoundException.class,
-            () -> scrapperService.removeLink(1L, request));
+        LinkNotFoundException exception =
+                assertThrows(LinkNotFoundException.class, () -> scrapperService.removeLink(1L, request));
         assertEquals("Ссылка не найдена для URL: https://test.ru", exception.getMessage());
 
         Mockito.verify(linkRepository).getIdByUrl("https://test.ru");
@@ -142,8 +143,8 @@ class ScrapperServiceTest {
 
         // when-then
 
-        LinkNotFoundException exception = assertThrows(LinkNotFoundException.class,
-            () -> scrapperService.removeLink(1L, request));
+        LinkNotFoundException exception =
+                assertThrows(LinkNotFoundException.class, () -> scrapperService.removeLink(1L, request));
         assertEquals("Ссылка с id " + 1L + " не найдена для чата с id " + 1L, exception.getMessage());
 
         Mockito.verify(linkRepository).getIdByUrl("https://test.ru");
@@ -183,8 +184,8 @@ class ScrapperServiceTest {
 
         // when-then
 
-        LinkNotFoundException exception = assertThrows(LinkNotFoundException.class,
-            () -> scrapperService.getAllLinks(1L));
+        LinkNotFoundException exception =
+                assertThrows(LinkNotFoundException.class, () -> scrapperService.getAllLinks(1L));
         assertEquals("Ссылка с id " + 1L + " не найдена", exception.getMessage());
 
         Mockito.verify(chatLinksRepository).getLinksForChat(1L);

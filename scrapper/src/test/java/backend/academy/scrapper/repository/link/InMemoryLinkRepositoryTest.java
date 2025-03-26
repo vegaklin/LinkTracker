@@ -1,16 +1,17 @@
 package backend.academy.scrapper.repository.link;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.repository.link.model.Link;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class InMemoryLinkRepositoryTest {
 
@@ -25,7 +26,11 @@ class InMemoryLinkRepositoryTest {
     void checkAddLink() {
         // given
 
-        Link link = new Link("https://test.ru", List.of("tag1"), List.of("filter:filter1"), OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
+        Link link = new Link(
+                "https://test.ru",
+                List.of("tag1"),
+                List.of("filter:filter1"),
+                OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
 
         // when
 
@@ -56,7 +61,11 @@ class InMemoryLinkRepositoryTest {
     void checkGetUpdateTime() {
         // given
 
-        Link link = new Link("https://test.ru", List.of("tag1"), List.of("filter:filter1"), OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
+        Link link = new Link(
+                "https://test.ru",
+                List.of("tag1"),
+                List.of("filter:filter1"),
+                OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
         repository.addLink(link);
 
         // when
@@ -72,9 +81,14 @@ class InMemoryLinkRepositoryTest {
     void checkSetUpdateTime() {
         // given
 
-        Link link = new Link("https://test.ru", List.of("tag1"), List.of("filter:filter1"), OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
+        Link link = new Link(
+                "https://test.ru",
+                List.of("tag1"),
+                List.of("filter:filter1"),
+                OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
         repository.addLink(link);
-        OffsetDateTime newTime = OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC).plusDays(1);
+        OffsetDateTime newTime =
+                OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC).plusDays(1);
 
         // when
 
@@ -93,7 +107,11 @@ class InMemoryLinkRepositoryTest {
     void checkGetLinkByIdExisting() {
         // given
 
-        Link link = new Link("https://test.ru", List.of("tag1"), List.of("filter:filter1"), OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
+        Link link = new Link(
+                "https://test.ru",
+                List.of("tag1"),
+                List.of("filter:filter1"),
+                OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
         repository.addLink(link);
 
         // when
@@ -123,7 +141,11 @@ class InMemoryLinkRepositoryTest {
     void checkGetIdByUrlExisting() {
         // given
 
-        Link link = new Link("https://test.ru", List.of("tag1"), List.of("filter:filter1"), OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
+        Link link = new Link(
+                "https://test.ru",
+                List.of("tag1"),
+                List.of("filter:filter1"),
+                OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC));
         repository.addLink(link);
 
         // when

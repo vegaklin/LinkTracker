@@ -47,7 +47,8 @@ class TrackStateMachineTest {
                 .thenReturn(BotState.AWAITING_FILTERS);
         Mockito.when(scrapperClient.getAllLinks(1L)).thenReturn(Mono.just(new ListLinksResponse(List.of(), 0)));
         Mockito.when(scrapperClient.addLink(Mockito.eq(1L), Mockito.any(AddLinkRequest.class)))
-                .thenReturn(Mono.just(new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"))));
+                .thenReturn(
+                        Mono.just(new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"))));
 
         // when
 
