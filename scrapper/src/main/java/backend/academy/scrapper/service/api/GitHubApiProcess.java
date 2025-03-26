@@ -23,6 +23,9 @@ public class GitHubApiProcess implements ApiProcess {
 
     @Override
     public Mono<OffsetDateTime> checkUpdate(String url) {
+        if (url == null) {
+            return Mono.empty();
+        }
         String[] parts = url.split("/");
         if (parts.length < 5) {
             log.warn("Invalid GitHub URL format: {}", url);
