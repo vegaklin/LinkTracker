@@ -23,18 +23,15 @@ public class GitHubApiProcess implements ApiProcess {
 
     @Override
     public Mono<OffsetDateTime> checkUpdate(String url) {
-        if (url == null) {
-            return Mono.empty();
-        }
-        String[] parts = url.split("/");
-        if (parts.length < 5) {
+        String[] parts = url.split("/+");
+        if (parts.length < 4) {
             log.warn("Invalid GitHub URL format: {}", url);
             return Mono.empty();
         }
 
         try {
-            String owner = parts[3];
-            String repo = parts[4];
+            String owner = parts[2];
+            String repo = parts[3];
             return gitHubClient.getRepository(owner, repo).map(GitHubResponse::updatedAt);
         } catch (ApiClientException e) {
             log.error("Error parsing URL {}: ", url, e);
