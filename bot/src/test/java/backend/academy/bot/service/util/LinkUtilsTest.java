@@ -16,8 +16,8 @@ public class LinkUtilsTest {
     void checkFormatLinkWithTagsAndFilters() {
         // given
 
-        LinkResponse link = new LinkResponse(1L, "https://test.ru", List.of("tag1", "tag2"), List.of("filter1"));
-        String expected = "Ссылка: https://test.ru\nТеги: tag1, tag2\nФильтры: filter1";
+        LinkResponse link = new LinkResponse(1L, "https://test.ru", List.of("tag1", "tag2"), List.of("filter:filter1"));
+        String expected = "Ссылка: https://test.ru\nТеги: tag1, tag2\nФильтры: filter:filter1";
 
         // when
 

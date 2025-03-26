@@ -47,13 +47,13 @@ class TrackStateMachineTest {
                 .thenReturn(BotState.AWAITING_FILTERS);
         Mockito.when(scrapperClient.getAllLinks(1L)).thenReturn(Mono.just(new ListLinksResponse(List.of(), 0)));
         Mockito.when(scrapperClient.addLink(Mockito.eq(1L), Mockito.any(AddLinkRequest.class)))
-                .thenReturn(Mono.just(new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter1"))));
+                .thenReturn(Mono.just(new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"))));
 
         // when
 
         trackStateMachine.trackProcess(1L, "https://test.ru");
         trackStateMachine.trackProcess(1L, "tag1 tag2");
-        trackStateMachine.trackProcess(1L, "filter1 filter2");
+        trackStateMachine.trackProcess(1L, "filter:filter1 filter:filter2");
 
         // then
 
@@ -65,7 +65,7 @@ class TrackStateMachineTest {
         Mockito.verify(inMemoryUserStateRepository).setState(1L, BotState.AWAITING_FILTERS);
         Mockito.verify(telegramMessenger).sendMessage(1L, "Введите фильтры через пробел:");
 
-        Mockito.verify(inMemoryUserLinkRepository).setFilters(1L, List.of("filter1", "filter2"));
+        Mockito.verify(inMemoryUserLinkRepository).setFilters(1L, List.of("filter:filter1", "filter:filter2"));
         Mockito.verify(inMemoryUserStateRepository).setState(1L, BotState.DEFAULT);
         Mockito.verify(inMemoryUserLinkRepository).clear(1L);
         Mockito.verify(telegramMessenger).sendMessage(Mockito.eq(1L), Mockito.startsWith("Добавлена ссылка:"));

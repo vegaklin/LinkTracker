@@ -85,7 +85,7 @@ class InMemoryUserLinkRepositoryTest {
         // given
 
         long chatId = 1L;
-        List<String> expectedFilters = List.of("filter1", "filter2");
+        List<String> expectedFilters = List.of("filter:filter1", "filter:filter2");
 
         // when
 
@@ -120,7 +120,7 @@ class InMemoryUserLinkRepositoryTest {
         repository.setLink(chatId, "http://test.ru");
         repository.setTags(chatId, List.of("tag1"));
 
-        repository.setFilters(chatId, List.of("filter1"));
+        repository.setFilters(chatId, List.of("filter:filter1"));
 
         // when
 
