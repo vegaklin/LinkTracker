@@ -1,45 +1,65 @@
 package backend.academy.bot.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import backend.academy.bot.dto.LinkUpdate;
 import backend.academy.bot.service.LinkUpdateSenderService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(LinkUpdateController.class)
 class LinkUpdateControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
     private LinkUpdateSenderService linkUpdateSenderService;
 
-    @InjectMocks
-    private LinkUpdateController linkUpdateController;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    void checkSendLinkUpdateValidRequestReturnOk() {
+    @SneakyThrows
+    void checkLinkUpdateReturnOkWhenValidRequest() {
         // given
 
-        LinkUpdate linkUpdate = new LinkUpdate(1L, "http://test.ru", "description", List.of(1L));
+        LinkUpdate linkUpdate = new LinkUpdate(1L, "https://test.ru", "Test update", List.of(1L, 2L));
+        String jsonRequest = objectMapper.writeValueAsString(linkUpdate);
 
-        Mockito.doNothing().when(linkUpdateSenderService).sendLinkUpdate(linkUpdate);
+        // when-then
 
-        // when
+        mockMvc.perform(post("/updates").contentType(MediaType.APPLICATION_JSON).content(jsonRequest))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Обновление обработано"));
 
-        ResponseEntity<String> response = linkUpdateController.handleLinkUpdate(linkUpdate);
+        Mockito.verify(linkUpdateSenderService, Mockito.times(1)).sendLinkUpdate(linkUpdate);
+    }
 
-        // then
+    @Test
+    @SneakyThrows
+    void checkLinkUpdateReturnBadRequestWhenInvalidRequest() {
+        // given
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Обновление обработано", response.getBody());
+        LinkUpdate invalidLinkUpdate = new LinkUpdate(1L, null, "", List.of(1L, 2L));
+        String jsonRequest = objectMapper.writeValueAsString(invalidLinkUpdate);
 
-        Mockito.verify(linkUpdateSenderService).sendLinkUpdate(linkUpdate);
+        // when-then
+
+        mockMvc.perform(post("/updates").contentType(MediaType.APPLICATION_JSON).content(jsonRequest))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"description\":\"Некорректные параметры запроса\",\"code\":\"400\"}"));
+
+        Mockito.verify(linkUpdateSenderService, Mockito.never()).sendLinkUpdate(Mockito.any());
     }
 }

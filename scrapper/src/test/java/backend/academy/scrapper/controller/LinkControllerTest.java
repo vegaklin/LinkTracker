@@ -1,92 +1,140 @@
 package backend.academy.scrapper.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
+import backend.academy.scrapper.exception.LinkNotFoundException;
 import backend.academy.scrapper.service.ScrapperService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(LinkController.class)
 class LinkControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
     private ScrapperService scrapperService;
 
-    @InjectMocks
-    private LinkController linkController;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    void checkHandleGetAllLinksValidRequestReturnOk() {
+    @SneakyThrows
+    void checkGetAllLinksReturnLinks() {
         // given
 
-        ListLinksResponse listLinksResponse = new ListLinksResponse(
+        Long chatId = 1L;
+        ListLinksResponse response = new ListLinksResponse(
                 List.of(new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"))), 1);
+        Mockito.when(scrapperService.getAllLinks(chatId)).thenReturn(response);
 
-        Mockito.when(scrapperService.getAllLinks(1L)).thenReturn(listLinksResponse);
+        // when-then
 
-        // when
+        mockMvc.perform(MockMvcRequestBuilders.get("/links").header("Tg-Chat-Id", String.valueOf(chatId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.links[0].url").value("https://test.ru"));
 
-        ResponseEntity<ListLinksResponse> response = linkController.handleGetAllLinks(1L);
-
-        // then
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(listLinksResponse, response.getBody());
-
-        Mockito.verify(scrapperService).getAllLinks(1L);
+        Mockito.verify(scrapperService, Mockito.times(1)).getAllLinks(chatId);
     }
 
     @Test
-    void checkHandleAddLinkValidRequestReturnOk() {
+    @SneakyThrows
+    void checkAddLinkReturnAddedLink() {
         // given
 
-        AddLinkRequest addLinkRequest =
-                new AddLinkRequest("https://test.ru", List.of("tag1"), List.of("filter:filter1"));
-        LinkResponse linkResponse = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
+        Long chatId = 1L;
+        AddLinkRequest request = new AddLinkRequest("https://test.ru", List.of("tag1"), List.of("filter:filter1"));
+        LinkResponse response = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
+        Mockito.when(scrapperService.addLink(chatId, request)).thenReturn(response);
 
-        Mockito.when(scrapperService.addLink(1L, addLinkRequest)).thenReturn(linkResponse);
+        // when-then
 
-        // when
+        mockMvc.perform(post("/links")
+                        .header("Tg-Chat-Id", chatId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.url").value("https://test.ru"));
 
-        ResponseEntity<LinkResponse> response = linkController.handleAddLink(1L, addLinkRequest);
-
-        // then
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(linkResponse, response.getBody());
-
-        Mockito.verify(scrapperService).addLink(1L, addLinkRequest);
+        Mockito.verify(scrapperService, Mockito.times(1)).addLink(chatId, request);
     }
 
     @Test
-    void checkHandleRemoveLinkValidRequestReturnOk() {
+    @SneakyThrows
+    void checkRemoveLinkReturnRemovedLink() {
         // given
 
-        RemoveLinkRequest removeLinkRequest = new RemoveLinkRequest("https://test.ru");
-        LinkResponse linkResponse = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
+        Long chatId = 1L;
+        RemoveLinkRequest request = new RemoveLinkRequest("https://test.ru");
+        LinkResponse response = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
+        Mockito.when(scrapperService.removeLink(chatId, request)).thenReturn(response);
 
-        Mockito.when(scrapperService.removeLink(1L, removeLinkRequest)).thenReturn(linkResponse);
+        // when-then
 
-        // when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/links")
+                        .header("Tg-Chat-Id", chatId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.url").value("https://test.ru"));
 
-        ResponseEntity<LinkResponse> response = linkController.handleRemoveLink(1L, removeLinkRequest);
+        Mockito.verify(scrapperService, Mockito.times(1)).removeLink(chatId, request);
+    }
 
-        // then
+    @Test
+    @SneakyThrows
+    void checkAddLinkInvalidRequestReturnBadRequest() {
+        // given
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(linkResponse, response.getBody());
+        Long chatId = 1L;
+        AddLinkRequest invalidRequest = new AddLinkRequest(null, List.of("tag1"), List.of("filter:filter1"));
 
-        Mockito.verify(scrapperService).removeLink(1L, removeLinkRequest);
+        // when-then
+
+        mockMvc.perform(post("/links")
+                        .header("Tg-Chat-Id", chatId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.description").value("Некорректные параметры запроса"));
+
+        Mockito.verify(scrapperService, Mockito.never()).addLink(Mockito.anyLong(), Mockito.any());
+    }
+
+    @Test
+    @SneakyThrows
+    void checkAddLinkInvalidRequestReturnNotFound() {
+        // given
+
+        Long chatId = 1L;
+        RemoveLinkRequest request = new RemoveLinkRequest("https://test.ru");
+        Mockito.when(scrapperService.removeLink(chatId, request))
+                .thenThrow(new LinkNotFoundException("LinkNotFoundException"));
+        ;
+
+        // when-then
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/links")
+                        .header("Tg-Chat-Id", chatId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.description").value("Ссылка не найдена"));
     }
 }

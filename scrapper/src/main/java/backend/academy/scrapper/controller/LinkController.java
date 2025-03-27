@@ -6,6 +6,7 @@ import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
 import backend.academy.scrapper.service.ScrapperService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class LinkController {
     private final ScrapperService scrapperService;
 
     @GetMapping
-    public ResponseEntity<ListLinksResponse> handleGetAllLinks(@RequestHeader("Tg-Chat-Id") Long tgChatId) {
+    public ResponseEntity<ListLinksResponse> handleGetAllLinks(@RequestHeader("Tg-Chat-Id") @NotNull Long tgChatId) {
         log.info("Received request to get all links for chatId: {}", tgChatId.toString());
         ListLinksResponse response = scrapperService.getAllLinks(tgChatId);
         log.info("Returning {} links for chatId: {}", response.links().size(), tgChatId.toString());

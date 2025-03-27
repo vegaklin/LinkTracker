@@ -18,9 +18,9 @@ public class InMemoryChatRepository implements ChatRepository {
     }
 
     @Override
-    public void deleteChat(Long chatId) {
-        chatIds.remove(chatId);
-        log.info("Chat with id {} deleted", chatId);
+    public boolean deleteChat(Long chatId) {
+        log.info("Chat with id {} deleting", chatId);
+        return chatIds.remove(chatId);
     }
 
     @Override

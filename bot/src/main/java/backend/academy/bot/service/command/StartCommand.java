@@ -25,7 +25,6 @@ public class StartCommand implements CommandHandler {
     public void handle(Long chatId, String message) {
         log.info("Processing '/start' command for chatId {}", chatId);
         try {
-            scrapperClient.deleteChat(chatId).block();
             scrapperClient.registerChat(chatId).block();
 
             log.info("Successfully registered chat {}", chatId);

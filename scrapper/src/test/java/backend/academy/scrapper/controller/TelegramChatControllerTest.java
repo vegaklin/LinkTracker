@@ -1,59 +1,73 @@
 package backend.academy.scrapper.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.service.ScrapperService;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(TelegramChatController.class)
 class TelegramChatControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
     private ScrapperService scrapperService;
 
-    @InjectMocks
-    private TelegramChatController telegramChatController;
-
     @Test
-    void checkHandleRegisterChatValidRequestReturnOk() {
+    @SneakyThrows
+    void checkRegisterChatReturnOk() {
         // given
 
-        Mockito.doNothing().when(scrapperService).registerChat(1L);
+        Long chatId = 1L;
 
-        // when
+        // when-then
 
-        ResponseEntity<String> response = telegramChatController.handleRegisterChat(1L);
+        mockMvc.perform(post("/tg-chat/{id}", chatId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Чат зарегистрирован"));
 
-        // then
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Чат зарегистрирован", response.getBody());
-
-        Mockito.verify(scrapperService).registerChat(1L);
+        verify(scrapperService, times(1)).registerChat(chatId);
     }
 
     @Test
-    void checkHandleDeleteChatValidRequestReturnOk() {
+    @SneakyThrows
+    void checkDeleteChatReturnOk() {
         // given
 
-        Mockito.doNothing().when(scrapperService).deleteChat(1L);
+        Long chatId = 1L;
 
-        // when
+        // when-then
 
-        ResponseEntity<String> response = telegramChatController.handleDeleteChat(1L);
+        mockMvc.perform(delete("/tg-chat/{id}", chatId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Чат успешно удалён"));
 
-        // then
+        verify(scrapperService, times(1)).deleteChat(chatId);
+    }
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Чат успешно удалён", response.getBody());
+    @Test
+    @SneakyThrows
+    void checkDeleteChatReturnNotFound() {
+        // given
 
-        Mockito.verify(scrapperService).deleteChat(1L);
+        Long chatId = 1L;
+        doThrow(new ChatNotFoundException("Чат не найден с id: " + chatId))
+                .when(scrapperService)
+                .deleteChat(chatId);
+
+        // when-then
+
+        mockMvc.perform(delete("/tg-chat/{id}", chatId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.description").value("Чат не найден"));
     }
 }

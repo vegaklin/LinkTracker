@@ -1,6 +1,7 @@
 package backend.academy.scrapper.controller;
 
 import backend.academy.scrapper.dto.ApiErrorResponse;
+import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.exception.LinkNotFoundException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -36,6 +37,21 @@ public class GlobalExceptionHandler {
 
         ApiErrorResponse response = new ApiErrorResponse(
                 "Ссылка не найдена",
+                "404",
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                Arrays.stream(ex.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .collect(Collectors.toList()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(ChatNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleChatNotFound(ChatNotFoundException ex) {
+        log.warn("Chat not found exception", ex);
+
+        ApiErrorResponse response = new ApiErrorResponse(
+                "Чат не найден",
                 "404",
                 ex.getClass().getSimpleName(),
                 ex.getMessage(),

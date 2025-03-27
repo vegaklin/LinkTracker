@@ -4,6 +4,7 @@ import backend.academy.scrapper.dto.AddLinkRequest;
 import backend.academy.scrapper.dto.LinkResponse;
 import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
+import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.exception.LinkNotFoundException;
 import backend.academy.scrapper.repository.chat.ChatLinksRepository;
 import backend.academy.scrapper.repository.chat.ChatRepository;
@@ -34,7 +35,10 @@ public class ScrapperService {
     public void deleteChat(Long chatId) {
         log.info("Deleting chat with chatId: {}", chatId.toString());
         chatLinksRepository.removeChatLinks(chatId);
-        chatRepository.deleteChat(chatId);
+        if (!chatRepository.deleteChat(chatId)) {
+            log.error("Chat not found for chatId: {}", chatId.toString());
+            throw new ChatNotFoundException("Чат не найден с id: " + chatId);
+        }
     }
 
     public LinkResponse addLink(Long chatId, AddLinkRequest addLinkRequest) {

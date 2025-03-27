@@ -5,7 +5,7 @@ import java.util.Set;
 public interface ChatRepository {
     void registerChat(Long chatId);
 
-    void deleteChat(Long chatId);
+    boolean deleteChat(Long chatId);
 
     Set<Long> getChatIds();
 }

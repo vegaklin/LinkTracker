@@ -42,7 +42,6 @@ public class StartCommandTest {
     void checkHandleSuccessfulRegistration() {
         // given
 
-        Mockito.when(scrapperClient.deleteChat(1L)).thenReturn(Mono.empty());
         Mockito.when(scrapperClient.registerChat(1L)).thenReturn(Mono.empty());
         String expectedMessage =
                 "Добро пожаловать! Это бот для отслеживания ссылок.\nДля получения списка доступных команд, введите /help";
@@ -53,35 +52,14 @@ public class StartCommandTest {
 
         // then
 
-        Mockito.verify(scrapperClient).deleteChat(1L);
         Mockito.verify(scrapperClient).registerChat(1L);
         Mockito.verify(telegramMessenger).sendMessage(1L, expectedMessage);
-    }
-
-    @Test
-    void checkHandleScrapperClientExceptionOnDelete() {
-        // given
-
-        Mockito.when(scrapperClient.deleteChat(1L))
-                .thenThrow(new ScrapperClientException(
-                        new ApiErrorResponse("Delete failed", "temp", "temp", "temp", List.of())));
-
-        // when
-
-        startCommand.handle(1L, "message");
-
-        // then
-
-        Mockito.verify(scrapperClient).deleteChat(1L);
-        Mockito.verify(scrapperClient, Mockito.never()).registerChat(1L);
-        Mockito.verify(telegramMessenger).sendMessage(1L, "Ошибка при регистрации чата: Delete failed");
     }
 
     @Test
     void checkHandleScrapperClientExceptionOnRegister() {
         // given
 
-        Mockito.when(scrapperClient.deleteChat(1L)).thenReturn(Mono.empty());
         Mockito.when(scrapperClient.registerChat(1L))
                 .thenThrow(new ScrapperClientException(
                         new ApiErrorResponse("Register failed", "temp", "temp", "temp", List.of())));
@@ -92,7 +70,6 @@ public class StartCommandTest {
 
         // then
 
-        Mockito.verify(scrapperClient).deleteChat(1L);
         Mockito.verify(scrapperClient).registerChat(1L);
         Mockito.verify(telegramMessenger).sendMessage(1L, "Ошибка при регистрации чата: Register failed");
     }

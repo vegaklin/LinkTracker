@@ -57,6 +57,8 @@ class ScrapperServiceTest {
     void checkDeleteChat() {
         // given-when
 
+        Mockito.when(chatRepository.deleteChat(1L)).thenReturn(true);
+
         scrapperService.deleteChat(1L);
 
         // then
