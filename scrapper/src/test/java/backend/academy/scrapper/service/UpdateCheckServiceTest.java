@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import backend.academy.scrapper.repository.link.LinkRepository;
+import backend.academy.scrapper.repository.interfaces.LinkRepository;
 import backend.academy.scrapper.service.api.ApiProcess;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

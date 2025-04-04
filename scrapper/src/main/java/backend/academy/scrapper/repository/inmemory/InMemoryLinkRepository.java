@@ -1,7 +1,7 @@
-package backend.academy.scrapper.repository.link;
+package backend.academy.scrapper.repository.inmemory;
 
-import backend.academy.scrapper.dto.AddLinkRequest;
-import backend.academy.scrapper.repository.link.model.Link;
+import backend.academy.scrapper.repository.interfaces.LinkRepository;
+import backend.academy.scrapper.repository.model.Link;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;

@@ -4,8 +4,8 @@
 //import backend.academy.scrapper.client.dto.LinkUpdate;
 //import backend.academy.scrapper.dto.ApiErrorResponse;
 //import backend.academy.scrapper.exception.BotClientException;
-//import backend.academy.scrapper.repository.chat.ChatLinksRepository;
-//import backend.academy.scrapper.repository.chat.ChatRepository;
+//import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
+//import backend.academy.scrapper.repository.interfaces.ChatRepository;
 //import java.util.List;
 //import java.util.Set;
 //import org.junit.jupiter.api.Test;

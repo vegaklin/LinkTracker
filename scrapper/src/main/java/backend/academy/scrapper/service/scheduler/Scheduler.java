@@ -1,6 +1,6 @@
 package backend.academy.scrapper.service.scheduler;
 
-import backend.academy.scrapper.repository.link.LinkRepository;
+import backend.academy.scrapper.repository.interfaces.LinkRepository;
 import backend.academy.scrapper.service.UpdateCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,10 @@
-package backend.academy.scrapper.repository.chat;
+package backend.academy.scrapper.repository.inmemory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import backend.academy.scrapper.repository.interfaces.ChatRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package backend.academy.scrapper.repository.chat;
+package backend.academy.scrapper.repository.interfaces;
 
 import java.util.List;
 

@@ -8,10 +8,10 @@
 //import backend.academy.scrapper.dto.ListLinksResponse;
 //import backend.academy.scrapper.dto.RemoveLinkRequest;
 //import backend.academy.scrapper.exception.LinkNotFoundException;
-//import backend.academy.scrapper.repository.chat.ChatLinksRepository;
-//import backend.academy.scrapper.repository.chat.ChatRepository;
-//import backend.academy.scrapper.repository.link.LinkRepository;
-//import backend.academy.scrapper.repository.link.model.Link;
+//import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
+//import backend.academy.scrapper.repository.interfaces.ChatRepository;
+//import backend.academy.scrapper.repository.interfaces.LinkRepository;
+//import backend.academy.scrapper.repository.model.Link;
 //import java.time.OffsetDateTime;
 //import java.time.ZoneOffset;
 //import java.util.List;

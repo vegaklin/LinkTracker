@@ -1,7 +1,7 @@
 //package backend.academy.scrapper.service.sheduler;
 //
-//import backend.academy.scrapper.repository.link.LinkRepository;
-//import backend.academy.scrapper.repository.link.model.Link;
+//import backend.academy.scrapper.repository.interfaces.LinkRepository;
+//import backend.academy.scrapper.repository.model.Link;
 //import backend.academy.scrapper.service.UpdateCheckService;
 //import backend.academy.scrapper.service.scheduler.Scheduler;
 //import java.time.OffsetDateTime;

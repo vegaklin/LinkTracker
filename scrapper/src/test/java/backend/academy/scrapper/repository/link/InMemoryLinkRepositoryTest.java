@@ -5,7 +5,7 @@
 //import static org.junit.jupiter.api.Assertions.assertTrue;
 //
 //import backend.academy.scrapper.dto.LinkResponse;
-//import backend.academy.scrapper.repository.link.model.Link;
+//import backend.academy.scrapper.repository.model.Link;
 //import java.time.OffsetDateTime;
 //import java.time.ZoneOffset;
 //import java.util.List;

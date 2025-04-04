@@ -1,4 +1,4 @@
-package backend.academy.scrapper.repository.link.model;
+package backend.academy.scrapper.repository.model;
 
 import java.time.OffsetDateTime;
 
