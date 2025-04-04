@@ -1,11 +1,11 @@
 package backend.academy.scrapper.repository.chat;
 
-import java.util.Set;
+import java.util.List;
 
 public interface ChatRepository {
     void registerChat(Long chatId);
 
     boolean deleteChat(Long chatId);
 
-    Set<Long> getChatIds();
+    List<Long> getChatIds();
 }

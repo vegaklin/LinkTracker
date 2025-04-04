@@ -27,8 +27,8 @@ public class StackOverflowClient {
                         .path("/2.3/questions/{questionId}")
                         .queryParam("site", "stackoverflow")
                         .queryParam("key", scrapperConfig.stackOverflow().key())
-//                        .queryParam(
-//                                "access_token", scrapperConfig.stackOverflow().accessToken())
+                        .queryParam(
+                                "access_token", scrapperConfig.stackOverflow().accessToken())
                         .queryParam("filter", "default")
                         .build(questionId))
                 .exchangeToMono(response -> handleResponse(response, questionId));

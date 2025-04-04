@@ -1,6 +1,5 @@
 package backend.academy.scrapper.repository.link.model;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
-public record Link(String url, List<String> tags, List<String> filters, OffsetDateTime updateTime) {}
+public record Link(Long id, String url, String description, OffsetDateTime updateTime) {}

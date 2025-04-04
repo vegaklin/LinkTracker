@@ -2,43 +2,79 @@ package backend.academy.scrapper.repository.chat;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import backend.academy.scrapper.repository.chat.model.ChatLink;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
 @Repository
 public class InMemoryChatLinksRepository implements ChatLinksRepository {
-    private final Map<Long, Set<Long>> chatLinks = new HashMap<>();
+    private final Map<Long, Set<ChatLink>> chatLinksMap = new HashMap<>();
 
     @Override
-    public void addLink(Long chatId, Long linkId) {
-        chatLinks.computeIfAbsent(chatId, k -> new HashSet<>()).add(linkId);
-        log.info("Link {} added to chatId {}", linkId, chatId);
+    public List<Long> getLinksForChat(Long chatId) {
+        Set<ChatLink> links = chatLinksMap.getOrDefault(chatId, Set.of());
+        log.info("Get links for chatId {}: {}", chatId, links);
+        return links.stream()
+            .map(ChatLink::link_id)
+            .toList();
     }
 
     @Override
-    public Set<Long> getLinksForChat(Long chatId) {
-        Set<Long> links = chatLinks.getOrDefault(chatId, Set.of());
-        log.info("Get links for chatId {}: {}", chatId, links);
-        return links;
+    public ChatLink getChatLinksByCharIdAndLinkId(Long chatId, Long linkId) {
+        Set<ChatLink> chatLinks = chatLinksMap.get(chatId);
+        if (chatLinks == null || chatLinks.isEmpty()) {
+            log.warn("No links found for chatId {}", chatId);
+            return null;
+        }
+
+        return chatLinks.stream()
+            .filter(link -> link.chat_id().equals(chatId) && link.link_id().equals(linkId))
+            .findFirst()
+            .orElseGet(() -> {
+                log.warn("ChatLinks not found for chatId {} and linkId {}", chatId, linkId);
+                return null;
+            });
+    }
+
+    @Override
+    public void addLink(ChatLink chatLinks) {
+        chatLinksMap.computeIfAbsent(chatLinks.chat_id(), k -> new HashSet<>()).add(chatLinks);
+        log.info("Link {} added to chatId {}", chatLinks.link_id(), chatLinks.chat_id());
     }
 
     @Override
     public boolean removeLink(Long chatId, Long linkId) {
-        Set<Long> links = chatLinks.get(chatId);
-        if (links != null && links.remove(linkId)) {
-            log.info("Link {} removed from chatId {}", linkId, chatId);
-            return true;
+        Set<ChatLink> chatLinks = chatLinksMap.get(chatId);
+
+        if (chatLinks == null || chatLinks.isEmpty()) {
+            log.warn("Failed to remove link {} from chatId {}: no links found", linkId, chatId);
+            return false;
         }
-        log.warn("Failed to remove link {} from chatId {}", linkId, chatId);
-        return false;
+
+        boolean removed = chatLinks.removeIf(link ->
+            link.chat_id().equals(chatId) && link.link_id().equals(linkId)
+        );
+
+        if (removed) {
+            log.info("Removed link {} from chatId {}", linkId, chatId);
+            if (chatLinks.isEmpty()) {
+                chatLinksMap.remove(chatId);
+                log.info("All links removed for chatId {}", chatId);
+            }
+        } else {
+            log.warn("Failed to remove link {} from chatId {}: link not found", linkId, chatId);
+        }
+
+        return removed;
     }
 
     @Override
     public void removeChatLinks(Long chatId) {
-        chatLinks.remove(chatId);
+        chatLinksMap.remove(chatId);
         log.info("Removed all links for chatId {}", chatId);
     }
 }

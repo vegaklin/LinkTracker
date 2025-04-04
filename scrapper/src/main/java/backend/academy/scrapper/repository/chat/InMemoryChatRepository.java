@@ -1,6 +1,8 @@
 package backend.academy.scrapper.repository.chat;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -24,8 +26,9 @@ public class InMemoryChatRepository implements ChatRepository {
     }
 
     @Override
-    public Set<Long> getChatIds() {
+    public List<Long> getChatIds() {
+        List<Long> chatIdList = new ArrayList<>(chatIds);
         log.info("Get all chat IDs: {}", chatIds);
-        return chatIds;
+        return chatIdList;
     }
 }

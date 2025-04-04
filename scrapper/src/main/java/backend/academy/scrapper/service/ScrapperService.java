@@ -8,10 +8,9 @@ import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.exception.LinkNotFoundException;
 import backend.academy.scrapper.repository.chat.ChatLinksRepository;
 import backend.academy.scrapper.repository.chat.ChatRepository;
+import backend.academy.scrapper.repository.chat.model.ChatLink;
 import backend.academy.scrapper.repository.link.LinkRepository;
-import backend.academy.scrapper.repository.link.model.Link;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ScrapperService {
-
-    private final UpdateCheckService updateCheckService;
 
     private final ChatRepository chatRepository;
     private final ChatLinksRepository chatLinksRepository;
@@ -43,47 +40,57 @@ public class ScrapperService {
 
     public LinkResponse addLink(Long chatId, AddLinkRequest addLinkRequest) {
         log.info("Adding link for chatId {}: {}", chatId, addLinkRequest.link());
-        Link link = new Link(
-                addLinkRequest.link(),
-                addLinkRequest.tags(),
-                addLinkRequest.filters(),
-                updateCheckService.checkUpdate(addLinkRequest.link()).block());
-        LinkResponse linkResponse = linkRepository.addLink(link);
-        chatLinksRepository.addLink(chatId, linkResponse.id());
-        return linkResponse;
+
+        Long linkId = linkRepository.addLink(addLinkRequest.link());
+        chatLinksRepository.addLink(new ChatLink(chatId, linkId, addLinkRequest.tags(), addLinkRequest.filters()));
+
+        ChatLink chatLink = chatLinksRepository.getChatLinksByCharIdAndLinkId(chatId, linkId);
+
+        return new LinkResponse(chatLink.link_id(), addLinkRequest.link(), chatLink.tags(), chatLink.tags());
     }
 
     public LinkResponse removeLink(Long chatId, RemoveLinkRequest request) {
         log.info("Removing link for chatId {}: {}", chatId, request.link());
         Long linkId = linkRepository.getIdByUrl(request.link());
+
+
         if (linkId == null) {
             log.error("Link not found for url: {}", request.link());
             throw new LinkNotFoundException("Ссылка не найдена для URL: " + request.link());
         }
+
+        String link = linkRepository.getLinkById(linkId);
+        if (link == null) {
+            log.error("Link with id {} not found while removing", linkId);
+            throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена");
+        }
+
+        ChatLink chatLink = chatLinksRepository.getChatLinksByCharIdAndLinkId(chatId, linkId);
+
         if (!chatLinksRepository.removeLink(chatId, linkId)) {
             log.error("Link with id {} not found for chat id {}", linkId, chatId.toString());
             throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена для чата с id " + chatId);
         }
-        LinkResponse linkResponse = linkRepository.getLinkById(linkId);
-        if (linkResponse == null) {
-            log.error("Link with id {} not found while removing", linkId);
-            throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена");
-        }
+
         log.info("Link with ID {} removed successfully", linkId);
-        return linkResponse;
+        return new LinkResponse(chatLink.link_id(), link, chatLink.tags(), chatLink.tags());
     }
 
     public ListLinksResponse getAllLinks(Long chatId) {
         log.info("Get all links for chat id: {}", chatId.toString());
-        Set<Long> linkIds = chatLinksRepository.getLinksForChat(chatId);
+        List<Long> linkIds = chatLinksRepository.getLinksForChat(chatId);
         List<LinkResponse> links = linkIds.stream()
                 .map(linkId -> {
-                    LinkResponse link = linkRepository.getLinkById(linkId);
+                    String link = linkRepository.getLinkById(linkId);
+
                     if (link == null) {
                         log.error("Link with id {} not found", linkId);
                         throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена");
                     }
-                    return link;
+
+                    ChatLink chatLink = chatLinksRepository.getChatLinksByCharIdAndLinkId(chatId, linkId);
+
+                    return new LinkResponse(chatLink.link_id(), link, chatLink.tags(), chatLink.tags());
                 })
                 .toList();
         log.info("Found {} links for chat id {}", links.size(), chatId.toString());
