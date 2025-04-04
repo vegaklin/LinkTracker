@@ -21,6 +21,7 @@ public class Scheduler {
     @Scheduled(fixedRate = 10000)
     public void checkForUpdates() {
         log.info("Starting scheduled link update check");
+
         linkRepository.getLinks().forEach((linkId, value) -> {
             String url = value.url();
             updateCheckService.checkLinkUpdate(linkId, url);

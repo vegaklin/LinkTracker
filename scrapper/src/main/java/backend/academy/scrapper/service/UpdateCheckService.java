@@ -22,11 +22,13 @@ public class UpdateCheckService {
 
     public void checkLinkUpdate(Long linkId, String url) {
         log.info("Checking for updates for linkId: {}, url: {}", linkId, url);
+
         OffsetDateTime lastUpdate = checkUpdate(url).block();
         if (lastUpdate != null) {
             OffsetDateTime previousUpdate = linkRepository.getUpdateTime(linkId);
             if (lastUpdate.isAfter(previousUpdate)) {
                 log.info("Update detected for linkId: {}, url: {}", linkId, url);
+
                 linkRepository.setUpdateTime(linkId, lastUpdate);
                 updateSenderService.notifyChatsForLink(linkId, url);
             } else {
@@ -39,15 +41,18 @@ public class UpdateCheckService {
 
     public Mono<OffsetDateTime> checkUpdate(String url) {
         log.info("Checking update for url: {}", url);
+
         for (ApiProcess apiProcess : apiProcessList) {
             if (apiProcess.isApiUrl(url)) {
                 log.info(
                         "API process found for url: {}, processing with {}",
                         url,
                         apiProcess.getClass().getSimpleName());
+
                 return apiProcess.checkUpdate(url);
             }
         }
+
         log.warn("No API process found for url: {}", url);
         return Mono.empty();
     }
