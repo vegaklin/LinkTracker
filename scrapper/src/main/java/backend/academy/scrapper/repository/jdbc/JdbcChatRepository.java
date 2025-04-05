@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Slf4j
-@Repository
+//@Repository
 @RequiredArgsConstructor
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "SQL")
 public class JdbcChatRepository implements ChatRepository {

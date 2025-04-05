@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Slf4j
-@Repository
+//@Repository
 @RequiredArgsConstructor
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "SQL")
 public class JdbcLinkRepository implements LinkRepository {
