@@ -8,10 +8,12 @@ import java.util.Set;
 import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
 import backend.academy.scrapper.repository.model.ChatLink;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
-@Repository
+//@Repository
+//@ConditionalOnProperty(name = "app.access-type", havingValue = "IN_MEMORY")
 public class InMemoryChatLinksRepository implements ChatLinksRepository {
     private final Map<Long, Set<ChatLink>> chatLinksMap = new HashMap<>();
 

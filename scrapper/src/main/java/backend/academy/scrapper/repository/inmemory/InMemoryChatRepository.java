@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Set;
 import backend.academy.scrapper.repository.interfaces.ChatRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
-@Repository
+//@Repository
+//@ConditionalOnProperty(name = "app.access-type", havingValue = "IN_MEMORY")
 public class InMemoryChatRepository implements ChatRepository {
 
     private final Set<Long> chatIds = new HashSet<>();

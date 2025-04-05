@@ -90,7 +90,7 @@ public class ScrapperService {
 
                     ChatLink chatLink = chatLinksRepository.getChatLinksByCharIdAndLinkId(chatId, linkId);
 
-                    return new LinkResponse(chatLink.link_id(), link, chatLink.tags(), chatLink.tags());
+                    return new LinkResponse(chatLink.link_id(), link, chatLink.tags(), chatLink.filters());
                 })
                 .toList();
         log.info("Found {} links for chat id {}", links.size(), chatId.toString());

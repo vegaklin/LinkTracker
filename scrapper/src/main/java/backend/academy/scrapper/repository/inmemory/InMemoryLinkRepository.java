@@ -9,10 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
-@Repository
+//@Repository
+//@ConditionalOnProperty(name = "app.access-type", havingValue = "IN_MEMORY")
 public class InMemoryLinkRepository implements LinkRepository {
 
     private final Map<Long, Link> links = new HashMap<>();

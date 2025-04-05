@@ -1,4 +1,5 @@
 app:
+#  access-type: ${ACCESS_TYPE:SQL}
   github-token: ${GITHUB_TOKEN} # env variable
   stackoverflow:
     key: ${SO_TOKEN_KEY}
@@ -7,6 +8,11 @@ app:
 spring:
   application:
     name: Scrapper
+  datasource:
+    url: jdbc:postgresql://localhost:5434/scrapper
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false
   jpa:
