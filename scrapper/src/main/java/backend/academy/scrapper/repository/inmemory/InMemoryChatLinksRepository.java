@@ -27,7 +27,7 @@ public class InMemoryChatLinksRepository implements ChatLinksRepository {
     }
 
     @Override
-    public ChatLink getChatLinksByCharIdAndLinkId(Long chatId, Long linkId) {
+    public ChatLink getChatLinkByChatIdAndLinkId(Long chatId, Long linkId) {
         Set<ChatLink> chatLinks = chatLinksMap.get(chatId);
         if (chatLinks == null || chatLinks.isEmpty()) {
             log.warn("No links found for chatId {}", chatId);

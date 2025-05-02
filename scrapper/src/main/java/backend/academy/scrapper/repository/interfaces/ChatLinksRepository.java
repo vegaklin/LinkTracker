@@ -7,7 +7,7 @@ public interface ChatLinksRepository {
 
     List<Long> getLinksForChat(Long chatId);
 
-    ChatLink getChatLinksByCharIdAndLinkId(Long chatId, Long linkId);
+    ChatLink getChatLinkByChatIdAndLinkId(Long chatId, Long linkId);
 
     void addLink(ChatLink chatLinks);
 

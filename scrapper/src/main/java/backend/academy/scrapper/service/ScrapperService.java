@@ -44,7 +44,7 @@ public class ScrapperService {
         Long linkId = linkRepository.addLink(addLinkRequest.link());
         chatLinksRepository.addLink(new ChatLink(chatId, linkId, addLinkRequest.tags(), addLinkRequest.filters()));
 
-        ChatLink chatLink = chatLinksRepository.getChatLinksByCharIdAndLinkId(chatId, linkId);
+        ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatId, linkId);
 
         return new LinkResponse(chatLink.link_id(), addLinkRequest.link(), chatLink.tags(), chatLink.tags());
     }
@@ -65,7 +65,7 @@ public class ScrapperService {
             throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена");
         }
 
-        ChatLink chatLink = chatLinksRepository.getChatLinksByCharIdAndLinkId(chatId, linkId);
+        ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatId, linkId);
 
         if (!chatLinksRepository.removeLink(chatId, linkId)) {
             log.error("Link with id {} not found for chat id {}", linkId, chatId.toString());
@@ -88,7 +88,7 @@ public class ScrapperService {
                         throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена");
                     }
 
-                    ChatLink chatLink = chatLinksRepository.getChatLinksByCharIdAndLinkId(chatId, linkId);
+                    ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatId, linkId);
 
                     return new LinkResponse(chatLink.link_id(), link, chatLink.tags(), chatLink.filters());
                 })

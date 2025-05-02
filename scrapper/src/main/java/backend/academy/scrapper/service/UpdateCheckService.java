@@ -26,7 +26,7 @@ public class UpdateCheckService {
         OffsetDateTime lastUpdate = checkUpdate(url).block();
         if (lastUpdate != null) {
             OffsetDateTime previousUpdate = linkRepository.getUpdateTime(linkId);
-            if (lastUpdate.isAfter(previousUpdate)) {
+            if (previousUpdate != null && lastUpdate.isAfter(previousUpdate)) {
                 log.info("Update detected for linkId: {}, url: {}", linkId, url);
 
                 linkRepository.setUpdateTime(linkId, lastUpdate);

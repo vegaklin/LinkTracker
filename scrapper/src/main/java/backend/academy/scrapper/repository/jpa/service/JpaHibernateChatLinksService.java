@@ -32,7 +32,7 @@ public class JpaHibernateChatLinksService implements ChatLinksRepository {
             .orElse(List.of());
     }
 
-    public ChatLink getChatLinksByCharIdAndLinkId(Long chatId, Long linkId) {
+    public ChatLink getChatLinkByChatIdAndLinkId(Long chatId, Long linkId) {
         Optional<ChatEntity> chatOpt = chatRepository.findByChatId(chatId);
         if (chatOpt.isEmpty()) return null;
 

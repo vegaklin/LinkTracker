@@ -4,11 +4,10 @@ import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
 import backend.academy.scrapper.repository.model.ChatLink;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Repository;
 import java.util.Arrays;
 import java.util.List;
+import backend.academy.scrapper.service.util.ScrapperUtils;
 
 @Slf4j
 //@Repository
@@ -20,26 +19,30 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
 
     @Override
     public List<Long> getLinksForChat(Long chatId) {
-        return jdbc.sql("SELECT link_id FROM chat_links WHERE chat_id = (SELECT id FROM chats WHERE chat_id = ?)")
+        return jdbc.sql("""
+                SELECT link_id
+                FROM chat_links
+                WHERE chat_id = (SELECT id FROM chats WHERE chat_id = ?)
+                """)
             .param(chatId)
             .query(Long.class)
             .list();
     }
 
     @Override
-    public ChatLink getChatLinksByCharIdAndLinkId(Long chatId, Long linkId) {
+    public ChatLink getChatLinkByChatIdAndLinkId(Long chatId, Long linkId) {
         return jdbc.sql("""
                 SELECT cl.chat_id, cl.link_id, cl.tags, cl.filters
                 FROM chat_links cl
                 JOIN chats c ON cl.chat_id = c.id
                 WHERE c.chat_id = ? AND cl.link_id = ?
-            """)
+                """)
             .params(chatId, linkId)
             .query((rs, rowNum) -> new ChatLink(
                 rs.getLong("chat_id"),
                 rs.getLong("link_id"),
-                rs.getString("tags") != null ? Arrays.asList(rs.getString("tags").replaceAll("[{}]", "").split(",")) : null,
-                rs.getString("filters") != null ? Arrays.asList(rs.getString("filters").replaceAll("[{}]", "").split(",")) : null
+                ScrapperUtils.parseResultSetArray(rs.getArray("tags"), chatId, linkId),
+                ScrapperUtils.parseResultSetArray(rs.getArray("filters"), chatId, linkId)
             ))
             .optional()
             .orElse(null);
@@ -49,14 +52,15 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
     public void addLink(ChatLink chatLink) {
         jdbc.sql("""
                 INSERT INTO chat_links (chat_id, link_id, tags, filters)
-                VALUES (
-                    (SELECT id FROM chats WHERE chat_id = ?),
-                    ?,
-                    ?,
-                    ?
-                ) ON CONFLICT DO NOTHING
+                VALUES ((SELECT id FROM chats WHERE chat_id = ?), ?, ?, ?)
+                ON CONFLICT DO NOTHING
             """)
-            .params(chatLink.chat_id(), chatLink.link_id(), chatLink.tags().toArray(new String[0]), chatLink.filters().toArray(new String[0]))
+            .params(
+                chatLink.chat_id(),
+                chatLink.link_id(),
+                chatLink.tags().toArray(new String[0]),
+                chatLink.filters().toArray(new String[0])
+            )
             .update();
     }
 
@@ -65,7 +69,7 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
         int updated = jdbc.sql("""
                 DELETE FROM chat_links
                 WHERE chat_id = (SELECT id FROM chats WHERE chat_id = ?) AND link_id = ?
-            """)
+                """)
             .params(chatId, linkId)
             .update();
         return updated > 0;
@@ -73,7 +77,11 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
 
     @Override
     public void removeChatLinks(Long chatId) {
-        jdbc.sql("DELETE FROM chat_links WHERE chat_id = (SELECT id FROM chats WHERE chat_id = ?)")
+        jdbc.sql("""
+            DELETE
+            FROM chat_links
+            WHERE chat_id = (SELECT id FROM chats WHERE chat_id = ?)
+            """)
             .param(chatId)
             .update();
     }
