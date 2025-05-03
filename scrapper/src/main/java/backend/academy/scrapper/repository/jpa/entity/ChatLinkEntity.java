@@ -37,10 +37,10 @@ public class ChatLinkEntity {
     private LinkEntity link;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "tags", columnDefinition = "text[]")
+    @Column(name = "tags")
     private List<String> tags;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "filters", columnDefinition = "text[]")
+    @Column(name = "filters")
     private List<String> filters;
 }

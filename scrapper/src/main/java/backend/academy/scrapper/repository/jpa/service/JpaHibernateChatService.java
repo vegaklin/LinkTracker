@@ -6,6 +6,7 @@ import backend.academy.scrapper.repository.jpa.repository.JpaHibernateChatReposi
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -15,25 +16,28 @@ public class JpaHibernateChatService implements ChatRepository {
 
     private final JpaHibernateChatRepository chatRepository;
 
+    @Override
+    @Transactional
     public void registerChat(Long chatId) {
-        if (chatRepository.findByChatId(chatId).isEmpty()) {
+        if (!chatRepository.existsByChatId(chatId)) {
             ChatEntity chat = new ChatEntity();
             chat.chatId(chatId);
             chatRepository.save(chat);
-            log.info("Chat with id {} registered", chatId);
         }
     }
 
+    @Override
+    @Transactional
     public boolean deleteChat(Long chatId) {
-        return chatRepository.findByChatId(chatId)
-            .map(chat -> {
-                chatRepository.delete(chat);
-                log.info("Chat with id {} deleted", chatId);
-                return true;
-            })
-            .orElse(false);
+        if (chatRepository.existsByChatId(chatId)) {
+            chatRepository.deleteByChatId(chatId);
+            return true;
+        }
+        return false;
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public List<Long> getChatIds() {
         return chatRepository.findAll().stream()
             .map(ChatEntity::chatId)

@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 //@Repository
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "IN_MEMORY")
-public class InMemoryChatLinksRepository implements ChatLinksRepository {
+public class InMemoryChatLinksRepository {
     private final Map<Long, Set<ChatLink>> chatLinksMap = new HashMap<>();
 
-    @Override
+//    @Override
     public List<Long> getLinksForChat(Long chatId) {
         Set<ChatLink> links = chatLinksMap.getOrDefault(chatId, Set.of());
         log.info("Get links for chatId {}: {}", chatId, links);
@@ -26,7 +26,7 @@ public class InMemoryChatLinksRepository implements ChatLinksRepository {
             .toList();
     }
 
-    @Override
+//    @Override
     public ChatLink getChatLinkByChatIdAndLinkId(Long chatId, Long linkId) {
         Set<ChatLink> chatLinks = chatLinksMap.get(chatId);
         if (chatLinks == null || chatLinks.isEmpty()) {
@@ -43,13 +43,13 @@ public class InMemoryChatLinksRepository implements ChatLinksRepository {
             });
     }
 
-    @Override
+//    @Override
     public void addLink(ChatLink chatLinks) {
         chatLinksMap.computeIfAbsent(chatLinks.chat_id(), k -> new HashSet<>()).add(chatLinks);
         log.info("Link {} added to chatId {}", chatLinks.link_id(), chatLinks.chat_id());
     }
 
-    @Override
+//    @Override
     public boolean removeLink(Long chatId, Long linkId) {
         Set<ChatLink> chatLinks = chatLinksMap.get(chatId);
 
@@ -75,7 +75,7 @@ public class InMemoryChatLinksRepository implements ChatLinksRepository {
         return removed;
     }
 
-    @Override
+//    @Override
     public void removeChatLinks(Long chatId) {
         chatLinksMap.remove(chatId);
         log.info("Removed all links for chatId {}", chatId);

@@ -8,16 +8,12 @@ import java.util.List;
 
 public class ScrapperUtils {
 
-    public static List<String> parseResultSetArray(
-        Array rsArray,
-        Long chatId,
-        Long linkId
-    ) {
+    public static List<String> parseResultSetArray(Array rsArray) {
         try {
             return rsArray != null ? Arrays.asList((String[]) rsArray.getArray()) : List.of();
         }
         catch (SQLException ex) {
-            throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена для чата с id " + chatId);
+            return List.of();
         }
     }
 }

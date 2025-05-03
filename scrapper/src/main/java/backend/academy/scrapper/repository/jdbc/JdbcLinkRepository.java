@@ -20,22 +20,20 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public List<Link> getLinks() {
-        List<Link> links = jdbc.sql("""
+        return jdbc.sql("""
                 SELECT * FROM links
                 """)
             .query(Link.class)
             .list();
-        log.info("Get all links, with count: {}", links.size());
-        return links;
     }
 
     @Override
     public OffsetDateTime getUpdateTime(Long linkId) {
         return jdbc.sql("""
-            SELECT update_time
-            FROM links
-            WHERE id = ?
-            """)
+                SELECT update_time
+                FROM links
+                WHERE id = ?
+                """)
             .param(linkId)
             .query(OffsetDateTime.class)
             .optional()
@@ -45,10 +43,10 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public String getLinkById(Long linkId) {
         return jdbc.sql("""
-            SELECT url
-            FROM links
-            WHERE id = ?
-            """)
+                SELECT url
+                FROM links
+                WHERE id = ?
+                """)
             .param(linkId)
             .query(String.class)
             .optional()
@@ -58,10 +56,10 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public Long getIdByUrl(String url) {
         return jdbc.sql("""
-            SELECT id
-            FROM links
-            WHERE url = ?
-            """)
+                SELECT id
+                FROM links
+                WHERE url = ?
+                """)
             .param(url)
             .query(Long.class)
             .optional()
@@ -71,10 +69,10 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public void setUpdateTime(Long linkId, OffsetDateTime updateTime) {
         jdbc.sql("""
-            UPDATE links
-            SET update_time = ?
-            WHERE id = ?
-            """)
+                UPDATE links
+                SET update_time = ?
+                WHERE id = ?
+                """)
             .params(updateTime, linkId)
             .update();
     }
@@ -82,12 +80,11 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public Long addLink(String url) {
         return jdbc.sql("""
-            INSERT INTO links (url, description, update_time)
-            VALUES (?, 'Без изменений', now())
-            ON CONFLICT (url) DO UPDATE
-            SET update_time = now()
-            RETURNING id
-            """)
+                INSERT INTO links (url, description, update_time)
+                VALUES (?, 'Без изменений', now())
+                ON CONFLICT (url) DO NOTHING;
+                SELECT id FROM links WHERE url = ?;
+                """)
             .param(url)
             .query(Long.class)
             .single();

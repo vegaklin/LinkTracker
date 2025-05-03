@@ -6,14 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -32,7 +28,4 @@ public class LinkEntity {
 
     @Column(name = "update_time", nullable = false)
     private OffsetDateTime updateTime = OffsetDateTime.now();
-
-    @OneToMany(mappedBy = "link", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatLinkEntity> chatLinks = new ArrayList<>();
 }

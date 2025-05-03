@@ -28,13 +28,13 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    public boolean deleteChat(Long chatId) {
+    public boolean deleteChat(Long chatRowId) {
         int updated = jdbc.sql("""
                 DELETE
                 FROM chats
-                WHERE chat_id = ?
+                WHERE id = ?
                 """)
-            .params(chatId)
+            .params(chatRowId)
             .update();
         return updated > 0;
     }
@@ -48,4 +48,18 @@ public class JdbcChatRepository implements ChatRepository {
             .query(Long.class)
             .list();
     }
+
+    @Override
+    public Long findIdByChatId(Long chatId) {
+        return jdbc.sql("""
+                SELECT id
+                FROM chats
+                WHERE chat_id = ?
+                """)
+            .param(chatId)
+            .query(Long.class)
+            .optional()
+            .orElse(null);
+    }
+
 }

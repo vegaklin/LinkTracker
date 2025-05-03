@@ -5,13 +5,13 @@ import java.util.List;
 
 public interface ChatLinksRepository {
 
-    List<Long> getLinksForChat(Long chatId);
+    List<Long> getLinksForChat(Long chatRowId);
 
-    ChatLink getChatLinkByChatIdAndLinkId(Long chatId, Long linkId);
+    ChatLink getChatLinkByChatIdAndLinkId(Long chatRowId, Long linkId);
 
     void addLink(ChatLink chatLinks);
 
-    boolean removeLink(Long chatId, Long linkId);
+    boolean removeLink(Long chatRowId, Long linkId);
 
-    void removeChatLinks(Long chatId);
+    void removeChatLinks(Long chatRowId);
 }

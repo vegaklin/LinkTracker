@@ -15,7 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class ChatLinkId implements Serializable {
+public class ChatLinkId implements Serializable{
 
     @Column(name = "chat_id")
     private Long chatId;
@@ -26,7 +26,8 @@ public class ChatLinkId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ChatLinkId that)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChatLinkId that = (ChatLinkId) o;
         return Objects.equals(chatId, that.chatId) &&
             Objects.equals(linkId, that.linkId);
     }

@@ -15,20 +15,20 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 //@Repository
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "IN_MEMORY")
-public class InMemoryLinkRepository implements LinkRepository {
+public class InMemoryLinkRepository {
 
     private final Map<Long, Link> links = new HashMap<>();
 
     private Long idCounter = 1L;
 
-    @Override
+//    @Override
     public List<Link> getLinks() {
         List<Link> linkList = new ArrayList<>(links.values());
         log.info("Get all links. Current links count: {}", links.size());
         return linkList;
     }
 
-    @Override
+//    @Override
     public OffsetDateTime getUpdateTime(Long linkId) {
         Link link = links.get(linkId);
         if (link != null) {
@@ -39,7 +39,7 @@ public class InMemoryLinkRepository implements LinkRepository {
         return null;
     }
 
-    @Override
+//    @Override
     public String getLinkById(Long linkId) {
         Link link = links.get(linkId);
         if (link != null) {
@@ -50,7 +50,7 @@ public class InMemoryLinkRepository implements LinkRepository {
         return null;
     }
 
-    @Override
+//    @Override
     public Long getIdByUrl(String url) {
         Long linkId = links.entrySet().stream()
             .filter(entry -> entry.getValue().url().equals(url))
@@ -65,7 +65,7 @@ public class InMemoryLinkRepository implements LinkRepository {
         return linkId;
     }
 
-    @Override
+//    @Override
     public void setUpdateTime(Long linkId, OffsetDateTime updateTime) {
         Link link = links.get(linkId);
         if (link != null) {
@@ -77,7 +77,7 @@ public class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    @Override
+//    @Override
     public Long addLink(String link) {
         Long id = idCounter++;
         links.put(id, new Link(id, link, "Без изменений", OffsetDateTime.now(ZoneOffset.UTC)));

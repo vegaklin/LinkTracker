@@ -7,6 +7,7 @@ import backend.academy.scrapper.repository.model.Link;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -17,9 +18,10 @@ public class JpaHibernateLinkService implements LinkRepository {
 
     private final JpaHibernateLinkRepository linkRepository;
 
+    @Override
+    @Transactional(readOnly = true)
     public List<Link> getLinks() {
         List<LinkEntity> links = linkRepository.findAll();
-        log.info("Get all links. Count: {}", links.size());
         return links.stream()
             .map(entity -> new Link(
                 entity.id(),
@@ -30,24 +32,32 @@ public class JpaHibernateLinkService implements LinkRepository {
             .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public OffsetDateTime getUpdateTime(Long linkId) {
         return linkRepository.findById(linkId)
             .map(LinkEntity::updateTime)
             .orElse(null);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public String getLinkById(Long linkId) {
         return linkRepository.findById(linkId)
             .map(LinkEntity::url)
             .orElse(null);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public Long getIdByUrl(String url) {
         return linkRepository.findByUrl(url)
             .map(LinkEntity::id)
             .orElse(null);
     }
 
+    @Override
+    @Transactional
     public void setUpdateTime(Long linkId, OffsetDateTime updateTime) {
         linkRepository.findById(linkId).ifPresent(link -> {
             link.updateTime(updateTime);
@@ -55,6 +65,8 @@ public class JpaHibernateLinkService implements LinkRepository {
         });
     }
 
+    @Override
+    @Transactional
     public Long addLink(String url) {
         return linkRepository.findByUrl(url)
             .map(link -> {

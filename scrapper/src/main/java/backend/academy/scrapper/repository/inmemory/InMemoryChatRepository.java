@@ -12,23 +12,23 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 //@Repository
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "IN_MEMORY")
-public class InMemoryChatRepository implements ChatRepository {
+public class InMemoryChatRepository {
 
     private final Set<Long> chatIds = new HashSet<>();
 
-    @Override
+//    @Override
     public void registerChat(Long chatId) {
         chatIds.add(chatId);
         log.info("Chat with id {} registered", chatId);
     }
 
-    @Override
+//    @Override
     public boolean deleteChat(Long chatId) {
         log.info("Chat with id {} deleting", chatId);
         return chatIds.remove(chatId);
     }
 
-    @Override
+//    @Override
     public List<Long> getChatIds() {
         List<Long> chatIdList = new ArrayList<>(chatIds);
         log.info("Get all chat IDs: {}", chatIds);

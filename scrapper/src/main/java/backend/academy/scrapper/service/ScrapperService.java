@@ -14,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -26,13 +27,17 @@ public class ScrapperService {
 
     public void registerChat(Long chatId) {
         log.info("Registering chat with chatId: {}", chatId.toString());
+
         chatRepository.registerChat(chatId);
     }
 
     public void deleteChat(Long chatId) {
         log.info("Deleting chat with chatId: {}", chatId.toString());
-        chatLinksRepository.removeChatLinks(chatId);
-        if (!chatRepository.deleteChat(chatId)) {
+
+        Long chatRowId = chatRepository.findIdByChatId(chatId);
+
+        chatLinksRepository.removeChatLinks(chatRowId);
+        if (!chatRepository.deleteChat(chatRowId)) {
             log.error("Chat not found for chatId: {}", chatId.toString());
             throw new ChatNotFoundException("Чат не найден с id: " + chatId);
         }
@@ -41,58 +46,49 @@ public class ScrapperService {
     public LinkResponse addLink(Long chatId, AddLinkRequest addLinkRequest) {
         log.info("Adding link for chatId {}: {}", chatId, addLinkRequest.link());
 
+        Long chatRowId = chatRepository.findIdByChatId(chatId);
+
         Long linkId = linkRepository.addLink(addLinkRequest.link());
-        chatLinksRepository.addLink(new ChatLink(chatId, linkId, addLinkRequest.tags(), addLinkRequest.filters()));
+        chatLinksRepository.addLink(new ChatLink(chatRowId, linkId, addLinkRequest.tags(), addLinkRequest.filters()));
 
-        ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatId, linkId);
-
-        return new LinkResponse(chatLink.link_id(), addLinkRequest.link(), chatLink.tags(), chatLink.tags());
+        ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId);
+        return new LinkResponse(chatLink.linkId(), addLinkRequest.link(), chatLink.tags(), chatLink.filters());
     }
 
-    public LinkResponse removeLink(Long chatId, RemoveLinkRequest request) {
-        log.info("Removing link for chatId {}: {}", chatId, request.link());
-        Long linkId = linkRepository.getIdByUrl(request.link());
+    public LinkResponse removeLink(Long chatId, RemoveLinkRequest removeLinkRequest) {
+        log.info("Removing link for chatId {}: {}", chatId, removeLinkRequest.link());
 
-
+        Long linkId = linkRepository.getIdByUrl(removeLinkRequest.link());
         if (linkId == null) {
-            log.error("Link not found for url: {}", request.link());
-            throw new LinkNotFoundException("Ссылка не найдена для URL: " + request.link());
+            log.error("Link not found for url: {}", removeLinkRequest.link());
+            throw new LinkNotFoundException("Ссылка не найдена для URL: " + removeLinkRequest.link());
         }
 
-        String link = linkRepository.getLinkById(linkId);
-        if (link == null) {
-            log.error("Link with id {} not found while removing", linkId);
-            throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена");
-        }
-
-        ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatId, linkId);
-
-        if (!chatLinksRepository.removeLink(chatId, linkId)) {
+        Long chatRowId = chatRepository.findIdByChatId(chatId);
+        ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId);
+        if (!chatLinksRepository.removeLink(chatRowId, linkId)) {
             log.error("Link with id {} not found for chat id {}", linkId, chatId.toString());
             throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена для чата с id " + chatId);
         }
 
         log.info("Link with ID {} removed successfully", linkId);
-        return new LinkResponse(chatLink.link_id(), link, chatLink.tags(), chatLink.tags());
+        return new LinkResponse(chatLink.linkId(), removeLinkRequest.link(), chatLink.tags(), chatLink.tags());
     }
 
     public ListLinksResponse getAllLinks(Long chatId) {
         log.info("Get all links for chat id: {}", chatId.toString());
-        List<Long> linkIds = chatLinksRepository.getLinksForChat(chatId);
+
+        Long chatRowId = chatRepository.findIdByChatId(chatId);
+
+        List<Long> linkIds = chatLinksRepository.getLinksForChat(chatRowId);
         List<LinkResponse> links = linkIds.stream()
                 .map(linkId -> {
+                    ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId);
                     String link = linkRepository.getLinkById(linkId);
-
-                    if (link == null) {
-                        log.error("Link with id {} not found", linkId);
-                        throw new LinkNotFoundException("Ссылка с id " + linkId + " не найдена");
-                    }
-
-                    ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatId, linkId);
-
-                    return new LinkResponse(chatLink.link_id(), link, chatLink.tags(), chatLink.filters());
+                    return new LinkResponse(chatLink.linkId(), link, chatLink.tags(), chatLink.filters());
                 })
                 .toList();
+
         log.info("Found {} links for chat id {}", links.size(), chatId.toString());
         return new ListLinksResponse(links, links.size());
     }
