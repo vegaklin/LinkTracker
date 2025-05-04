@@ -94,7 +94,9 @@ public class JdbcLinkRepository implements LinkRepository {
             .param(url)
             .update();
         return jdbc.sql("""
-                SELECT id FROM links WHERE url = ?;
+                SELECT id
+                FROM links
+                WHERE url = ?;
                 """)
             .param(url)
             .query(Long.class)
