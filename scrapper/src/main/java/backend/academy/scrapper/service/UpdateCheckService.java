@@ -18,7 +18,7 @@ public class UpdateCheckService {
 
     private final List<ApiProcess> apiProcessList;
 
-    private final UpdateSenderService updateSenderService;
+    private final UpdateNotifyService updateNotifyService;
 
     public void checkLinkUpdate(Long linkId, String url) {
         log.info("Checking for updates for linkId: {}, url: {}", linkId, url);
@@ -30,7 +30,7 @@ public class UpdateCheckService {
                 log.info("Update detected for linkId: {}, url: {}", linkId, url);
 
                 linkRepository.setUpdateTime(linkId, lastUpdate);
-                updateSenderService.notifyChatsForLink(linkId, url);
+                updateNotifyService.notifyChatsForLink(linkId, url);
             } else {
                 log.info("No update for linkId: {}, url: {}", linkId, url);
             }

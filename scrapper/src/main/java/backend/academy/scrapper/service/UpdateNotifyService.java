@@ -8,6 +8,7 @@ import backend.academy.scrapper.repository.interfaces.ChatRepository;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
+import backend.academy.scrapper.service.sender.UpdateSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UpdateSenderService {
+public class UpdateNotifyService {
 
-    private final BotClient botClient;
+    UpdateSenderService updateSenderService;
 
     private final ChatLinksRepository chatLinksRepository;
     private final ChatRepository chatRepository;
@@ -33,8 +34,7 @@ public class UpdateSenderService {
             LinkUpdate update = new LinkUpdate(linkId, url, "Обнаружено обновление", new ArrayList<>(chatIds));
             try {
                 log.info("Sending update for linkId: {} to {} chats", linkId, chatIds.size());
-                botClient.sendUpdate(update).block();
-                log.info("Update sent successfully for linkId: {}", linkId);
+                updateSenderService.sendUpdate(update);
             } catch (BotClientException e) {
                 log.error("Bot client update error: ", e);
             }

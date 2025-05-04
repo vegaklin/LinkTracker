@@ -9,6 +9,7 @@ import backend.academy.scrapper.service.api.ApiProcess;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +32,7 @@ class UpdateCheckServiceTest {
     private ApiProcess stackOverflowApiProcess;
 
     @Mock
-    private UpdateSenderService updateSenderService;
+    private UpdateNotifyService updateSenderService;
 
     @InjectMocks
     private UpdateCheckService updateCheckService;
