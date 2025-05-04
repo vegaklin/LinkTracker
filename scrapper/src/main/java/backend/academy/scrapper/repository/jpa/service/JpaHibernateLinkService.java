@@ -6,22 +6,25 @@ import backend.academy.scrapper.repository.jpa.repository.JpaHibernateLinkReposi
 import backend.academy.scrapper.repository.model.Link;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @Slf4j
-//@Service
+@Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "app", name = "access-type", havingValue = "ORM")
 public class JpaHibernateLinkService implements LinkRepository {
 
-    private final JpaHibernateLinkRepository linkRepository;
+    private final JpaHibernateLinkRepository jpaHibernateLinkRepository;
 
     @Override
     @Transactional(readOnly = true)
     public List<Link> getLinks() {
-        List<LinkEntity> links = linkRepository.findAll();
+        List<LinkEntity> links = jpaHibernateLinkRepository.findAll();
         return links.stream()
             .map(entity -> new Link(
                 entity.id(),
@@ -35,7 +38,7 @@ public class JpaHibernateLinkService implements LinkRepository {
     @Override
     @Transactional(readOnly = true)
     public OffsetDateTime getUpdateTime(Long linkId) {
-        return linkRepository.findById(linkId)
+        return jpaHibernateLinkRepository.findById(linkId)
             .map(LinkEntity::updateTime)
             .orElse(null);
     }
@@ -43,7 +46,7 @@ public class JpaHibernateLinkService implements LinkRepository {
     @Override
     @Transactional(readOnly = true)
     public String getLinkById(Long linkId) {
-        return linkRepository.findById(linkId)
+        return jpaHibernateLinkRepository.findById(linkId)
             .map(LinkEntity::url)
             .orElse(null);
     }
@@ -51,7 +54,7 @@ public class JpaHibernateLinkService implements LinkRepository {
     @Override
     @Transactional(readOnly = true)
     public Long getIdByUrl(String url) {
-        return linkRepository.findByUrl(url)
+        return jpaHibernateLinkRepository.findByUrl(url)
             .map(LinkEntity::id)
             .orElse(null);
     }
@@ -59,26 +62,26 @@ public class JpaHibernateLinkService implements LinkRepository {
     @Override
     @Transactional
     public void setUpdateTime(Long linkId, OffsetDateTime updateTime) {
-        linkRepository.findById(linkId).ifPresent(link -> {
+        jpaHibernateLinkRepository.findById(linkId).ifPresent(link -> {
             link.updateTime(updateTime);
-            linkRepository.save(link);
+            jpaHibernateLinkRepository.save(link);
         });
     }
 
     @Override
     @Transactional
     public Long addLink(String url) {
-        return linkRepository.findByUrl(url)
+        return jpaHibernateLinkRepository.findByUrl(url)
             .map(link -> {
                 link.updateTime(OffsetDateTime.now());
-                return linkRepository.save(link).id();
+                return jpaHibernateLinkRepository.save(link).id();
             })
             .orElseGet(() -> {
                 LinkEntity link = new LinkEntity();
                 link.url(url);
                 link.description("Без изменений");
                 link.updateTime(OffsetDateTime.now());
-                return linkRepository.save(link).id();
+                return jpaHibernateLinkRepository.save(link).id();
             });
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-//@ConditionalOnProperty(name = "app.access-type", havingValue = "SQL")
+@ConditionalOnProperty(prefix = "app", name = "access-type", havingValue = "SQL")
 public class JdbcChatRepository implements ChatRepository {
 
     private final JdbcClient jdbc;

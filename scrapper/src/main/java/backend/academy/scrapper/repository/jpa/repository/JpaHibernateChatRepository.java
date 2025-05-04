@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface JpaHibernateChatRepository extends JpaRepository<ChatEntity, Long> {
     boolean existsByChatId(Long chatId);
-    Optional<ChatEntity> findByChatId(Long chatId);
     void deleteByChatId(Long chatId);
+    Optional<ChatEntity> findByChatId(Long chatId);
 }

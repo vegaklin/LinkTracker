@@ -44,10 +44,7 @@ public class UpdateCheckService {
 
         for (ApiProcess apiProcess : apiProcessList) {
             if (apiProcess.isApiUrl(url)) {
-                log.info(
-                        "API process found for url: {}, processing with {}",
-                        url,
-                        apiProcess.getClass().getSimpleName());
+                log.info("API process found for url: {}, processing with {}", url, apiProcess.getClass().getSimpleName());
 
                 return apiProcess.checkUpdate(url);
             }

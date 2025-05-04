@@ -11,83 +11,76 @@ import backend.academy.scrapper.repository.jpa.repository.JpaHibernateLinkReposi
 import backend.academy.scrapper.repository.model.ChatLink;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-//@Service
+@Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "app", name = "access-type", havingValue = "ORM")
 public class JpaHibernateChatLinksService implements ChatLinksRepository {
 
-    private final JpaHibernateChatRepository chatRepository;
-    private final JpaHibernateLinkRepository linkRepository;
-    private final JpaHibernateChatLinksRepository chatLinkRepository;
+    private final JpaHibernateChatLinksRepository jpaHibernateChatLinksRepository;
 
-    public List<Long> getLinksForChat(Long chatId) {
-        return chatRepository.findByChatId(chatId)
-            .map(chat -> chatLinkRepository.findByChat(chat).stream()
-                .map(chatLink -> chatLink.link().id())
-                .toList())
-            .orElse(List.of());
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> getLinksForChat(Long chatRowId) {
+        return jpaHibernateChatLinksRepository.findAllById_ChatId(chatRowId)
+            .stream()
+            .map(ChatLinkEntity::getLinkId)
+            .toList();
     }
 
-    public ChatLink getChatLinkByChatIdAndLinkId(Long chatId, Long linkId) {
-        Optional<ChatEntity> chatOpt = chatRepository.findByChatId(chatId);
-        if (chatOpt.isEmpty()) return null;
-
-        Long chatInternalId = chatOpt.get().id();
-        ChatLinkId id = new ChatLinkId(chatInternalId, linkId);
-        return chatLinkRepository.findById(id)
+    @Override
+    @Transactional(readOnly = true)
+    public ChatLink getChatLinkByChatIdAndLinkId(Long chatRowId, Long linkId) {
+        ChatLinkId id = new ChatLinkId(chatRowId, linkId);
+        return jpaHibernateChatLinksRepository.findById(id)
             .map(entity -> new ChatLink(
-                entity.chat().chatId(),   // внешний chatId
-                entity.link().id(),       // linkId
+                entity.getChatId(),
+                entity.getLinkId(),
                 entity.tags(),
                 entity.filters()
             ))
             .orElse(null);
     }
 
-    public void addLink(ChatLink chatLinks) {
-//        Long chatId, Long linkId, List<String> tags, List<String> filters;
+    @Override
+    @Transactional
+    public void addLink(ChatLink chatLink) {
+        ChatLinkEntity entity = new ChatLinkEntity();
+        entity.id(new ChatLinkId(chatLink.chatId(), chatLink.linkId()));
 
-        ChatEntity chat = chatRepository.findByChatId(chatLinks.chatId()).orElseThrow();
-        LinkEntity link = linkRepository.findById(chatLinks.linkId()).orElseThrow();
+        ChatEntity chat = new ChatEntity();
+        chat.id(chatLink.chatId());
+        LinkEntity link = new LinkEntity();
+        link.id(chatLink.linkId());
 
-        ChatLinkId id = new ChatLinkId(chat.id(), link.id());
+        entity.chat(chat);
+        entity.link(link);
+        entity.tags(chatLink.tags());
+        entity.filters(chatLink.filters());
+        jpaHibernateChatLinksRepository.save(entity);
+    }
 
-        if (chatLinkRepository.existsById(id)) {
-            return; // Уже существует
+    @Override
+    @Transactional
+    public boolean removeLink(Long chatRowId, Long linkId) {
+        ChatLinkId id = new ChatLinkId(chatRowId, linkId);
+        if (jpaHibernateChatLinksRepository.existsById(id)) {
+            jpaHibernateChatLinksRepository.deleteById(id);
+            return true;
         }
-
-        ChatLinkEntity chatLink = new ChatLinkEntity();
-        chatLink.id(id);
-        chatLink.chat(chat);
-        chatLink.link(link);
-        chatLink.tags(chatLinks.tags());
-        chatLink.filters(chatLinks.filters());
-        chatLinkRepository.save(chatLink);
+        return false;
     }
 
-    public boolean removeLink(Long chatId, Long linkId) {
-        return chatRepository.findByChatId(chatId)
-            .map(chat -> {
-                ChatLinkId id = new ChatLinkId(chat.id(), linkId);
-                if (chatLinkRepository.existsById(id)) {
-                    chatLinkRepository.deleteById(id);
-                    return true;
-                }
-                return false;
-            })
-            .orElse(false);
+    @Override
+    @Transactional
+    public void removeChatLinks(Long chatRowId) {
+        jpaHibernateChatLinksRepository.deleteAllById_ChatId(chatRowId);
     }
-
-    public void removeChatLinks(Long chatId) {
-        chatRepository.findByChatId(chatId).ifPresent(chat -> {
-            List<ChatLinkEntity> links = chatLinkRepository.findByChat(chat);
-            chatLinkRepository.deleteAll(links);
-        });
-    }
-
 }

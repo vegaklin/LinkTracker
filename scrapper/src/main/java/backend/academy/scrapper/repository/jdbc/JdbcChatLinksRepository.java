@@ -4,6 +4,7 @@ import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
 import backend.academy.scrapper.repository.model.ChatLink;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-//@ConditionalOnProperty(name = "app.access-type", havingValue = "SQL")
+@ConditionalOnProperty(prefix = "app", name = "access-type", havingValue = "SQL")
 public class JdbcChatLinksRepository implements ChatLinksRepository {
 
     private final JdbcClient jdbc;
