@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Service
+//@Service
 @RequiredArgsConstructor
 public class JpaHibernateChatLinksService implements ChatLinksRepository {
 
@@ -52,8 +52,8 @@ public class JpaHibernateChatLinksService implements ChatLinksRepository {
     public void addLink(ChatLink chatLinks) {
 //        Long chatId, Long linkId, List<String> tags, List<String> filters;
 
-        ChatEntity chat = chatRepository.findByChatId(chatLinks.chat_id()).orElseThrow();
-        LinkEntity link = linkRepository.findById(chatLinks.link_id()).orElseThrow();
+        ChatEntity chat = chatRepository.findByChatId(chatLinks.chatId()).orElseThrow();
+        LinkEntity link = linkRepository.findById(chatLinks.linkId()).orElseThrow();
 
         ChatLinkId id = new ChatLinkId(chat.id(), link.id());
 

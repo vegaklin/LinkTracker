@@ -8,9 +8,11 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import java.util.Arrays;
 import java.util.List;
 import backend.academy.scrapper.service.util.ScrapperUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-//@Repository
+@Repository
 @RequiredArgsConstructor
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "SQL")
 public class JdbcChatLinksRepository implements ChatLinksRepository {
@@ -18,6 +20,7 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
     private final JdbcClient jdbc;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Long> getLinksForChat(Long chatRowId) {
         return jdbc.sql("""
                 SELECT link_id
@@ -30,6 +33,7 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ChatLink getChatLinkByChatIdAndLinkId(Long chatRowId, Long linkId) {
         return jdbc.sql("""
                 SELECT chat_id, link_id, tags, filters
@@ -48,6 +52,7 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
     }
 
     @Override
+    @Transactional
     public void addLink(ChatLink chatLink) {
         jdbc.sql("""
                 INSERT INTO chat_links (chat_id, link_id, tags, filters)
@@ -64,6 +69,7 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
     }
 
     @Override
+    @Transactional
     public boolean removeLink(Long chatRowId, Long linkId) {
         int updated = jdbc.sql("""
                 DELETE
@@ -76,6 +82,7 @@ public class JdbcChatLinksRepository implements ChatLinksRepository {
     }
 
     @Override
+    @Transactional
     public void removeChatLinks(Long chatRowId) {
         jdbc.sql("""
                 DELETE

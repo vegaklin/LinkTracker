@@ -7,11 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @Slf4j
-//@Repository
+@Repository
 @RequiredArgsConstructor
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "SQL")
 public class JdbcLinkRepository implements LinkRepository {
@@ -19,6 +20,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private final JdbcClient jdbc;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Link> getLinks() {
         return jdbc.sql("""
                 SELECT * FROM links
@@ -28,6 +30,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OffsetDateTime getUpdateTime(Long linkId) {
         return jdbc.sql("""
                 SELECT update_time
@@ -41,6 +44,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String getLinkById(Long linkId) {
         return jdbc.sql("""
                 SELECT url
@@ -54,6 +58,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long getIdByUrl(String url) {
         return jdbc.sql("""
                 SELECT id
@@ -67,6 +72,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public void setUpdateTime(Long linkId, OffsetDateTime updateTime) {
         jdbc.sql("""
                 UPDATE links
@@ -78,11 +84,16 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public Long addLink(String url) {
-        return jdbc.sql("""
+        jdbc.sql("""
                 INSERT INTO links (url, description, update_time)
                 VALUES (?, 'Без изменений', now())
                 ON CONFLICT (url) DO NOTHING;
+                """)
+            .param(url)
+            .update();
+        return jdbc.sql("""
                 SELECT id FROM links WHERE url = ?;
                 """)
             .param(url)

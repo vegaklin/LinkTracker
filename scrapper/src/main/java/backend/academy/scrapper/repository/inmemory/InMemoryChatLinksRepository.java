@@ -22,7 +22,7 @@ public class InMemoryChatLinksRepository {
         Set<ChatLink> links = chatLinksMap.getOrDefault(chatId, Set.of());
         log.info("Get links for chatId {}: {}", chatId, links);
         return links.stream()
-            .map(ChatLink::link_id)
+            .map(ChatLink::linkId)
             .toList();
     }
 
@@ -35,7 +35,7 @@ public class InMemoryChatLinksRepository {
         }
 
         return chatLinks.stream()
-            .filter(link -> link.chat_id().equals(chatId) && link.link_id().equals(linkId))
+            .filter(link -> link.chatId().equals(chatId) && link.linkId().equals(linkId))
             .findFirst()
             .orElseGet(() -> {
                 log.warn("ChatLinks not found for chatId {} and linkId {}", chatId, linkId);
@@ -45,8 +45,8 @@ public class InMemoryChatLinksRepository {
 
 //    @Override
     public void addLink(ChatLink chatLinks) {
-        chatLinksMap.computeIfAbsent(chatLinks.chat_id(), k -> new HashSet<>()).add(chatLinks);
-        log.info("Link {} added to chatId {}", chatLinks.link_id(), chatLinks.chat_id());
+        chatLinksMap.computeIfAbsent(chatLinks.chatId(), k -> new HashSet<>()).add(chatLinks);
+        log.info("Link {} added to chatId {}", chatLinks.linkId(), chatLinks.chatId());
     }
 
 //    @Override
@@ -59,7 +59,7 @@ public class InMemoryChatLinksRepository {
         }
 
         boolean removed = chatLinks.removeIf(link ->
-            link.chat_id().equals(chatId) && link.link_id().equals(linkId)
+            link.chatId().equals(chatId) && link.linkId().equals(linkId)
         );
 
         if (removed) {

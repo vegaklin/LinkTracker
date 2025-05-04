@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
-@Service
+//@Service
 @RequiredArgsConstructor
-public class JpaHibernateChatService implements ChatRepository {
+public class JpaHibernateChatService { //implements ChatRepository {
 
     private final JpaHibernateChatRepository chatRepository;
 
-    @Override
+//    @Override
     @Transactional
     public void registerChat(Long chatId) {
         if (!chatRepository.existsByChatId(chatId)) {
@@ -26,7 +26,7 @@ public class JpaHibernateChatService implements ChatRepository {
         }
     }
 
-    @Override
+//    @Override
     @Transactional
     public boolean deleteChat(Long chatId) {
         if (chatRepository.existsByChatId(chatId)) {
@@ -36,7 +36,7 @@ public class JpaHibernateChatService implements ChatRepository {
         return false;
     }
 
-    @Override
+//    @Override
     @Transactional(readOnly = true)
     public List<Long> getChatIds() {
         return chatRepository.findAll().stream()

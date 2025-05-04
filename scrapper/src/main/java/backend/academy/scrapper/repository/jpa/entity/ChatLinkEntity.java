@@ -28,12 +28,12 @@ public class ChatLinkEntity {
 
     @ManyToOne
     @MapsId("chatId")
-    @JoinColumn(name = "chat_id")
+    @JoinColumn(name = "chat_id", referencedColumnName = "id")
     private ChatEntity chat;
 
     @ManyToOne
     @MapsId("linkId")
-    @JoinColumn(name = "link_id")
+    @JoinColumn(name = "link_id", referencedColumnName = "id")
     private LinkEntity link;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
@@ -43,4 +43,12 @@ public class ChatLinkEntity {
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "filters")
     private List<String> filters;
+
+    public Long getChatId() {
+        return id.chatId();
+    }
+
+    public Long getLinkId() {
+        return id.linkId();
+    }
 }

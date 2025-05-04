@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Slf4j
-@Service
+//@Service
 @RequiredArgsConstructor
 public class JpaHibernateLinkService implements LinkRepository {
 

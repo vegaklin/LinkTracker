@@ -6,10 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
-//@Repository
+@Repository
 @RequiredArgsConstructor
 //@ConditionalOnProperty(name = "app.access-type", havingValue = "SQL")
 public class JdbcChatRepository implements ChatRepository {
@@ -17,6 +18,7 @@ public class JdbcChatRepository implements ChatRepository {
     private final JdbcClient jdbc;
 
     @Override
+    @Transactional
     public void registerChat(Long chatId) {
         jdbc.sql("""
                 INSERT INTO chats (chat_id)
@@ -28,6 +30,7 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteChat(Long chatRowId) {
         int updated = jdbc.sql("""
                 DELETE
@@ -40,6 +43,7 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Long> getChatIds() {
         return jdbc.sql("""
                 SELECT chat_id
@@ -50,6 +54,7 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long findIdByChatId(Long chatId) {
         return jdbc.sql("""
                 SELECT id

@@ -25,12 +25,14 @@ public class ScrapperService {
     private final ChatLinksRepository chatLinksRepository;
     private final LinkRepository linkRepository;
 
+    @Transactional
     public void registerChat(Long chatId) {
         log.info("Registering chat with chatId: {}", chatId.toString());
 
         chatRepository.registerChat(chatId);
     }
 
+    @Transactional
     public void deleteChat(Long chatId) {
         log.info("Deleting chat with chatId: {}", chatId.toString());
 
@@ -43,6 +45,7 @@ public class ScrapperService {
         }
     }
 
+    @Transactional
     public LinkResponse addLink(Long chatId, AddLinkRequest addLinkRequest) {
         log.info("Adding link for chatId {}: {}", chatId, addLinkRequest.link());
 
@@ -55,6 +58,7 @@ public class ScrapperService {
         return new LinkResponse(chatLink.linkId(), addLinkRequest.link(), chatLink.tags(), chatLink.filters());
     }
 
+    @Transactional
     public LinkResponse removeLink(Long chatId, RemoveLinkRequest removeLinkRequest) {
         log.info("Removing link for chatId {}: {}", chatId, removeLinkRequest.link());
 
@@ -75,6 +79,7 @@ public class ScrapperService {
         return new LinkResponse(chatLink.linkId(), removeLinkRequest.link(), chatLink.tags(), chatLink.tags());
     }
 
+    @Transactional
     public ListLinksResponse getAllLinks(Long chatId) {
         log.info("Get all links for chat id: {}", chatId.toString());
 
