@@ -18,11 +18,13 @@ CREATE TABLE chat_links (
     PRIMARY KEY (chat_id, link_id)
 );
 
+CREATE INDEX idx_chats_id ON chats(id);
 CREATE INDEX idx_chats_chat_id ON chats(chat_id);
 
-CREATE INDEX idx_links_url ON links(id);
+CREATE INDEX idx_links_id ON links(id);
 CREATE INDEX idx_links_url ON links(url);
 
+CREATE INDEX idx_chat_links_chat_id ON chat_links(chat_id);
 CREATE INDEX idx_chat_links_link_id ON chat_links(link_id);
 
 CREATE INDEX idx_chat_links_tags ON chat_links USING GIN (tags);
