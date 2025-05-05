@@ -70,6 +70,15 @@ public class JpaHibernateLinkService implements LinkRepository {
 
     @Override
     @Transactional
+    public void setDescription(Long linkId, String description) {
+        jpaHibernateLinkRepository.findById(linkId).ifPresent(link -> {
+            link.description(description);
+            jpaHibernateLinkRepository.save(link);
+        });
+    }
+
+    @Override
+    @Transactional
     public Long addLink(String url) {
         return jpaHibernateLinkRepository.findByUrl(url)
             .map(link -> {

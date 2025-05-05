@@ -18,20 +18,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UpdateNotifyService {
 
-    UpdateSenderService updateSenderService;
+    private final UpdateSenderService updateSenderService;
 
     private final ChatLinksRepository chatLinksRepository;
     private final ChatRepository chatRepository;
 
-    public void notifyChatsForLink(Long linkId, String url) {
+    public void notifyChatsForLink(Long linkId, String url, String description) {
         log.info("Notifying chats for linkId: {}, url: {}", linkId, url);
 
         Set<Long> chatIds = chatRepository.getChatIds().stream()
                 .filter(chatId -> chatLinksRepository.getLinksForChat(chatId).contains(linkId))
+                .map(chatRepository::findChatIdById)
                 .collect(Collectors.toSet());
 
         if (!chatIds.isEmpty()) {
-            LinkUpdate update = new LinkUpdate(linkId, url, "Обнаружено обновление", new ArrayList<>(chatIds));
+            LinkUpdate update = new LinkUpdate(linkId, url, description, new ArrayList<>(chatIds));
             try {
                 log.info("Sending update for linkId: {} to {} chats", linkId, chatIds.size());
                 updateSenderService.sendUpdate(update);

@@ -1,6 +1,7 @@
 package backend.academy.scrapper.service.api;
 
 import backend.academy.scrapper.client.GitHubClient;
+import backend.academy.scrapper.client.dto.ApiAnswer;
 import backend.academy.scrapper.client.dto.GitHubResponse;
 import backend.academy.scrapper.exception.ApiClientException;
 import java.time.OffsetDateTime;
@@ -22,22 +23,25 @@ public class GitHubApiProcess implements ApiProcess {
     }
 
     @Override
-    public Mono<OffsetDateTime> checkUpdate(String url) {
+    public ApiAnswer checkUpdate(String url) {
         log.info("Processing update for github url {}", url);
 
         String[] parts = url.split("/");
         if (parts.length < 5) {
             log.warn("Invalid GitHub URL format: {}", url);
-            return Mono.empty();
+            return null;
         }
 
         String owner = parts[3];
         String repo = parts[4];
         try {
-            return gitHubClient.getRepository(owner, repo).map(GitHubResponse::updatedAt);
+            GitHubResponse gitHubResponse = gitHubClient.getRepository(owner, repo).block();
+            if(gitHubResponse != null) {
+                return new ApiAnswer(gitHubResponse.toMessage(), gitHubResponse.createdAt());
+            }
         } catch (ApiClientException e) {
             log.error("Error parsing URL {}: ", url, e);
         }
-        return Mono.empty();
+        return null;
     }
 }

@@ -46,7 +46,7 @@ public class JdbcChatRepository implements ChatRepository {
     @Transactional(readOnly = true)
     public List<Long> getChatIds() {
         return jdbc.sql("""
-                SELECT chat_id
+                SELECT id
                 FROM chats
                 """)
             .query(Long.class)
@@ -67,4 +67,17 @@ public class JdbcChatRepository implements ChatRepository {
             .orElse(null);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Long findChatIdById(Long chatRowId) {
+        return jdbc.sql("""
+                SELECT chat_id
+                FROM chats
+                WHERE id = ?
+                """)
+            .param(chatRowId)
+            .query(Long.class)
+            .optional()
+            .orElse(null);
+    }
 }

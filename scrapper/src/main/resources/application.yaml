@@ -1,5 +1,5 @@
 app:
-  access-type: ${ACCESS_TYPE:SQL}
+  access-type: ${ACCESS_TYPE:ORM}
   github-token: ${GITHUB_TOKEN} # env variable
   stackoverflow:
     key: ${SO_TOKEN_KEY}

@@ -85,6 +85,18 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
+    public void setDescription(Long linkId, String description) {
+        jdbc.sql("""
+                UPDATE links
+                SET description = ?
+                WHERE id = ?
+                """)
+            .params(description, linkId)
+            .update();
+    }
+
+    @Override
+    @Transactional
     public Long addLink(String url) {
         jdbc.sql("""
                 INSERT INTO links (url, description, update_time)

@@ -43,7 +43,7 @@ public class JpaHibernateChatService implements ChatRepository {
     @Transactional(readOnly = true)
     public List<Long> getChatIds() {
         return jpaHibernateChatRepository.findAll().stream()
-            .map(ChatEntity::chatId)
+            .map(ChatEntity::id)
             .toList();
     }
 
@@ -52,6 +52,14 @@ public class JpaHibernateChatService implements ChatRepository {
     public Long findIdByChatId(Long chatId) {
         return jpaHibernateChatRepository.findByChatId(chatId)
             .map(ChatEntity::id)
+            .orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long findChatIdById(Long chatRowId) {
+        return jpaHibernateChatRepository.findById(chatRowId)
+            .map(ChatEntity::chatId)
             .orElse(null);
     }
 }

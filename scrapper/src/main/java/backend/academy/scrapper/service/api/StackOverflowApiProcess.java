@@ -1,6 +1,7 @@
 package backend.academy.scrapper.service.api;
 
 import backend.academy.scrapper.client.StackOverflowClient;
+import backend.academy.scrapper.client.dto.ApiAnswer;
 import backend.academy.scrapper.client.dto.StackOverflowResponse;
 import backend.academy.scrapper.exception.ApiClientException;
 import java.time.OffsetDateTime;
@@ -22,25 +23,26 @@ public class StackOverflowApiProcess implements ApiProcess {
     }
 
     @Override
-    public Mono<OffsetDateTime> checkUpdate(String url) {
+    public ApiAnswer checkUpdate(String url) {
         log.info("Processing update for stackoverflow url {}", url);
 
         String[] parts = url.split("/");
         if (parts.length < 5) {
             log.warn("Invalid StackOverflow URL format: {}", url);
-            return Mono.empty();
+            return null;
         }
 
+        Long questionId = Long.parseLong(parts[4]);
         try {
-            Long questionId = Long.parseLong(parts[4]);
-            return stackOverflowClient
-                    .getQuestion(questionId)
-                    .map(StackOverflowResponse::getLastActivityDateAsOffsetDateTime);
+            StackOverflowResponse stackOverflowResponse = stackOverflowClient.getQuestion(questionId).block();
+            if(stackOverflowResponse != null) {
+                return new ApiAnswer("temp", stackOverflowResponse.getLastActivityDateAsOffsetDateTime());
+            }
         } catch (ApiClientException e) {
             log.error("Error parsing URL {}: ", url, e);
         } catch (NumberFormatException e) {
             log.error("Error parsing Long {}: ", parts[4], e);
         }
-        return Mono.empty();
+        return null;
     }
 }

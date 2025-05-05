@@ -7,4 +7,5 @@ public interface ChatRepository {
     boolean deleteChat(Long chatRowId);
     List<Long> getChatIds();
     Long findIdByChatId(Long chatId);
+    Long findChatIdById(Long chatRowId);
 }

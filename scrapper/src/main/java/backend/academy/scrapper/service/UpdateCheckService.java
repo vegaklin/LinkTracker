@@ -1,5 +1,6 @@
 package backend.academy.scrapper.service;
 
+import backend.academy.scrapper.client.dto.ApiAnswer;
 import backend.academy.scrapper.repository.interfaces.LinkRepository;
 import backend.academy.scrapper.service.api.ApiProcess;
 import java.time.OffsetDateTime;
@@ -23,14 +24,18 @@ public class UpdateCheckService {
     public void checkLinkUpdate(Long linkId, String url) {
         log.info("Checking for updates for linkId: {}, url: {}", linkId, url);
 
-        OffsetDateTime lastUpdate = checkUpdate(url).block();
-        if (lastUpdate != null) {
+        ApiAnswer apiAnswer = checkUpdate(url);
+        if (apiAnswer != null) {
             OffsetDateTime previousUpdate = linkRepository.getUpdateTime(linkId);
-            if (previousUpdate != null && lastUpdate.isAfter(previousUpdate)) {
+            OffsetDateTime currentUpdate = apiAnswer.lastUpdate();
+
+            if (previousUpdate != null && currentUpdate.isAfter(previousUpdate)) {
                 log.info("Update detected for linkId: {}, url: {}", linkId, url);
 
-                linkRepository.setUpdateTime(linkId, lastUpdate);
-                updateNotifyService.notifyChatsForLink(linkId, url);
+                linkRepository.setUpdateTime(linkId, currentUpdate);
+                linkRepository.setDescription(linkId, apiAnswer.description());
+
+                updateNotifyService.notifyChatsForLink(linkId, url, apiAnswer.description());
             } else {
                 log.info("No update for linkId: {}, url: {}", linkId, url);
             }
@@ -39,18 +44,17 @@ public class UpdateCheckService {
         }
     }
 
-    public Mono<OffsetDateTime> checkUpdate(String url) {
+    public ApiAnswer checkUpdate(String url) {
         log.info("Checking update for url: {}", url);
 
         for (ApiProcess apiProcess : apiProcessList) {
             if (apiProcess.isApiUrl(url)) {
                 log.info("API process found for url: {}, processing with {}", url, apiProcess.getClass().getSimpleName());
-
                 return apiProcess.checkUpdate(url);
             }
         }
 
         log.warn("No API process found for url: {}", url);
-        return Mono.empty();
+        return null;
     }
 }
