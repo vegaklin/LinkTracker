@@ -32,11 +32,11 @@ public class StackOverflowApiProcess implements ApiProcess {
             return null;
         }
 
-        Long questionId = Long.parseLong(parts[4]);
         try {
+            Long questionId = Long.parseLong(parts[4]);
             StackOverflowResponse stackOverflowResponse = stackOverflowClient.getQuestion(questionId).block();
             if(stackOverflowResponse != null) {
-                return new ApiAnswer("temp", stackOverflowResponse.getLastActivityDateAsOffsetDateTime());
+                return new ApiAnswer(stackOverflowResponse.toMessage(), stackOverflowResponse.getLastActivityDateAsOffsetDateTime());
             }
         } catch (ApiClientException e) {
             log.error("Error parsing URL {}: ", url, e);

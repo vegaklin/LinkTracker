@@ -19,6 +19,7 @@ CREATE TABLE chat_links (
 );
 
 CREATE INDEX idx_links_url ON links(url);
+
 CREATE INDEX idx_chat_links_link_id ON chat_links(link_id);
 
 CREATE INDEX idx_chat_links_tags ON chat_links USING GIN (tags);
