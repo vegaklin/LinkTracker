@@ -37,11 +37,11 @@ public class Scheduler {
     public void checkForUpdates() {
         log.info("Starting scheduled link update check with batch size {} and {} threads", batchSize, threadCount);
 
-        Long totalLinks = linkRepository.countLinks();
+        Long totalLinksCount = linkRepository.countLinks();
         int offset = 0;
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         try {
-            while (offset < totalLinks) {
+            while (offset < totalLinksCount) {
                 List<Link> batch = linkRepository.getLinks(batchSize, offset);
                 if (batch.isEmpty()) {
                     break;
