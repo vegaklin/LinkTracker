@@ -5,6 +5,12 @@ app:
     key: ${SO_TOKEN_KEY}
     access-token: ${SO_ACCESS_TOKEN}
 
+scheduler:
+  batch-size: 100
+  thread-count: 4
+  thread-waiting-time: 15
+  fixed-interval-ms: 10000
+
 spring:
   application:
     name: Scrapper

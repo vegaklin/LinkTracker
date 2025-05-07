@@ -5,7 +5,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface LinkRepository {
-    List<Link> getLinks();
+    List<Link> getLinks(int limit, int offset);
+    Long countLinks();
     OffsetDateTime getUpdateTime(Long linkId);
     String getLinkById(Long linkId);
     Long getIdByUrl(String url);

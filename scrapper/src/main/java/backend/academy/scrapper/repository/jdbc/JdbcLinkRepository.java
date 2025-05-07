@@ -21,12 +21,27 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Link> getLinks() {
+    public List<Link> getLinks(int limit, int offset) {
         return jdbc.sql("""
-                SELECT * FROM links
+                SELECT *
+                FROM links
+                ORDER BY id
+                LIMIT ? OFFSET ?
                 """)
+            .params(limit, offset)
             .query(Link.class)
             .list();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long countLinks() {
+        return jdbc.sql("""
+                SELECT COUNT(*)
+                FROM links
+                """)
+            .query(Long.class)
+            .single();
     }
 
     @Override
