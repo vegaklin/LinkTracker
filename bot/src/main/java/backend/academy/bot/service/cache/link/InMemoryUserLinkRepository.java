@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
 @Repository
 public class InMemoryUserLinkRepository implements UserLinkRepository {
-    private final Map<Long, String> userLinks = new HashMap<>();
-    private final Map<Long, List<String>> userTags = new HashMap<>();
-    private final Map<Long, List<String>> userFilters = new HashMap<>();
+    private final Map<Long, String> userLinks = new ConcurrentHashMap<>();
+    private final Map<Long, List<String>> userTags = new ConcurrentHashMap<>();
+    private final Map<Long, List<String>> userFilters = new ConcurrentHashMap<>();
 
     @Override
     public void setLink(long chatId, String link) {
@@ -26,7 +27,7 @@ public class InMemoryUserLinkRepository implements UserLinkRepository {
         if (link != null) {
             log.info("Get link for chatId: {}", chatId);
         } else {
-            log.warn("No link found for chatId: {}", chatId);
+            log.info("No link found for chatId: {}", chatId);
         }
         return link;
     }
@@ -43,7 +44,7 @@ public class InMemoryUserLinkRepository implements UserLinkRepository {
         if (!tags.isEmpty()) {
             log.info("Get tags for chatId: {}", chatId);
         } else {
-            log.warn("No tags found for chatId: {}", chatId);
+            log.info("No tags found for chatId: {}", chatId);
         }
         return tags;
     }
@@ -60,7 +61,7 @@ public class InMemoryUserLinkRepository implements UserLinkRepository {
         if (!filters.isEmpty()) {
             log.info("Get filters for chatId: {}", chatId);
         } else {
-            log.warn("No filters found for chatId: {}", chatId);
+            log.warn("No info found for chatId: {}", chatId);
         }
         return filters;
     }

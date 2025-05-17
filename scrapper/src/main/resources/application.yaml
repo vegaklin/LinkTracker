@@ -32,6 +32,12 @@ server:
 bot:
   url: ${BOT_URL:http://localhost:8080}
 
+api:
+  github:
+    base-url: https://api.github.com
+  stackoverflow:
+    base-url: https://api.stackexchange.com
+
 springdoc:
   swagger-ui:
     enabled: true

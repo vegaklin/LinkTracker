@@ -11,8 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
 import backend.academy.scrapper.client.dto.ListWrapper;
+import java.util.Map;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -21,6 +24,16 @@ public class StackOverflowClient {
     private final ScrapperConfig scrapperConfig;
 
     private final WebClient stackOverflowWebClient;
+
+    public static final String QUESTION_ENDPOINT = "/2.3/questions/{questionId}";
+    public static final String QUESTION_ANSWERS_ENDPOINT = QUESTION_ENDPOINT + "/answers";
+
+    public static final String SITE_PARAM = "site";
+    public static final String SITE_VALUE = "stackoverflow";
+    public static final String KEY_PARAM = "key";
+    public static final String ACCESS_TOKEN_PARAM = "access_token";
+    public static final String FILTER_PARAM = "filter";
+    public static final String FILTER_VALUE = "withbody";
 
     public Mono<StackOverflowResponse> getQuestion(Long questionId) {
         Mono<StackOverflowResponse> answerMono = getAnswer(questionId);
@@ -43,11 +56,11 @@ public class StackOverflowClient {
         return stackOverflowWebClient
             .get()
             .uri(uriBuilder -> uriBuilder
-                .path("/2.3/questions/{questionId}/answers")
-                .queryParam("site", "stackoverflow")
-                .queryParam("key", scrapperConfig.stackOverflow().key())
-//                .queryParam("access_token", scrapperConfig.stackOverflow().accessToken())
-                .queryParam("filter", "withbody")
+                .path(QUESTION_ANSWERS_ENDPOINT)
+                .queryParam(SITE_PARAM, SITE_VALUE)
+                .queryParam(KEY_PARAM, scrapperConfig.stackOverflow().key())
+//                .queryParam(ACCESS_TOKEN_PARAM, scrapperConfig.stackOverflow().accessToken())
+                .queryParam(FILTER_PARAM, FILTER_VALUE)
                 .build(questionId))
             .exchangeToMono(response -> handleResponse(response, questionId, StackOverflowResponseWrapper.class));
     }
@@ -56,10 +69,10 @@ public class StackOverflowClient {
         return stackOverflowWebClient
             .get()
             .uri(uriBuilder -> uriBuilder
-                .path("/2.3/questions/{questionId}")
-                .queryParam("site", "stackoverflow")
-                .queryParam("key", scrapperConfig.stackOverflow().key())
-//                .queryParam("access_token", scrapperConfig.stackOverflow().accessToken())
+                .path(QUESTION_ENDPOINT)
+                .queryParam(SITE_PARAM, SITE_VALUE)
+                .queryParam(KEY_PARAM, scrapperConfig.stackOverflow().key())
+//                .queryParam(ACCESS_TOKEN_PARAM, scrapperConfig.stackOverflow().accessToken())
                 .build(questionId))
             .exchangeToMono(response -> handleResponse(response, questionId, StackOverflowQuestionWrapper.class));
     }

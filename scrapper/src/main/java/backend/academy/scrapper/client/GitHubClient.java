@@ -19,13 +19,17 @@ public class GitHubClient {
 
     private final WebClient githubWebClient;
 
+    public static final String REPOS_ISSUES_ENDPOINT = "/repos/{owner}/{repo}/issues";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_VALUE_PREFIX = "Bearer ";
+
     public Mono<GitHubResponse> getRepository(String owner, String repo) {
         return githubWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                    .path("/repos/{owner}/{repo}/issues")
+                    .path(REPOS_ISSUES_ENDPOINT)
                     .build(owner, repo))
-                .header("Authorization", "Bearer " + scrapperConfig.githubToken())
+                .header(AUTHORIZATION_HEADER, AUTHORIZATION_VALUE_PREFIX + scrapperConfig.githubToken())
                 .exchangeToMono(response -> handleResponse(response, owner, repo));
     }
 

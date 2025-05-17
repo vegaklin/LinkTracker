@@ -37,11 +37,15 @@ public class ScrapperService {
         log.info("Deleting chat with chatId: {}", chatId.toString());
 
         Long chatRowId = chatRepository.findIdByChatId(chatId);
+        if (chatRowId == null) {
+            log.error("Id not found for chatId while deleteChat: {}", chatId);
+            throw new ChatNotFoundException("Id не найдена для chatId: " + chatId);
+        }
 
         chatLinksRepository.removeChatLinks(chatRowId);
         if (!chatRepository.deleteChat(chatRowId)) {
-            log.error("Chat not found for chatId: {}", chatId.toString());
-            throw new ChatNotFoundException("Чат не найден с id: " + chatId);
+            log.error("Chat not found for chatId: {}", chatId.toString()); //
+            throw new ChatNotFoundException("Чат не найден с id: " + chatId); //
         }
     }
 
@@ -50,6 +54,10 @@ public class ScrapperService {
         log.info("Adding link for chatId {}: {}", chatId, addLinkRequest.link());
 
         Long chatRowId = chatRepository.findIdByChatId(chatId);
+        if (chatRowId == null) {
+            log.error("Id not found for chatId while addLink: {}", chatId);
+            throw new ChatNotFoundException("Id не найдена для chatId: " + chatId);
+        }
 
         Long linkId = linkRepository.addLink(addLinkRequest.link());
         chatLinksRepository.addLink(new ChatLink(chatRowId, linkId, addLinkRequest.tags(), addLinkRequest.filters()));
@@ -69,6 +77,11 @@ public class ScrapperService {
         }
 
         Long chatRowId = chatRepository.findIdByChatId(chatId);
+        if (chatRowId == null) {
+            log.error("Id not found for chatId while removeLink: {}", chatId);
+            throw new ChatNotFoundException("Id не найдена для chatId: " + chatId);
+        }
+
         ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId);
         if (!chatLinksRepository.removeLink(chatRowId, linkId)) {
             log.error("Link with id {} not found for chat id {}", linkId, chatId.toString());
@@ -84,12 +97,16 @@ public class ScrapperService {
         log.info("Get all links for chat id: {}", chatId.toString());
 
         Long chatRowId = chatRepository.findIdByChatId(chatId);
+        if (chatRowId == null) {
+            log.error("Id not found for chatId while getAllLinks: {}", chatId);
+            throw new ChatNotFoundException("Id не найдена для chatId: " + chatId);
+        }
 
         List<Long> linkIds = chatLinksRepository.getLinksForChat(chatRowId);
         List<LinkResponse> links = linkIds.stream()
                 .map(linkId -> {
-                    ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId);
-                    String link = linkRepository.getLinkById(linkId);
+                    ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId); //
+                    String link = linkRepository.getLinkById(linkId); //
                     return new LinkResponse(chatLink.linkId(), link, chatLink.tags(), chatLink.filters());
                 })
                 .toList();

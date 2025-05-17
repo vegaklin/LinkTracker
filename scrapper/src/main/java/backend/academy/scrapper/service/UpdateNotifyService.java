@@ -26,7 +26,7 @@ public class UpdateNotifyService {
     public void notifyChatsForLink(Long linkId, String url, String description) {
         log.info("Notifying chats for linkId: {}, url: {}", linkId, url);
 
-        Set<Long> chatIds = chatRepository.getChatIds().stream()
+        Set<Long> chatIds = chatRepository.getChatIds().stream() //
                 .filter(chatId -> chatLinksRepository.getLinksForChat(chatId).contains(linkId))
                 .map(chatRepository::findChatIdById)
                 .collect(Collectors.toSet());

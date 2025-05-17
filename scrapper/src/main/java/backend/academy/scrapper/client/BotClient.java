@@ -17,10 +17,12 @@ public class BotClient {
 
     private final WebClient botWebClient;
 
+    private static final String UPDATES_ENDPOINT = "/updates";
+
     public Mono<Void> sendUpdate(LinkUpdate update) {
         return botWebClient
                 .post()
-                .uri("/updates")
+                .uri(UPDATES_ENDPOINT)
                 .bodyValue(update)
                 .exchangeToMono(response -> handleResponse(response, Void.class));
     }

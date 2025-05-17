@@ -30,7 +30,6 @@ public class LinkController {
     public ResponseEntity<ListLinksResponse> handleGetAllLinks(@RequestHeader("Tg-Chat-Id") @NotNull Long tgChatId) {
         log.info("Received request to get all links for chatId: {}", tgChatId.toString());
         ListLinksResponse response = scrapperService.getAllLinks(tgChatId);
-        log.info("Returning {} links for chatId: {}", response.links().size(), tgChatId.toString());
         return ResponseEntity.ok(response);
     }
 
@@ -39,7 +38,6 @@ public class LinkController {
             @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody @Valid AddLinkRequest request) {
         log.info("Received request to add link '{}' for chatId: {}", request.link(), tgChatId.toString());
         LinkResponse response = scrapperService.addLink(tgChatId, request);
-        log.info("Successfully added link '{}' for chatId: {}", response.url(), tgChatId.toString());
         return ResponseEntity.ok(response);
     }
 
@@ -48,7 +46,6 @@ public class LinkController {
             @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody @Valid RemoveLinkRequest request) {
         log.info("Received request to remove link '{}' for chatId: {}", request.link(), tgChatId.toString());
         LinkResponse response = scrapperService.removeLink(tgChatId, request);
-        log.info("Successfully removed link '{}' for chatId: {}", response.url(), tgChatId.toString());
         return ResponseEntity.ok(response);
     }
 }

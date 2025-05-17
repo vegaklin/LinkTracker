@@ -21,33 +21,37 @@ public class ScrapperClient {
 
     private final WebClient scrapperWebClient;
 
+    private static final String TG_CHAT_ENDPOINT = "/tg-chat/{id}";
+    private static final String LINKS_ENDPOINT = "/links";
+    private static final String TG_CHAT_ID_HEADER  = "Tg-Chat-Id";
+
     public Mono<Void> registerChat(Long chatId) {
         return scrapperWebClient
                 .post()
-                .uri("/tg-chat/{id}", chatId)
+                .uri(TG_CHAT_ENDPOINT, chatId)
                 .exchangeToMono(response -> handleResponse(response, Void.class));
     }
 
     public Mono<Void> deleteChat(Long chatId) {
         return scrapperWebClient
                 .delete()
-                .uri("/tg-chat/{id}", chatId)
+                .uri(TG_CHAT_ENDPOINT, chatId)
                 .exchangeToMono(response -> handleResponse(response, Void.class));
     }
 
     public Mono<ListLinksResponse> getAllLinks(Long chatId) {
         return scrapperWebClient
                 .get()
-                .uri("/links")
-                .header("Tg-Chat-Id", String.valueOf(chatId))
+                .uri(LINKS_ENDPOINT)
+                .header(TG_CHAT_ID_HEADER, String.valueOf(chatId))
                 .exchangeToMono(response -> handleResponse(response, ListLinksResponse.class));
     }
 
     public Mono<LinkResponse> addLink(Long chatId, AddLinkRequest request) {
         return scrapperWebClient
                 .post()
-                .uri("/links")
-                .header("Tg-Chat-Id", String.valueOf(chatId))
+                .uri(LINKS_ENDPOINT)
+                .header(TG_CHAT_ID_HEADER, String.valueOf(chatId))
                 .bodyValue(request)
                 .exchangeToMono(response -> handleResponse(response, LinkResponse.class));
     }
@@ -55,8 +59,8 @@ public class ScrapperClient {
     public Mono<LinkResponse> removeLink(Long chatId, RemoveLinkRequest request) {
         return scrapperWebClient
                 .method(HttpMethod.DELETE)
-                .uri("/links")
-                .header("Tg-Chat-Id", String.valueOf(chatId))
+                .uri(LINKS_ENDPOINT)
+                .header(TG_CHAT_ID_HEADER, String.valueOf(chatId))
                 .bodyValue(request)
                 .exchangeToMono(response -> handleResponse(response, LinkResponse.class));
     }
