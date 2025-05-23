@@ -1,7 +1,6 @@
 package backend.academy.bot.service.cache.link;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

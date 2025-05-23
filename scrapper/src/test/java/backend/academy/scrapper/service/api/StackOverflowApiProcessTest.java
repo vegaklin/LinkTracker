@@ -1,27 +1,27 @@
-//package backend.academy.scrapper.service.api;
+// package backend.academy.scrapper.service.api;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertFalse;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
-//import static org.junit.jupiter.api.Assertions.assertNull;
-//import static org.junit.jupiter.api.Assertions.assertTrue;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertFalse;
+// import static org.junit.jupiter.api.Assertions.assertNotNull;
+// import static org.junit.jupiter.api.Assertions.assertNull;
+// import static org.junit.jupiter.api.Assertions.assertTrue;
 //
-//import backend.academy.scrapper.client.StackOverflowClient;
-//import backend.academy.scrapper.client.dto.StackOverflowResponse;
-//import backend.academy.scrapper.exception.ApiClientException;
-//import java.time.Instant;
-//import java.time.OffsetDateTime;
-//import java.time.ZoneOffset;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import reactor.core.publisher.Mono;
+// import backend.academy.scrapper.client.StackOverflowClient;
+// import backend.academy.scrapper.client.dto.StackOverflowResponse;
+// import backend.academy.scrapper.exception.ApiClientException;
+// import java.time.Instant;
+// import java.time.OffsetDateTime;
+// import java.time.ZoneOffset;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.Mockito;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import reactor.core.publisher.Mono;
 //
-//@ExtendWith(MockitoExtension.class)
-//class StackOverflowApiProcessTest {
+// @ExtendWith(MockitoExtension.class)
+// class StackOverflowApiProcessTest {
 //
 //    @Mock
 //    private StackOverflowClient stackOverflowClient;
@@ -102,4 +102,4 @@
 //
 //        assertNull(result);
 //    }
-//}
+// }

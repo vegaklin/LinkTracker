@@ -4,11 +4,9 @@ import backend.academy.scrapper.client.StackOverflowClient;
 import backend.academy.scrapper.client.dto.ApiAnswer;
 import backend.academy.scrapper.client.dto.StackOverflowResponse;
 import backend.academy.scrapper.exception.ApiClientException;
-import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
@@ -34,9 +32,11 @@ public class StackOverflowApiProcess implements ApiProcess {
 
         try {
             Long questionId = Long.parseLong(parts[4]);
-            StackOverflowResponse stackOverflowResponse = stackOverflowClient.getQuestion(questionId).block();
-            if(stackOverflowResponse != null) {
-                return new ApiAnswer(stackOverflowResponse.toMessage(), stackOverflowResponse.getLastActivityDateAsOffsetDateTime());
+            StackOverflowResponse stackOverflowResponse =
+                    stackOverflowClient.getQuestion(questionId).block();
+            if (stackOverflowResponse != null) {
+                return new ApiAnswer(
+                        stackOverflowResponse.toMessage(), stackOverflowResponse.getLastActivityDateAsOffsetDateTime());
             }
         } catch (ApiClientException e) {
             log.error("Error parsing URL {}: ", url, e);

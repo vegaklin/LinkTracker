@@ -1,7 +1,6 @@
 package backend.academy.bot.service.cache.state;
 
 import backend.academy.bot.service.model.BotState;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;

@@ -1,31 +1,31 @@
-//package backend.academy.scrapper.service;
+// package backend.academy.scrapper.service;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
 //
-//import backend.academy.scrapper.dto.AddLinkRequest;
-//import backend.academy.scrapper.dto.LinkResponse;
-//import backend.academy.scrapper.dto.ListLinksResponse;
-//import backend.academy.scrapper.dto.RemoveLinkRequest;
-//import backend.academy.scrapper.exception.LinkNotFoundException;
-//import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
-//import backend.academy.scrapper.repository.interfaces.ChatRepository;
-//import backend.academy.scrapper.repository.interfaces.LinkRepository;
-//import backend.academy.scrapper.repository.model.Link;
-//import java.time.OffsetDateTime;
-//import java.time.ZoneOffset;
-//import java.util.List;
-//import java.util.Set;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import reactor.core.publisher.Mono;
+// import backend.academy.scrapper.dto.AddLinkRequest;
+// import backend.academy.scrapper.dto.LinkResponse;
+// import backend.academy.scrapper.dto.ListLinksResponse;
+// import backend.academy.scrapper.dto.RemoveLinkRequest;
+// import backend.academy.scrapper.exception.LinkNotFoundException;
+// import backend.academy.scrapper.repository.ChatLinksRepository;
+// import backend.academy.scrapper.repository.ChatRepository;
+// import backend.academy.scrapper.repository.LinkRepository;
+// import backend.academy.scrapper.repository.model.Link;
+// import java.time.OffsetDateTime;
+// import java.time.ZoneOffset;
+// import java.util.List;
+// import java.util.Set;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.Mockito;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import reactor.core.publisher.Mono;
 //
-//@ExtendWith(MockitoExtension.class)
-//class ScrapperServiceTest {
+// @ExtendWith(MockitoExtension.class)
+// class ScrapperServiceTest {
 //
 //    @Mock
 //    private UpdateCheckService updateCheckService;
@@ -158,7 +158,8 @@
 //    void checkGetAllLinks() {
 //        // given
 //        Set<Long> linkIds = Set.of(1L);
-//        LinkResponse linkResponse = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
+//        LinkResponse linkResponse = new LinkResponse(1L, "https://test.ru", List.of("tag1"),
+// List.of("filter:filter1"));
 //
 //        Mockito.when(chatLinksRepository.getLinksForChat(1L)).thenReturn(linkIds);
 //        Mockito.when(linkRepository.getLinkById(1L)).thenReturn(linkResponse);
@@ -193,4 +194,4 @@
 //        Mockito.verify(chatLinksRepository).getLinksForChat(1L);
 //        Mockito.verify(linkRepository).getLinkById(1L);
 //    }
-//}
+// }

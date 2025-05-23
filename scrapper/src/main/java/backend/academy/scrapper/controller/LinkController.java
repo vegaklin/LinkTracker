@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,25 +26,22 @@ public class LinkController {
     private final ScrapperService scrapperService;
 
     @GetMapping
-    public ResponseEntity<ListLinksResponse> handleGetAllLinks(@RequestHeader("Tg-Chat-Id") @NotNull Long tgChatId) {
+    public ListLinksResponse handleGetAllLinks(@RequestHeader("Tg-Chat-Id") @NotNull Long tgChatId) {
         log.info("Received request to get all links for chatId: {}", tgChatId.toString());
-        ListLinksResponse response = scrapperService.getAllLinks(tgChatId);
-        return ResponseEntity.ok(response);
+        return scrapperService.getAllLinks(tgChatId);
     }
 
     @PostMapping
-    public ResponseEntity<LinkResponse> handleAddLink(
+    public LinkResponse handleAddLink(
             @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody @Valid AddLinkRequest request) {
         log.info("Received request to add link '{}' for chatId: {}", request.link(), tgChatId.toString());
-        LinkResponse response = scrapperService.addLink(tgChatId, request);
-        return ResponseEntity.ok(response);
+        return scrapperService.addLink(tgChatId, request);
     }
 
     @DeleteMapping
-    public ResponseEntity<LinkResponse> handleRemoveLink(
+    public LinkResponse handleRemoveLink(
             @RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody @Valid RemoveLinkRequest request) {
         log.info("Received request to remove link '{}' for chatId: {}", request.link(), tgChatId.toString());
-        LinkResponse response = scrapperService.removeLink(tgChatId, request);
-        return ResponseEntity.ok(response);
+        return scrapperService.removeLink(tgChatId, request);
     }
 }

@@ -31,27 +31,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(LinkNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleLinkNotFound(LinkNotFoundException ex) {
-        log.warn("Link not found exception", ex);
+    @ExceptionHandler({LinkNotFoundException.class, ChatNotFoundException.class})
+    public ResponseEntity<ApiErrorResponse> handleLinkNotFound(RuntimeException ex) {
+        log.warn("Not found exception", ex);
 
         ApiErrorResponse response = new ApiErrorResponse(
-                "Ссылка не найдена",
-                "404",
-                ex.getClass().getSimpleName(),
                 ex.getMessage(),
-                Arrays.stream(ex.getStackTrace())
-                        .map(StackTraceElement::toString)
-                        .collect(Collectors.toList()));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
-
-    @ExceptionHandler(ChatNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleChatNotFound(ChatNotFoundException ex) {
-        log.warn("Chat not found exception", ex);
-
-        ApiErrorResponse response = new ApiErrorResponse(
-                "Чат не найден",
                 "404",
                 ex.getClass().getSimpleName(),
                 ex.getMessage(),

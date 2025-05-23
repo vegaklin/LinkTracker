@@ -6,10 +6,10 @@ import backend.academy.scrapper.dto.ListLinksResponse;
 import backend.academy.scrapper.dto.RemoveLinkRequest;
 import backend.academy.scrapper.exception.ChatNotFoundException;
 import backend.academy.scrapper.exception.LinkNotFoundException;
-import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
-import backend.academy.scrapper.repository.interfaces.ChatRepository;
+import backend.academy.scrapper.repository.ChatLinksRepository;
+import backend.academy.scrapper.repository.ChatRepository;
+import backend.academy.scrapper.repository.LinkRepository;
 import backend.academy.scrapper.repository.model.ChatLink;
-import backend.academy.scrapper.repository.interfaces.LinkRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,16 +36,9 @@ public class ScrapperService {
     public void deleteChat(Long chatId) {
         log.info("Deleting chat with chatId: {}", chatId.toString());
 
-        Long chatRowId = chatRepository.findIdByChatId(chatId);
-        if (chatRowId == null) {
-            log.error("Id not found for chatId while deleteChat: {}", chatId);
-            throw new ChatNotFoundException("Id не найдена для chatId: " + chatId);
-        }
-
-        chatLinksRepository.removeChatLinks(chatRowId);
-        if (!chatRepository.deleteChat(chatRowId)) {
-            log.error("Chat not found for chatId: {}", chatId.toString()); //
-            throw new ChatNotFoundException("Чат не найден с id: " + chatId); //
+        if (!chatRepository.deleteChat(chatId)) {
+            log.error("Chat not found for chatId: {}", chatId.toString());
+            throw new ChatNotFoundException("Чат не найден с id: " + chatId);
         }
     }
 
@@ -105,8 +98,8 @@ public class ScrapperService {
         List<Long> linkIds = chatLinksRepository.getLinksForChat(chatRowId);
         List<LinkResponse> links = linkIds.stream()
                 .map(linkId -> {
-                    ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId); //
-                    String link = linkRepository.getLinkById(linkId); //
+                    ChatLink chatLink = chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId);
+                    String link = linkRepository.getLinkById(linkId);
                     return new LinkResponse(chatLink.linkId(), link, chatLink.tags(), chatLink.filters());
                 })
                 .toList();

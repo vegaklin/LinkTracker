@@ -1,22 +1,18 @@
 package backend.academy.scrapper.repository.jpa.service;
 
-import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
+import backend.academy.scrapper.repository.ChatLinksRepository;
 import backend.academy.scrapper.repository.jpa.entity.ChatEntity;
 import backend.academy.scrapper.repository.jpa.entity.ChatLinkEntity;
 import backend.academy.scrapper.repository.jpa.entity.LinkEntity;
 import backend.academy.scrapper.repository.jpa.entity.model.ChatLinkId;
 import backend.academy.scrapper.repository.jpa.repository.JpaHibernateChatLinksRepository;
-import backend.academy.scrapper.repository.jpa.repository.JpaHibernateChatRepository;
-import backend.academy.scrapper.repository.jpa.repository.JpaHibernateLinkRepository;
 import backend.academy.scrapper.repository.model.ChatLink;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -29,24 +25,19 @@ public class JpaHibernateChatLinksService implements ChatLinksRepository {
     @Override
     @Transactional(readOnly = true)
     public List<Long> getLinksForChat(Long chatRowId) {
-        return jpaHibernateChatLinksRepository.findAllById_ChatId(chatRowId)
-            .stream()
-            .map(ChatLinkEntity::getLinkId)
-            .toList();
+        return jpaHibernateChatLinksRepository.findAllById_ChatId(chatRowId).stream()
+                .map(ChatLinkEntity::getLinkId)
+                .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public ChatLink getChatLinkByChatIdAndLinkId(Long chatRowId, Long linkId) {
         ChatLinkId id = new ChatLinkId(chatRowId, linkId);
-        return jpaHibernateChatLinksRepository.findById(id)
-            .map(entity -> new ChatLink(
-                entity.getChatId(),
-                entity.getLinkId(),
-                entity.tags(),
-                entity.filters()
-            ))
-            .orElse(null);
+        return jpaHibernateChatLinksRepository
+                .findById(id)
+                .map(entity -> new ChatLink(entity.getChatId(), entity.getLinkId(), entity.tags(), entity.filters()))
+                .orElse(null);
     }
 
     @Override

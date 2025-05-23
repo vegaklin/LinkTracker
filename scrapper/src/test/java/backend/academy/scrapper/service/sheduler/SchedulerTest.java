@@ -1,23 +1,23 @@
-//package backend.academy.scrapper.service.sheduler;
+// package backend.academy.scrapper.service.sheduler;
 //
-//import backend.academy.scrapper.repository.interfaces.LinkRepository;
-//import backend.academy.scrapper.repository.model.Link;
-//import backend.academy.scrapper.service.UpdateCheckService;
-//import backend.academy.scrapper.service.scheduler.Scheduler;
-//import java.time.OffsetDateTime;
-//import java.time.ZoneOffset;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.junit.jupiter.MockitoExtension;
+// import backend.academy.scrapper.repository.LinkRepository;
+// import backend.academy.scrapper.repository.model.Link;
+// import backend.academy.scrapper.service.UpdateCheckService;
+// import backend.academy.scrapper.service.scheduler.Scheduler;
+// import java.time.OffsetDateTime;
+// import java.time.ZoneOffset;
+// import java.util.HashMap;
+// import java.util.List;
+// import java.util.Map;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.Mockito;
+// import org.mockito.junit.jupiter.MockitoExtension;
 //
-//@ExtendWith(MockitoExtension.class)
-//class SchedulerTest {
+// @ExtendWith(MockitoExtension.class)
+// class SchedulerTest {
 //
 //    @Mock
 //    private LinkRepository linkRepository;
@@ -76,4 +76,4 @@
 //        Mockito.verify(linkRepository).getLinks();
 //        Mockito.verifyNoInteractions(updateCheckService);
 //    }
-//}
+// }

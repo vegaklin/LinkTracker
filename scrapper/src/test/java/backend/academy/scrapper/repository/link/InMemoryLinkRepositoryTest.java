@@ -1,19 +1,19 @@
-//package backend.academy.scrapper.repository.link;
+// package backend.academy.scrapper.repository.link;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNull;
-//import static org.junit.jupiter.api.Assertions.assertTrue;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertNull;
+// import static org.junit.jupiter.api.Assertions.assertTrue;
 //
-//import backend.academy.scrapper.dto.LinkResponse;
-//import backend.academy.scrapper.repository.model.Link;
-//import java.time.OffsetDateTime;
-//import java.time.ZoneOffset;
-//import java.util.List;
-//import java.util.Map;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
+// import backend.academy.scrapper.dto.LinkResponse;
+// import backend.academy.scrapper.repository.model.Link;
+// import java.time.OffsetDateTime;
+// import java.time.ZoneOffset;
+// import java.util.List;
+// import java.util.Map;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
 //
-//class InMemoryLinkRepositoryTest {
+// class InMemoryLinkRepositoryTest {
 //
 //    private InMemoryLinkRepository repository;
 //
@@ -167,4 +167,4 @@
 //
 //        assertNull(id);
 //    }
-//}
+// }

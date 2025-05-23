@@ -3,7 +3,6 @@ package backend.academy.scrapper.controller;
 import backend.academy.scrapper.service.ScrapperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,16 +18,14 @@ public class TelegramChatController {
     private final ScrapperService scrapperService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<String> handleRegisterChat(@PathVariable Long id) {
+    public void handleRegisterChat(@PathVariable Long id) {
         log.info("Received request to register chat with id: {}", id.toString());
         scrapperService.registerChat(id);
-        return ResponseEntity.ok("Чат зарегистрирован");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> handleDeleteChat(@PathVariable Long id) {
+    public void handleDeleteChat(@PathVariable Long id) {
         log.info("Received request to delete chat with id: {}", id.toString());
         scrapperService.deleteChat(id);
-        return ResponseEntity.ok("Чат успешно удалён");
     }
 }

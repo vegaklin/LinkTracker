@@ -1,14 +1,13 @@
 package backend.academy.scrapper.service;
 
-import backend.academy.scrapper.client.BotClient;
 import backend.academy.scrapper.client.dto.LinkUpdate;
 import backend.academy.scrapper.exception.BotClientException;
-import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
-import backend.academy.scrapper.repository.interfaces.ChatRepository;
+import backend.academy.scrapper.repository.ChatLinksRepository;
+import backend.academy.scrapper.repository.ChatRepository;
+import backend.academy.scrapper.service.sender.UpdateSenderService;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
-import backend.academy.scrapper.service.sender.UpdateSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class UpdateNotifyService {
     public void notifyChatsForLink(Long linkId, String url, String description) {
         log.info("Notifying chats for linkId: {}, url: {}", linkId, url);
 
-        Set<Long> chatIds = chatRepository.getChatIds().stream() //
+        Set<Long> chatIds = chatRepository.getChatIds().stream()
                 .filter(chatId -> chatLinksRepository.getLinksForChat(chatId).contains(linkId))
                 .map(chatRepository::findChatIdById)
                 .collect(Collectors.toSet());

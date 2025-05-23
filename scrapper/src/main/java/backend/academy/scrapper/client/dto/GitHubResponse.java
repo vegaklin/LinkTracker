@@ -3,11 +3,11 @@ package backend.academy.scrapper.client.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-public record GitHubResponse(@JsonProperty("title") String title,
-                             @JsonProperty("user") GitHubUser user,
-                             @JsonProperty("created_at") OffsetDateTime createdAt,
-                             @JsonProperty("body") String body
-) {
+public record GitHubResponse(
+        @JsonProperty("title") String title,
+        @JsonProperty("user") GitHubUser user,
+        @JsonProperty("created_at") OffsetDateTime createdAt,
+        @JsonProperty("body") String body) {
     public String getUser() {
         return user != null ? user.login() : "Unknown";
     }
@@ -20,16 +20,15 @@ public record GitHubResponse(@JsonProperty("title") String title,
     }
 
     public String toMessage() {
-        return String.format("""
+        return String.format(
+                """
             Название Issue: %s
             Пользователь: %s
             Время создания: %s
             Описание: %s
             """,
-            title, getUser(), createdAt.toString(), getBody());
+                title, getUser(), createdAt.toString(), getBody());
     }
 
-    public record GitHubUser(
-        @JsonProperty("login") String login
-    ) {}
+    public record GitHubUser(@JsonProperty("login") String login) {}
 }

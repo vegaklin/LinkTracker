@@ -1,14 +1,14 @@
-//package backend.academy.scrapper.repository.chat;
+// package backend.academy.scrapper.repository.chat;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertFalse;
-//import static org.junit.jupiter.api.Assertions.assertTrue;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertFalse;
+// import static org.junit.jupiter.api.Assertions.assertTrue;
 //
-//import java.util.Set;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
+// import java.util.Set;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
 //
-//class InMemoryChatRepositoryTest {
+// class InMemoryChatRepositoryTest {
 //
 //    private InMemoryChatRepository repository;
 //
@@ -111,4 +111,4 @@
 //        assertTrue(chatIds.contains(1L));
 //        assertTrue(chatIds.contains(2L));
 //    }
-//}
+// }

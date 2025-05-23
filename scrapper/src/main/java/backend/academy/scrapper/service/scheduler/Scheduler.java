@@ -1,23 +1,21 @@
 package backend.academy.scrapper.service.scheduler;
 
-import backend.academy.scrapper.repository.interfaces.LinkRepository;
+import backend.academy.scrapper.repository.LinkRepository;
 import backend.academy.scrapper.repository.model.Link;
 import backend.academy.scrapper.service.UpdateCheckService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@EnableScheduling
 public class Scheduler {
 
     private final LinkRepository linkRepository;

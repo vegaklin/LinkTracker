@@ -4,11 +4,9 @@ import backend.academy.scrapper.client.GitHubClient;
 import backend.academy.scrapper.client.dto.ApiAnswer;
 import backend.academy.scrapper.client.dto.GitHubResponse;
 import backend.academy.scrapper.exception.ApiClientException;
-import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
@@ -35,8 +33,9 @@ public class GitHubApiProcess implements ApiProcess {
         String owner = parts[3];
         String repo = parts[4];
         try {
-            GitHubResponse gitHubResponse = gitHubClient.getRepository(owner, repo).block();
-            if(gitHubResponse != null) {
+            GitHubResponse gitHubResponse =
+                    gitHubClient.getRepository(owner, repo).block();
+            if (gitHubResponse != null) {
                 return new ApiAnswer(gitHubResponse.toMessage(), gitHubResponse.createdAt());
             }
         } catch (ApiClientException e) {

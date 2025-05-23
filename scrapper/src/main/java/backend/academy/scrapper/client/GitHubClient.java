@@ -2,9 +2,10 @@ package backend.academy.scrapper.client;
 
 import backend.academy.scrapper.client.dto.GitHubResponse;
 import backend.academy.scrapper.configuration.ScrapperConfig;
+import backend.academy.scrapper.configuration.WebClientConfig;
 import backend.academy.scrapper.exception.ApiClientException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,7 +13,6 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class GitHubClient {
 
     private final ScrapperConfig scrapperConfig;
@@ -23,12 +23,16 @@ public class GitHubClient {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_VALUE_PREFIX = "Bearer ";
 
+    public GitHubClient(
+            ScrapperConfig scrapperConfig, @Qualifier(WebClientConfig.GITHUB_WEB_CLIENT) WebClient githubWebClient) {
+        this.scrapperConfig = scrapperConfig;
+        this.githubWebClient = githubWebClient;
+    }
+
     public Mono<GitHubResponse> getRepository(String owner, String repo) {
         return githubWebClient
                 .get()
-                .uri(uriBuilder -> uriBuilder
-                    .path(REPOS_ISSUES_ENDPOINT)
-                    .build(owner, repo))
+                .uri(uriBuilder -> uriBuilder.path(REPOS_ISSUES_ENDPOINT).build(owner, repo))
                 .header(AUTHORIZATION_HEADER, AUTHORIZATION_VALUE_PREFIX + scrapperConfig.githubToken())
                 .exchangeToMono(response -> handleResponse(response, owner, repo));
     }

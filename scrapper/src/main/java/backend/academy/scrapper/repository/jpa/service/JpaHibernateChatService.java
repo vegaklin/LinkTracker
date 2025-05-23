@@ -1,15 +1,14 @@
 package backend.academy.scrapper.repository.jpa.service;
 
-import backend.academy.scrapper.repository.interfaces.ChatRepository;
+import backend.academy.scrapper.repository.ChatRepository;
 import backend.academy.scrapper.repository.jpa.entity.ChatEntity;
 import backend.academy.scrapper.repository.jpa.repository.JpaHibernateChatRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Slf4j
 @Repository
@@ -42,24 +41,24 @@ public class JpaHibernateChatService implements ChatRepository {
     @Override
     @Transactional(readOnly = true)
     public List<Long> getChatIds() {
-        return jpaHibernateChatRepository.findAll().stream()
-            .map(ChatEntity::id)
-            .toList();
+        return jpaHibernateChatRepository.findAll().stream().map(ChatEntity::id).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Long findIdByChatId(Long chatId) {
-        return jpaHibernateChatRepository.findByChatId(chatId)
-            .map(ChatEntity::id)
-            .orElse(null);
+        return jpaHibernateChatRepository
+                .findByChatId(chatId)
+                .map(ChatEntity::id)
+                .orElse(null);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Long findChatIdById(Long chatRowId) {
-        return jpaHibernateChatRepository.findById(chatRowId)
-            .map(ChatEntity::chatId)
-            .orElse(null);
+        return jpaHibernateChatRepository
+                .findById(chatRowId)
+                .map(ChatEntity::chatId)
+                .orElse(null);
     }
 }

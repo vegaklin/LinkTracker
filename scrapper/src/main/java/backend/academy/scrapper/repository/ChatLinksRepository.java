@@ -1,4 +1,4 @@
-package backend.academy.scrapper.repository.interfaces;
+package backend.academy.scrapper.repository;
 
 import backend.academy.scrapper.repository.model.ChatLink;
 import java.util.List;

@@ -1,23 +1,23 @@
-//package backend.academy.scrapper.service;
+// package backend.academy.scrapper.service;
 //
-//import backend.academy.scrapper.client.BotClient;
-//import backend.academy.scrapper.client.dto.LinkUpdate;
-//import backend.academy.scrapper.dto.ApiErrorResponse;
-//import backend.academy.scrapper.exception.BotClientException;
-//import backend.academy.scrapper.repository.interfaces.ChatLinksRepository;
-//import backend.academy.scrapper.repository.interfaces.ChatRepository;
-//import java.util.List;
-//import java.util.Set;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import reactor.core.publisher.Mono;
+// import backend.academy.scrapper.client.BotClient;
+// import backend.academy.scrapper.client.dto.LinkUpdate;
+// import backend.academy.scrapper.dto.ApiErrorResponse;
+// import backend.academy.scrapper.exception.BotClientException;
+// import backend.academy.scrapper.repository.ChatLinksRepository;
+// import backend.academy.scrapper.repository.ChatRepository;
+// import java.util.List;
+// import java.util.Set;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.Mockito;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import reactor.core.publisher.Mono;
 //
-//@ExtendWith(MockitoExtension.class)
-//class UpdateSenderServiceTest {
+// @ExtendWith(MockitoExtension.class)
+// class UpdateSenderServiceTest {
 //
 //    @Mock
 //    private BotClient botClient;
@@ -106,4 +106,4 @@
 //                        && update.url().equals("https://test.ru")
 //                        && update.tgChatIds().equals(List.of(1L))));
 //    }
-//}
+// }

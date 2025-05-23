@@ -1,26 +1,26 @@
-//package backend.academy.scrapper.service;
+// package backend.academy.scrapper.service;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
-//import static org.junit.jupiter.api.Assertions.assertNull;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertNotNull;
+// import static org.junit.jupiter.api.Assertions.assertNull;
 //
-//import backend.academy.scrapper.repository.interfaces.LinkRepository;
-//import backend.academy.scrapper.service.api.ApiProcess;
-//import java.time.OffsetDateTime;
-//import java.time.ZoneOffset;
-//import java.util.List;
+// import backend.academy.scrapper.repository.LinkRepository;
+// import backend.academy.scrapper.service.api.ApiProcess;
+// import java.time.OffsetDateTime;
+// import java.time.ZoneOffset;
+// import java.util.List;
 //
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import reactor.core.publisher.Mono;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.Mockito;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import reactor.core.publisher.Mono;
 //
-//@ExtendWith(MockitoExtension.class)
-//class UpdateCheckServiceTest {
+// @ExtendWith(MockitoExtension.class)
+// class UpdateCheckServiceTest {
 //
 //    @Mock
 //    private LinkRepository linkRepository;
@@ -82,7 +82,8 @@
 //        // then
 //
 //        Mockito.verify(linkRepository, Mockito.never()).setUpdateTime(Mockito.anyLong(), Mockito.any());
-//        Mockito.verify(updateSenderService, Mockito.never()).notifyChatsForLink(Mockito.anyLong(), Mockito.anyString());
+//        Mockito.verify(updateSenderService, Mockito.never()).notifyChatsForLink(Mockito.anyLong(),
+// Mockito.anyString());
 //        Mockito.verify(linkRepository, Mockito.never()).getUpdateTime(Mockito.anyLong());
 //    }
 //
@@ -104,7 +105,8 @@
 //        // then
 //
 //        Mockito.verify(linkRepository, Mockito.never()).setUpdateTime(Mockito.anyLong(), Mockito.any());
-//        Mockito.verify(updateSenderService, Mockito.never()).notifyChatsForLink(Mockito.anyLong(), Mockito.anyString());
+//        Mockito.verify(updateSenderService, Mockito.never()).notifyChatsForLink(Mockito.anyLong(),
+// Mockito.anyString());
 //        Mockito.verify(linkRepository).getUpdateTime(1L);
 //    }
 //
@@ -155,4 +157,4 @@
 //        Mockito.verify(gitHubApiProcess, Mockito.never()).checkUpdate("https://stackoverflow.com/questions");
 //        Mockito.verify(stackOverflowApiProcess, Mockito.never()).checkUpdate("https://stackoverflow.com/questions");
 //    }
-//}
+// }

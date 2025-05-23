@@ -1,14 +1,13 @@
 package backend.academy.scrapper.service;
 
 import backend.academy.scrapper.client.dto.ApiAnswer;
-import backend.academy.scrapper.repository.interfaces.LinkRepository;
+import backend.academy.scrapper.repository.LinkRepository;
 import backend.academy.scrapper.service.api.ApiProcess;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -49,7 +48,10 @@ public class UpdateCheckService {
 
         for (ApiProcess apiProcess : apiProcessList) {
             if (apiProcess.isApiUrl(url)) {
-                log.info("API process found for url: {}, processing with {}", url, apiProcess.getClass().getSimpleName());
+                log.info(
+                        "API process found for url: {}, processing with {}",
+                        url,
+                        apiProcess.getClass().getSimpleName());
                 return apiProcess.checkUpdate(url);
             }
         }

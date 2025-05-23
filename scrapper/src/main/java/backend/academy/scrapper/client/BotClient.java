@@ -1,10 +1,11 @@
 package backend.academy.scrapper.client;
 
 import backend.academy.scrapper.client.dto.LinkUpdate;
+import backend.academy.scrapper.configuration.WebClientConfig;
 import backend.academy.scrapper.dto.ApiErrorResponse;
 import backend.academy.scrapper.exception.BotClientException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,12 +13,15 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class BotClient {
 
     private final WebClient botWebClient;
 
     private static final String UPDATES_ENDPOINT = "/updates";
+
+    public BotClient(@Qualifier(WebClientConfig.BOT_WEB_CLIENT) WebClient botWebClient) {
+        this.botWebClient = botWebClient;
+    }
 
     public Mono<Void> sendUpdate(LinkUpdate update) {
         return botWebClient

@@ -1,13 +1,13 @@
 package backend.academy.scrapper.repository.jdbc;
 
-import backend.academy.scrapper.repository.interfaces.ChatRepository;
+import backend.academy.scrapper.repository.ChatRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Slf4j
 @Repository
@@ -20,25 +20,27 @@ public class JdbcChatRepository implements ChatRepository {
     @Override
     @Transactional
     public void registerChat(Long chatId) {
-        jdbc.sql("""
+        jdbc.sql(
+                        """
                 INSERT INTO chats (chat_id)
                 VALUES (?)
                 ON CONFLICT DO NOTHING
                 """)
-            .params(chatId)
-            .update();
+                .params(chatId)
+                .update();
     }
 
     @Override
     @Transactional
-    public boolean deleteChat(Long chatRowId) {
-        int updated = jdbc.sql("""
+    public boolean deleteChat(Long chatId) {
+        int updated = jdbc.sql(
+                        """
                 DELETE
                 FROM chats
-                WHERE id = ?
+                WHERE chat_id = ?
                 """)
-            .params(chatRowId)
-            .update();
+                .params(chatId)
+                .update();
         return updated > 0;
     }
 
@@ -49,35 +51,37 @@ public class JdbcChatRepository implements ChatRepository {
                 SELECT id
                 FROM chats
                 """)
-            .query(Long.class)
-            .list();
+                .query(Long.class)
+                .list();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Long findIdByChatId(Long chatId) {
-        return jdbc.sql("""
+        return jdbc.sql(
+                        """
                 SELECT id
                 FROM chats
                 WHERE chat_id = ?
                 """)
-            .param(chatId)
-            .query(Long.class)
-            .optional()
-            .orElse(null);
+                .param(chatId)
+                .query(Long.class)
+                .optional()
+                .orElse(null);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Long findChatIdById(Long chatRowId) {
-        return jdbc.sql("""
+        return jdbc.sql(
+                        """
                 SELECT chat_id
                 FROM chats
                 WHERE id = ?
                 """)
-            .param(chatRowId)
-            .query(Long.class)
-            .optional()
-            .orElse(null);
+                .param(chatRowId)
+                .query(Long.class)
+                .optional()
+                .orElse(null);
     }
 }

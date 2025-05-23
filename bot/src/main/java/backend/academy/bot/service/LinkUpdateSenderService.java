@@ -15,12 +15,12 @@ public class LinkUpdateSenderService {
     public void sendLinkUpdate(LinkUpdate linkUpdate) {
         linkUpdate.tgChatIds().forEach(chatId -> {
             log.info("Sending update to chatId={}", chatId);
-            String text = String.format("""
+            String text = String.format(
+                    """
                 Новое обновление по ссылке: %s
                 %s
                 """,
-                linkUpdate.url(), linkUpdate.description()
-            );
+                    linkUpdate.url(), linkUpdate.description());
             telegramMessenger.sendMessage(chatId, text);
         });
     }

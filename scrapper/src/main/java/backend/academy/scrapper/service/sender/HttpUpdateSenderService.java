@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class HttpUpdateSenderService implements UpdateSenderService{
+public class HttpUpdateSenderService implements UpdateSenderService {
 
     private final BotClient botClient;
 
