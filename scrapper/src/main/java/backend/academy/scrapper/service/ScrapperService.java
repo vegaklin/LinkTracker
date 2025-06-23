@@ -25,14 +25,12 @@ public class ScrapperService {
     private final ChatLinksRepository chatLinksRepository;
     private final LinkRepository linkRepository;
 
-    @Transactional
     public void registerChat(Long chatId) {
         log.info("Registering chat with chatId: {}", chatId.toString());
 
         chatRepository.registerChat(chatId);
     }
 
-    @Transactional
     public void deleteChat(Long chatId) {
         log.info("Deleting chat with chatId: {}", chatId.toString());
 

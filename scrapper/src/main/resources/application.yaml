@@ -1,5 +1,5 @@
 app:
-  access-type: ${ACCESS_TYPE:ORM}
+  access-type: ${ACCESS_TYPE:SQL}
   github-token: ${GITHUB_TOKEN} # env variable
   stackoverflow:
     key: ${SO_TOKEN_KEY}
@@ -7,7 +7,7 @@ app:
 
 scheduler:
   batch-size: 100
-  thread-count: 4
+  thread-count: 8
   thread-waiting-time: 15
   fixed-interval-ms: 10000
 

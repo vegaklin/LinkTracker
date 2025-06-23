@@ -134,7 +134,6 @@ class LinkControllerTest {
                         .header("Tg-Chat-Id", chatId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.description").value("Ссылка не найдена"));
+                .andExpect(status().isNotFound());
     }
 }

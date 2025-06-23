@@ -28,6 +28,34 @@ public class InMemoryLinkRepository {
         return null;
     }
 
+    public void setUpdateTime(Long linkId, OffsetDateTime updateTime) {
+        Link link = links.get(linkId);
+        if (link != null) {
+            Link updatedLink = new Link(link.id(), link.url(), link.description(), updateTime);
+            links.put(linkId, updatedLink);
+            log.info("Updated updateTime time for linkId: {}", linkId);
+        } else {
+            log.warn("Link with id {} not found to update", linkId);
+        }
+    }
+
+    public Link addLink(Link link) {
+        Long id = idCounter++;
+        links.put(id, link);
+        log.info("Added new link with id: {}", id);
+        return links.get(id);
+    }
+
+    public Link getLinkById(Long linkId) {
+        Link link = links.get(linkId);
+        if (link != null) {
+            log.info("Get link with id: {}", linkId);
+            return link;
+        }
+        log.warn("Link with id {} not found while getLinkById", linkId);
+        return null;
+    }
+
     public Long getIdByUrl(String url) {
         Long linkId = links.entrySet().stream()
                 .filter(entry -> entry.getValue().url().equals(url))

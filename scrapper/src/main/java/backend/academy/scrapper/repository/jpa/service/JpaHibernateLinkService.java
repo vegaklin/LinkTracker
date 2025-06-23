@@ -89,7 +89,7 @@ public class JpaHibernateLinkService implements LinkRepository {
                 .orElseGet(() -> {
                     LinkEntity link = new LinkEntity();
                     link.url(url);
-                    link.description("Без изменений");
+                    link.description("");
                     link.updateTime(OffsetDateTime.now());
                     return jpaHibernateLinkRepository.save(link).id();
                 });

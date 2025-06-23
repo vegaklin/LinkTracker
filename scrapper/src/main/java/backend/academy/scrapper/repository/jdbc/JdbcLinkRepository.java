@@ -122,7 +122,7 @@ public class JdbcLinkRepository implements LinkRepository {
         jdbc.sql(
                         """
                 INSERT INTO links (url, description, update_time)
-                VALUES (?, 'Без изменений', now())
+                VALUES (?, '', now())
                 ON CONFLICT (url) DO NOTHING;
                 """)
                 .param(url)

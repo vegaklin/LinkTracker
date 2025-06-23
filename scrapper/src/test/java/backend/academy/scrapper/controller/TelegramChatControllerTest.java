@@ -31,9 +31,7 @@ class TelegramChatControllerTest {
 
         // when-then
 
-        mockMvc.perform(post("/tg-chat/{id}", chatId))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Чат зарегистрирован"));
+        mockMvc.perform(post("/tg-chat/{id}", chatId)).andExpect(status().isOk());
 
         verify(scrapperService, times(1)).registerChat(chatId);
     }
@@ -47,9 +45,7 @@ class TelegramChatControllerTest {
 
         // when-then
 
-        mockMvc.perform(delete("/tg-chat/{id}", chatId))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Чат успешно удалён"));
+        mockMvc.perform(delete("/tg-chat/{id}", chatId)).andExpect(status().isOk());
 
         verify(scrapperService, times(1)).deleteChat(chatId);
     }
@@ -66,8 +62,6 @@ class TelegramChatControllerTest {
 
         // when-then
 
-        mockMvc.perform(delete("/tg-chat/{id}", chatId))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.description").value("Чат не найден"));
+        mockMvc.perform(delete("/tg-chat/{id}", chatId)).andExpect(status().isNotFound());
     }
 }

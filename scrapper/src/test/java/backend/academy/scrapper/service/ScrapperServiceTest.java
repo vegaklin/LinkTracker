@@ -1,197 +1,263 @@
-// package backend.academy.scrapper.service;
-//
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertThrows;
-//
-// import backend.academy.scrapper.dto.AddLinkRequest;
-// import backend.academy.scrapper.dto.LinkResponse;
-// import backend.academy.scrapper.dto.ListLinksResponse;
-// import backend.academy.scrapper.dto.RemoveLinkRequest;
-// import backend.academy.scrapper.exception.LinkNotFoundException;
-// import backend.academy.scrapper.repository.ChatLinksRepository;
-// import backend.academy.scrapper.repository.ChatRepository;
-// import backend.academy.scrapper.repository.LinkRepository;
-// import backend.academy.scrapper.repository.model.Link;
-// import java.time.OffsetDateTime;
-// import java.time.ZoneOffset;
-// import java.util.List;
-// import java.util.Set;
-// import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.extension.ExtendWith;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.Mockito;
-// import org.mockito.junit.jupiter.MockitoExtension;
-// import reactor.core.publisher.Mono;
-//
-// @ExtendWith(MockitoExtension.class)
-// class ScrapperServiceTest {
-//
-//    @Mock
-//    private UpdateCheckService updateCheckService;
-//
-//    @Mock
-//    private ChatRepository chatRepository;
-//
-//    @Mock
-//    private ChatLinksRepository chatLinksRepository;
-//
-//    @Mock
-//    private LinkRepository linkRepository;
-//
-//    @InjectMocks
-//    private ScrapperService scrapperService;
-//
-//    @Test
-//    void checkRegisterChat() {
-//        // given-when
-//
-//        scrapperService.registerChat(1L);
-//
-//        // then
-//
-//        Mockito.verify(chatRepository).registerChat(1L);
-//    }
-//
-//    @Test
-//    void checkDeleteChat() {
-//        // given-when
-//
-//        Mockito.when(chatRepository.deleteChat(1L)).thenReturn(true);
-//
-//        scrapperService.deleteChat(1L);
-//
-//        // then
-//
-//        Mockito.verify(chatLinksRepository).removeChatLinks(1L);
-//        Mockito.verify(chatRepository).deleteChat(1L);
-//    }
-//
-//    @Test
-//    void checkAddLink() {
-//        // given
-//
-//        OffsetDateTime offsetDateTime = OffsetDateTime.of(2025, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC);
-//        AddLinkRequest request = new AddLinkRequest("https://test.ru", List.of("tag1"), List.of("filter:filter1"));
-//        Link link = new Link("https://test.ru", List.of("tag1"), List.of("filter:filter1"), offsetDateTime);
-//        LinkResponse response = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
-//
-//        Mockito.when(updateCheckService.checkUpdate("https://test.ru")).thenReturn(Mono.just(offsetDateTime));
-//        Mockito.when(linkRepository.addLink(link)).thenReturn(response);
-//
-//        // when
-//
-//        LinkResponse result = scrapperService.addLink(1L, request);
-//
-//        // then
-//
-//        assertEquals(response, result);
-//
-//        Mockito.verify(updateCheckService).checkUpdate("https://test.ru");
-//        Mockito.verify(linkRepository).addLink(link);
-//        Mockito.verify(chatLinksRepository).addLink(1L, 1L);
-//    }
-//
-//    @Test
-//    void checkRemoveLinkSuccess() {
-//        // given
-//
-//        RemoveLinkRequest request = new RemoveLinkRequest("https://test.ru");
-//        LinkResponse response = new LinkResponse(1L, "https://test.ru", List.of("tag1"), List.of("filter:filter1"));
-//
-//        Mockito.when(linkRepository.getIdByUrl("https://test.ru")).thenReturn(1L);
-//        Mockito.when(chatLinksRepository.removeLink(1L, 1L)).thenReturn(true);
-//        Mockito.when(linkRepository.getLinkById(1L)).thenReturn(response);
-//
-//        // when
-//
-//        LinkResponse result = scrapperService.removeLink(1L, request);
-//
-//        // then
-//
-//        assertEquals(response, result);
-//
-//        Mockito.verify(linkRepository).getIdByUrl("https://test.ru");
-//        Mockito.verify(chatLinksRepository).removeLink(1L, 1L);
-//        Mockito.verify(linkRepository).getLinkById(1L);
-//    }
-//
-//    @Test
-//    void checkRemoveLinkAndLinkNotFoundByUrl() {
-//        // given
-//
-//        RemoveLinkRequest request = new RemoveLinkRequest("https://test.ru");
-//
-//        Mockito.when(linkRepository.getIdByUrl("https://test.ru")).thenReturn(null);
-//
-//        // when-then
-//
-//        LinkNotFoundException exception =
-//                assertThrows(LinkNotFoundException.class, () -> scrapperService.removeLink(1L, request));
-//        assertEquals("Ссылка не найдена для URL: https://test.ru", exception.getMessage());
-//
-//        Mockito.verify(linkRepository).getIdByUrl("https://test.ru");
-//        Mockito.verifyNoMoreInteractions(chatLinksRepository, linkRepository);
-//    }
-//
-//    @Test
-//    void checkRemoveLinkAndLinkNotFoundInChat() {
-//        // given
-//
-//        RemoveLinkRequest request = new RemoveLinkRequest("https://test.ru");
-//
-//        Mockito.when(linkRepository.getIdByUrl("https://test.ru")).thenReturn(1L);
-//        Mockito.when(chatLinksRepository.removeLink(1L, 1L)).thenReturn(false);
-//
-//        // when-then
-//
-//        LinkNotFoundException exception =
-//                assertThrows(LinkNotFoundException.class, () -> scrapperService.removeLink(1L, request));
-//        assertEquals("Ссылка с id " + 1L + " не найдена для чата с id " + 1L, exception.getMessage());
-//
-//        Mockito.verify(linkRepository).getIdByUrl("https://test.ru");
-//        Mockito.verify(chatLinksRepository).removeLink(1L, 1L);
-//        Mockito.verifyNoMoreInteractions(linkRepository);
-//    }
-//
-//    @Test
-//    void checkGetAllLinks() {
-//        // given
-//        Set<Long> linkIds = Set.of(1L);
-//        LinkResponse linkResponse = new LinkResponse(1L, "https://test.ru", List.of("tag1"),
-// List.of("filter:filter1"));
-//
-//        Mockito.when(chatLinksRepository.getLinksForChat(1L)).thenReturn(linkIds);
-//        Mockito.when(linkRepository.getLinkById(1L)).thenReturn(linkResponse);
-//
-//        // when
-//
-//        ListLinksResponse result = scrapperService.getAllLinks(1L);
-//
-//        // then
-//
-//        assertEquals(1, result.size());
-//        assertEquals(List.of(linkResponse), result.links());
-//
-//        Mockito.verify(chatLinksRepository).getLinksForChat(1L);
-//        Mockito.verify(linkRepository).getLinkById(1L);
-//    }
-//
-//    @Test
-//    void checkGetAllLinks_linkNotFound() {
-//        // given
-//        Set<Long> linkIds = Set.of(1L);
-//
-//        Mockito.when(chatLinksRepository.getLinksForChat(1L)).thenReturn(linkIds);
-//        Mockito.when(linkRepository.getLinkById(1L)).thenReturn(null);
-//
-//        // when-then
-//
-//        LinkNotFoundException exception =
-//                assertThrows(LinkNotFoundException.class, () -> scrapperService.getAllLinks(1L));
-//        assertEquals("Ссылка с id " + 1L + " не найдена", exception.getMessage());
-//
-//        Mockito.verify(chatLinksRepository).getLinksForChat(1L);
-//        Mockito.verify(linkRepository).getLinkById(1L);
-//    }
-// }
+package backend.academy.scrapper.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import backend.academy.scrapper.dto.AddLinkRequest;
+import backend.academy.scrapper.dto.LinkResponse;
+import backend.academy.scrapper.dto.ListLinksResponse;
+import backend.academy.scrapper.dto.RemoveLinkRequest;
+import backend.academy.scrapper.exception.ChatNotFoundException;
+import backend.academy.scrapper.exception.LinkNotFoundException;
+import backend.academy.scrapper.repository.ChatLinksRepository;
+import backend.academy.scrapper.repository.ChatRepository;
+import backend.academy.scrapper.repository.LinkRepository;
+import backend.academy.scrapper.repository.model.ChatLink;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class ScrapperServiceTest {
+
+    @Mock
+    private ChatRepository chatRepository;
+
+    @Mock
+    private ChatLinksRepository chatLinksRepository;
+
+    @Mock
+    private LinkRepository linkRepository;
+
+    @InjectMocks
+    private ScrapperService scrapperService;
+
+    @Test
+    void checkRegisterChat() {
+        // given-when
+
+        scrapperService.registerChat(1L);
+
+        // then
+
+        Mockito.verify(chatRepository).registerChat(1L);
+    }
+
+    @Test
+    void checkDeleteChatSuccess() {
+        // given
+
+        Mockito.when(chatRepository.deleteChat(1L)).thenReturn(true);
+
+        // when
+
+        scrapperService.deleteChat(1L);
+
+        // then
+
+        Mockito.verify(chatRepository).deleteChat(1L);
+    }
+
+    @Test
+    void checkDeleteChatNotFound() {
+        // given-when
+
+        Mockito.when(chatRepository.deleteChat(1L)).thenReturn(false);
+
+        ChatNotFoundException exception =
+                assertThrows(ChatNotFoundException.class, () -> scrapperService.deleteChat(1L));
+
+        // then
+
+        assertEquals("Чат не найден с id: 1", exception.getMessage());
+        Mockito.verify(chatRepository).deleteChat(1L);
+    }
+
+    @Test
+    void checkAddLinkSuccess() {
+        // given
+
+        Long chatId = 1L;
+        Long chatRowId = 10L;
+        Long linkId = 20L;
+        String url = "https://test.com";
+        List<String> tags = List.of("tag1");
+        List<String> filters = List.of("filter1");
+
+        AddLinkRequest request = new AddLinkRequest(url, tags, filters);
+        ChatLink chatLink = new ChatLink(chatRowId, linkId, tags, filters);
+
+        Mockito.when(chatRepository.findIdByChatId(chatId)).thenReturn(chatRowId);
+        Mockito.when(linkRepository.addLink(url)).thenReturn(linkId);
+        Mockito.when(chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId))
+                .thenReturn(chatLink);
+
+        // when
+
+        LinkResponse response = scrapperService.addLink(chatId, request);
+
+        // then
+
+        assertEquals(linkId, response.id());
+        assertEquals(url, response.url());
+        assertEquals(tags, response.tags());
+        assertEquals(filters, response.filters());
+
+        Mockito.verify(chatRepository).findIdByChatId(chatId);
+        Mockito.verify(linkRepository).addLink(url);
+        Mockito.verify(chatLinksRepository).addLink(Mockito.any());
+    }
+
+    @Test
+    void checkAddLinkChatNotFound() {
+        // given-when
+
+        Mockito.when(chatRepository.findIdByChatId(1L)).thenReturn(null);
+
+        AddLinkRequest request = new AddLinkRequest("https://test.com", List.of(), List.of());
+
+        ChatNotFoundException exception =
+                assertThrows(ChatNotFoundException.class, () -> scrapperService.addLink(1L, request));
+
+        // then
+
+        assertEquals("Id не найдена для chatId: 1", exception.getMessage());
+    }
+
+    @Test
+    void checkRemoveLinkSuccess() {
+        // given
+
+        Long chatId = 1L;
+        Long chatRowId = 10L;
+        Long linkId = 20L;
+        String url = "https://test.com";
+        List<String> tags = List.of("tag1");
+        List<String> filters = List.of("filter1");
+
+        ChatLink chatLink = new ChatLink(chatRowId, linkId, tags, filters);
+        RemoveLinkRequest request = new RemoveLinkRequest(url);
+
+        Mockito.when(linkRepository.getIdByUrl(url)).thenReturn(linkId);
+        Mockito.when(chatRepository.findIdByChatId(chatId)).thenReturn(chatRowId);
+        Mockito.when(chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId))
+                .thenReturn(chatLink);
+        Mockito.when(chatLinksRepository.removeLink(chatRowId, linkId)).thenReturn(true);
+
+        // when
+
+        LinkResponse response = scrapperService.removeLink(chatId, request);
+
+        // then
+
+        assertEquals(linkId, response.id());
+        assertEquals(url, response.url());
+        assertEquals(tags, response.tags());
+        assertEquals(tags, response.filters());
+
+        Mockito.verify(chatLinksRepository).removeLink(chatRowId, linkId);
+    }
+
+    @Test
+    void checkRemoveLinkNotFoundByUrl() {
+        // given-when
+
+        Mockito.when(linkRepository.getIdByUrl("https://test.com")).thenReturn(null);
+
+        RemoveLinkRequest request = new RemoveLinkRequest("https://test.com");
+
+        LinkNotFoundException exception =
+                assertThrows(LinkNotFoundException.class, () -> scrapperService.removeLink(1L, request));
+
+        // then
+
+        assertEquals("Ссылка не найдена для URL: https://test.com", exception.getMessage());
+    }
+
+    @Test
+    void checkRemoveLinkChatNotFound() {
+        // given-when
+
+        Mockito.when(linkRepository.getIdByUrl("https://test.com")).thenReturn(20L);
+        Mockito.when(chatRepository.findIdByChatId(1L)).thenReturn(null);
+
+        RemoveLinkRequest request = new RemoveLinkRequest("https://test.com");
+
+        ChatNotFoundException exception =
+                assertThrows(ChatNotFoundException.class, () -> scrapperService.removeLink(1L, request));
+
+        // then
+
+        assertEquals("Id не найдена для chatId: 1", exception.getMessage());
+    }
+
+    @Test
+    void checkRemoveLinkNotFoundInChat() {
+        // given-when
+
+        Long chatRowId = 10L;
+        Long linkId = 20L;
+
+        Mockito.when(linkRepository.getIdByUrl("https://test.com")).thenReturn(linkId);
+        Mockito.when(chatRepository.findIdByChatId(1L)).thenReturn(chatRowId);
+        Mockito.when(chatLinksRepository.removeLink(chatRowId, linkId)).thenReturn(false);
+        Mockito.when(chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId))
+                .thenReturn(new ChatLink(chatRowId, linkId, List.of(), List.of()));
+
+        RemoveLinkRequest request = new RemoveLinkRequest("https://test.com");
+
+        LinkNotFoundException exception =
+                assertThrows(LinkNotFoundException.class, () -> scrapperService.removeLink(1L, request));
+
+        // then
+
+        assertEquals("Ссылка с id 20 не найдена для чата с id 1", exception.getMessage());
+    }
+
+    @Test
+    void checkGetAllLinksSuccess() {
+        // given
+
+        Long chatId = 1L;
+        Long chatRowId = 10L;
+        Long linkId = 20L;
+        String url = "https://test.com";
+        List<String> tags = List.of("tag1");
+        List<String> filters = List.of("filter1");
+
+        Mockito.when(chatRepository.findIdByChatId(chatId)).thenReturn(chatRowId);
+        Mockito.when(chatLinksRepository.getLinksForChat(chatRowId)).thenReturn(List.of(linkId));
+        Mockito.when(linkRepository.getLinkById(linkId)).thenReturn(url);
+        Mockito.when(chatLinksRepository.getChatLinkByChatIdAndLinkId(chatRowId, linkId))
+                .thenReturn(new ChatLink(chatRowId, linkId, tags, filters));
+
+        // when
+
+        ListLinksResponse response = scrapperService.getAllLinks(chatId);
+
+        // then
+
+        assertEquals(1, response.size());
+        assertEquals(url, response.links().getFirst().url());
+        assertEquals(tags, response.links().getFirst().tags());
+        assertEquals(filters, response.links().getFirst().filters());
+    }
+
+    @Test
+    void checkGetAllLinksChatNotFound() {
+        // given-when
+
+        Mockito.when(chatRepository.findIdByChatId(1L)).thenReturn(null);
+
+        ChatNotFoundException exception =
+                assertThrows(ChatNotFoundException.class, () -> scrapperService.getAllLinks(1L));
+
+        // then
+
+        assertEquals("Id не найдена для chatId: 1", exception.getMessage());
+    }
+}
