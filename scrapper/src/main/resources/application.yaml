@@ -1,12 +1,24 @@
 app:
+  access-type: ${ACCESS_TYPE:SQL}
   github-token: ${GITHUB_TOKEN} # env variable
   stackoverflow:
     key: ${SO_TOKEN_KEY}
     access-token: ${SO_ACCESS_TOKEN}
 
+scheduler:
+  batch-size: 100
+  thread-count: 8
+  thread-waiting-time: 15
+  fixed-interval-ms: 10000
+
 spring:
   application:
     name: Scrapper
+  datasource:
+    url: jdbc:postgresql://localhost:5434/scrapper
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false
   jpa:
@@ -16,6 +28,15 @@ spring:
 
 server:
   port: 8081
+
+bot:
+  url: ${BOT_URL:http://localhost:8080}
+
+api:
+  github:
+    base-url: https://api.github.com
+  stackoverflow:
+    base-url: https://api.stackexchange.com
 
 springdoc:
   swagger-ui:
