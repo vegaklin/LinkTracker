@@ -9,6 +9,6 @@
 * Bot
 * Scrapper
 
-Для работы требуется БД `PostgreSQL`..
+Для работы требуется БД `PostgreSQL`
 
 Для дополнительной справки: [HELP.md](./HELP.md)
